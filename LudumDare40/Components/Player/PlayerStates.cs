@@ -23,7 +23,7 @@ namespace LudumDare40.Components.Player
                 {
                     fsm.resetStackTo(new JumpingState(true));
                 }
-                if (_input.UpButton.isPressed && entity.platformerObject.IsLadderTouching)
+                if (_input.UpButton.isDown && entity.platformerObject.IsLadderTouching)
                 {
                     fsm.resetStackTo(new LadderState());
                 }
@@ -62,7 +62,7 @@ namespace LudumDare40.Components.Player
                 fsm.changeState(new JumpingState(false));
             }
 
-            if (isMovementAvailable() && Input.isKeyPressed(Keys.A))
+            if (isMovementAvailable() && _input.AttackButton.isPressed)
             {
                 fsm.pushState(new AttackStateOne());
             }
@@ -218,7 +218,7 @@ namespace LudumDare40.Components.Player
         public override void update()
         {
             base.update();
-            if (entity.sprite.isOnCombableFrame() && Input.isKeyPressed(Keys.A))
+            if (entity.sprite.isOnCombableFrame() && _input.AttackButton.isPressed)
             {
                 _changeToAttack = true;
             }

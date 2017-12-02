@@ -28,9 +28,6 @@ namespace LudumDare40.Managers
         //--------------------------------------------------
         // Map
 
-        private int _mapId;
-        public int MapId => _mapId;
-
         private TiledMap _tiledMapComponent;
         public TiledMap TiledMap => _tiledMapComponent;
 
@@ -48,11 +45,6 @@ namespace LudumDare40.Managers
         public void setPlayer(Entity playerEntity)
         {
             this.playerEntity = playerEntity;
-        }
-
-        public void setMapId(int mapId)
-        {
-            _mapId = mapId;
         }
         
         public void setTiledMapComponent(TiledMap map)

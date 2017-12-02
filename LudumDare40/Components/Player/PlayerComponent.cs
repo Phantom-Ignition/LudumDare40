@@ -38,11 +38,6 @@ namespace LudumDare40.Components.Player
         public AnimatedSprite coreSprite;
 
         //--------------------------------------------------
-        // Movement Input
-
-        private VirtualIntegerAxis _movementInput;
-
-        //--------------------------------------------------
         // Platformer Object
 
         PlatformerObject _platformerObject;
@@ -71,6 +66,11 @@ namespace LudumDare40.Components.Player
         private bool _forceMovement;
         private Vector2 _forceMovementVelocity;
         private bool _walljumpForcedMovement;
+
+        //--------------------------------------------------
+        // Player Manager
+
+        private PlayerManager _playerManager;
 
         //----------------------//------------------------//
 
@@ -189,8 +189,8 @@ namespace LudumDare40.Components.Player
 
             _fsm = new FiniteStateMachine<PlayerState, PlayerComponent>(this, new StandState());
 
-            _movementInput = new VirtualIntegerAxis();
-            _movementInput.nodes.Add(new VirtualAxis.KeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Left, Keys.Right));
+            // Set player manager
+            _playerManager = Core.getGlobalManager<PlayerManager>();
         }
 
         public override void onAddedToEntity()
@@ -219,8 +219,9 @@ namespace LudumDare40.Components.Player
 
             // Match the core sprite with the default one
             coreSprite.spriteEffects = sprite.spriteEffects;
+            coreSprite.setEnabled(_playerManager.HoldingCore);
 
-            var velocity = _forceMovement ? _forceMovementVelocity.X : _movementInput.value;
+            var velocity = _forceMovement ? _forceMovementVelocity.X : Core.getGlobalManager<InputManager>().MovementAxis.value;
             if (canMove() && (velocity > 0 || velocity < 0))
             {
                 var po = _platformerObject;

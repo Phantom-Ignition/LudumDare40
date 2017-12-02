@@ -42,7 +42,6 @@ namespace LudumDare40
             base.Draw(new GameTime());
 
             // Set first scene
-            getGlobalManager<SystemManager>().setMapId(4);
             scene = new SceneMap();
         }
     }

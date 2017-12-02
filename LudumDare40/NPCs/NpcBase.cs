@@ -294,11 +294,6 @@ namespace LudumDare40.NPCs
             _commands.Add(new NpcHideTextureCommand(this, true));
         }
 
-        protected void mapTransfer(int mapId, int mapX, int mapY)
-        {
-            _commands.Add(new NpcMapTransferCommand(this, mapId, mapX, mapY));
-        }
-
         #endregion
     }
 }

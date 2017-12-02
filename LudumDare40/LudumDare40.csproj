@@ -92,7 +92,6 @@
     <Compile Include="Systems\CameraSystem.cs" />
     <Compile Include="Systems\LadderSystem.cs" />
     <Compile Include="Systems\NpcInteractionSystem.cs" />
-    <Compile Include="Systems\TransferSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

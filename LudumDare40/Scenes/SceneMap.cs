@@ -77,8 +77,7 @@ namespace LudumDare40.Scenes
         private void setupMap()
         {
             var sysManager = Core.getGlobalManager<SystemManager>();
-            var mapId = sysManager.MapId;
-            _tiledMap = content.Load<TiledMap>(string.Format("maps/map", mapId));
+            _tiledMap = content.Load<TiledMap>("maps/map");
             sysManager.setTiledMapComponent(_tiledMap);
 
             var tiledEntity = createEntity("tiled-map");
@@ -234,7 +233,6 @@ namespace LudumDare40.Scenes
             camera.addComponent(new CameraShake());
             var mapSize = new Vector2(_tiledMap.width * _tiledMap.tileWidth, _tiledMap.height * _tiledMap.tileHeight);
             addEntityProcessor(new CameraSystem(player) { mapLockEnabled = true, mapSize = mapSize, followLerp = 0.08f, deadzoneSize = new Vector2(20, 10) });
-            addEntityProcessor(new TransferSystem(new Matcher().all(typeof(TransferComponent)), player));
             addEntityProcessor(new NpcInteractionSystem(playerComponent));
             addEntityProcessor(new LadderSystem(new Matcher().all(typeof(LadderComponent)), playerComponent));
             addEntityProcessor(new BattleSystem());
@@ -298,22 +296,7 @@ namespace LudumDare40.Scenes
             Core.getGlobalManager<SystemManager>().cinematicLetterboxPostProcessor = addPostProcessor(new CinematicLetterboxPostProcessor(1));
             Core.getGlobalManager<SystemManager>().flashPostProcessor = addPostProcessor(new FlashPostProcessor(0));
         }
-
-        public void reserveTransfer(TransferComponent transferComponent)
-        {
-            Core.getGlobalManager<SystemManager>().setMapId(transferComponent.destinyId);
-            Core.getGlobalManager<SystemManager>().setSpawnPosition(transferComponent.destinyPosition);
-            Core.startSceneTransition(new FadeTransition(() => new SceneMap()));
-        }
-
-        public void reserveTransfer(int mapId, int mapX, int mapY)
-        {
-            var spawnPosition = new Vector2(mapX, mapY);
-            Core.getGlobalManager<SystemManager>().setMapId(mapId);
-            Core.getGlobalManager<SystemManager>().setSpawnPosition(spawnPosition);
-            Core.startSceneTransition(new FadeTransition(() => new SceneMap()));
-        }
-
+        
         public override void update()
         {
             base.update();
