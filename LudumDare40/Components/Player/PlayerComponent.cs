@@ -35,6 +35,7 @@ namespace LudumDare40.Components.Player
         // Sprite
 
         public AnimatedSprite sprite;
+        public AnimatedSprite coreSprite;
 
         //--------------------------------------------------
         // Movement Input
@@ -181,6 +182,11 @@ namespace LudumDare40.Components.Player
             });
             sprite.AddFramesToAttack(am[Animations.AttackTwo], 0, 1, 2, 3);
 
+            // Create the core sprite
+            var coreTexture = entity.scene.content.Load<Texture2D>(Content.Characters.core);
+            coreSprite = entity.addComponent(new AnimatedSprite(coreTexture, am[Animations.Stand]));
+            coreSprite.CloneAnimationsFrom(sprite, coreTexture);
+
             _fsm = new FiniteStateMachine<PlayerState, PlayerComponent>(this, new StandState());
 
             _movementInput = new VirtualIntegerAxis();
@@ -210,6 +216,8 @@ namespace LudumDare40.Components.Player
         {
             // Update FSM
             _fsm.update();
+
+            coreSprite.spriteEffects = sprite.spriteEffects;
 
             var velocity = _forceMovement ? _forceMovementVelocity.X : _movementInput.value;
             if (canMove() && (velocity > 0 || velocity < 0))
@@ -248,7 +256,10 @@ namespace LudumDare40.Components.Player
         {
             var animationStr = _animationMap[animation];
             if (sprite.CurrentAnimation != animationStr)
+            {
                 sprite.play(animationStr);
+                coreSprite.play(sprite.CurrentAnimation);
+            }
         }
 
         public void Jump()

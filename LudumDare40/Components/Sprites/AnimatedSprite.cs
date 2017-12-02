@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using LudumDare40.Components.Battle;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -26,6 +28,7 @@ namespace LudumDare40.Components.Sprites
         // Animations
 
         private Dictionary<string, FramesList> _animations;
+        public Dictionary<string, FramesList> animations => _animations;
         private float _delayTick;
 
         //----------------------//------------------------//
@@ -97,6 +100,26 @@ namespace LudumDare40.Components.Sprites
                 _animations[name].FramesToAttack.Add(frames[i]);
         }
 
+        public void CloneAnimationsFrom(AnimatedSprite animatedSprite, Texture2D tex)
+        {
+            _animations = new Dictionary<string, FramesList>();
+            foreach (var animation in animatedSprite.animations)
+            {
+                CreateAnimation(animation.Key, animation.Value.Delay);
+                var frames = animation.Value.Frames;
+                var rectList = new Rectangle[frames.Count];
+                var offsetListX = new int[frames.Count];
+                var offsetListY = new int[frames.Count];
+                for (var i = 0; i < frames.Count; i++)
+                {
+                    rectList[i] = frames[i].Subtexture.sourceRect;
+                    offsetListX[i] = frames[i].OffsetX;
+                    offsetListY[i] = frames[i].OffsetY;
+                }
+                AddFrames(animation.Key, rectList.ToList(), offsetListX, offsetListY);
+            }
+        }
+
         void IUpdatable.update()
         {
             foreach (var frame in _animations[_currentFrameList].Frames)
@@ -153,6 +176,7 @@ namespace LudumDare40.Components.Sprites
 
         public void play(string animation)
         {
+            if (_currentFrameList == animation) return;
             _currentFrame = 0;
             _delayTick = 0;
             _currentFrameList = animation;

@@ -8,8 +8,8 @@ namespace Nez
 		public static class Characters
 		{
 			public const string characters = @"characters\characters";
+			public const string core = @"characters\Core";
 			public const string elderMouse = @"characters\ElderMouse";
-			public const string elliot = @"characters\Elliot";
 			public const string elliotMother = @"characters\ElliotMother";
 			public const string player = @"characters\Player";
 		}
@@ -74,6 +74,7 @@ namespace Nez
 
 		public const string map = @"map";
 		public const string tileset = @"tileset";
+
 
     }
 }

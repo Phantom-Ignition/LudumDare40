@@ -6,6 +6,18 @@
  </properties>
  <tileset firstgid="1" name="tilesheet" tilewidth="32" tileheight="32" tilecount="10" columns="5">
   <image source="tilesheet.png" width="160" height="64"/>
+  <tile id="1">
+   <properties>
+    <property name="nez:isSlope" type="bool" value="true"/>
+    <property name="nez:slopeTopLeft" type="int" value="0"/>
+    <property name="nez:slopeTopRight" type="int" value="32"/>
+   </properties>
+  </tile>
+  <tile id="7">
+   <properties>
+    <property name="nez:isOneWayPlatform" type="bool" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="collision" width="15" height="8">
   <data encoding="csv">
@@ -13,9 +25,9 @@
 0,0,0,0,6,6,6,6,0,0,7,7,7,7,7,
 0,0,0,0,0,0,0,7,0,0,7,0,0,0,0,
 0,0,0,0,0,0,0,7,0,0,7,0,0,0,0,
-0,0,0,0,0,0,0,7,0,0,7,0,0,7,7,
-0,0,0,0,0,0,0,7,0,0,7,0,0,7,0,
-0,0,0,0,0,0,0,7,0,0,0,0,0,7,0,
+2,0,0,0,0,0,0,7,0,0,7,0,0,7,7,
+2,2,0,0,8,8,8,7,0,0,7,0,0,7,0,
+2,2,2,0,0,0,0,7,0,0,0,0,0,7,0,
 6,6,6,6,6,6,6,6,6,6,6,6,6,6,0
 </data>
  </layer>

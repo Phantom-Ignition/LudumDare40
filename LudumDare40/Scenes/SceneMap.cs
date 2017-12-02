@@ -121,6 +121,7 @@ namespace LudumDare40.Scenes
             player.addComponent<BattleComponent>();
             var playerComponent = player.addComponent<PlayerComponent>();
             playerComponent.sprite.renderLayer = PLAYER_RENDER_LAYER;
+            playerComponent.coreSprite.renderLayer = MISC_RENDER_LAYER;
 
             Core.getGlobalManager<SystemManager>().setPlayer(player);
 

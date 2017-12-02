@@ -16,7 +16,7 @@ namespace LudumDare40.NPCs
 
         protected override void loadTexture()
         {
-            TextureName = Content.Characters.elliot;
+            TextureName = Content.Characters.player;
         }
     }
 }
