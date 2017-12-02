@@ -13,7 +13,7 @@ namespace LudumDare40
         [STAThread]
         static void Main()
         {
-            using (var game = new GameMain())
+            using (var game = new Game1())
                 game.Run();
         }
     }
