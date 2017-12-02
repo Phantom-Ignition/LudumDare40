@@ -27,7 +27,7 @@ namespace LudumDare40.Components.Battle
         {
             if (draw)
             {
-                graphics.batcher.drawRect(bounds.x-1, bounds.y-1, bounds.width+1, bounds.height+1, Color.DarkRed);
+                graphics.batcher.drawRect(bounds.x-1, bounds.y-1, bounds.width+1, bounds.height+1, Color.Orchid * 0.3f);
             }
         }
     }

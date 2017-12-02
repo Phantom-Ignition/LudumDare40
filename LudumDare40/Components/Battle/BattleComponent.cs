@@ -18,7 +18,7 @@ namespace LudumDare40.Components.Battle
     class BattleComponent: Component, IUpdatable
     {
         public IBattleEntity battleEntity;
-        private const float ImmunityDuration = 0.4f;
+        private const float ImmunityDuration = 0.3f;
         public float ImmunityTime { get; set; }
 
         private const float HitAnimationDuration = 0.3f;

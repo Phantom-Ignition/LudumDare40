@@ -28,8 +28,9 @@ namespace LudumDare40.Scenes
 
         public const int BACKGROUND_RENDER_LAYER = 10;
         public const int TILED_MAP_RENDER_LAYER = 9;
-        public const int WATER_RENDER_LAYER = 5;
-        public const int MISC_RENDER_LAYER = 4; // NPCs, Text, etc.
+        public const int WATER_RENDER_LAYER = 6;
+        public const int MISC_RENDER_LAYER = 5; // NPCs, Text, etc.
+        public const int ENEMIES_RENDER_LAYER = 4; // NPCs, Text, etc.
         public const int PLAYER_RENDER_LAYER = 3;
         public const int PARTICLES_RENDER_LAYER = 2;
 
@@ -64,6 +65,7 @@ namespace LudumDare40.Scenes
             setupMapTexts();
             setupMapExtensions();
             setupPostProcessors();
+            clearColor = new Color(58, 61, 101);
         }
 
         public override void onStart()
@@ -112,7 +114,7 @@ namespace LudumDare40.Scenes
             var player = createEntity("player");
             player.transform.position = playerSpawn.Value;
             player.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
-            player.addComponent(new BoxCollider(-10f, -20f, 20f, 40f));
+            player.addComponent(new BoxCollider(-5f, -10f, 11f, 30f));
             player.addComponent(new InteractionCollider(-30f, -6, 60, 22));
             player.addComponent<PlatformerObject>();
             player.addComponent<TextWindowComponent>();
@@ -137,10 +139,11 @@ namespace LudumDare40.Scenes
             enemy.transform.position = spawn - 64 * Vector2.UnitX;
 
             enemy.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
-            enemy.addComponent(new BoxCollider(-10f, -20f, 20f, 40f));
+            enemy.addComponent(new BoxCollider(-5f, -10f, 11f, 30f));
             enemy.addComponent<PlatformerObject>();
             enemy.addComponent<BattleComponent>();
-            enemy.addComponent<EnemyComponent>();
+            var comp = enemy.addComponent<EnemyComponent>();
+            comp.sprite.renderLayer = ENEMIES_RENDER_LAYER;
         }
 
         private void setupNpcs()

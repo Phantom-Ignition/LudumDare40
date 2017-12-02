@@ -17,7 +17,7 @@ namespace LudumDare40.Components.Battle
 
         public override void initialize()
         {
-            var texture = entity.scene.content.Load<Texture2D>(Content.Characters.elliot);
+            var texture = entity.scene.content.Load<Texture2D>(Content.Characters.player);
             sprite = entity.addComponent(new AnimatedSprite(texture, "stand"));
             sprite.CreateAnimation("stand", 0.25f);
             sprite.AddFrames("stand", new List<Rectangle>()
@@ -26,7 +26,9 @@ namespace LudumDare40.Components.Battle
                 new Rectangle(64, 0, 64, 64),
                 new Rectangle(128, 0, 64, 64),
                 new Rectangle(192, 0, 64, 64),
-            }, new int[] { 0, 0, 0, 0 }, new int[] { -12, -12, -12, -12 });
+                new Rectangle(256, 0, 64, 64),
+                new Rectangle(320, 0, 64, 64),
+            }, new int[] { 0, 0, 0, 0, 0, 0 }, new int[] { -9, -9, -9, -9, -9, -9 });
         }
 
         public override void onAddedToEntity()

@@ -138,7 +138,7 @@ namespace LudumDare40.Components.Sprites
 
         public bool isOnCombableFrame()
         {
-            return _currentFrame >= _animations[_currentFrameList].Frames.Count - 2;
+            return _currentFrame >= _animations[_currentFrameList].Frames.Count - 3;
         }
 
         public FramesList getCurrentAnimation()

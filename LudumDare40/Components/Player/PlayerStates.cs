@@ -92,11 +92,7 @@ namespace LudumDare40.Components.Player
         {
             if (entity.isOnGround())
             {
-                entity.SetAnimation(PlayerComponent.Animations.JumpLanding);
-                _landTime += Time.deltaTime;
-                if (_landTime >= 0.1f)
-                    fsm.resetStackTo(new StandState());
-                return;
+                fsm.resetStackTo(new StandState());
             }
             else if (entity.platformerObject.collisionState.left)
             {
