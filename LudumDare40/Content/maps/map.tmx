@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="15" height="8" tilewidth="32" tileheight="32" nextobjectid="39">
+ <properties>
+  <property name="collisionLayer" value="collision"/>
+  <property name="defaultLayers" value="collision, details, trees"/>
+ </properties>
+ <tileset firstgid="1" name="tilesheet" tilewidth="32" tileheight="32" tilecount="4" columns="2">
+  <image source="tilesheet.png" width="64" height="64"/>
+ </tileset>
+ <layer name="trees" width="15" height="8">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+</data>
+ </layer>
+ <layer name="collision" width="15" height="8">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,3,3,3,3,0,0,4,4,4,4,4,
+0,0,0,0,0,0,0,4,0,0,4,0,0,0,0,
+0,0,0,0,0,0,0,4,0,0,4,0,0,0,0,
+0,0,0,0,0,0,0,4,0,0,4,0,0,4,4,
+0,0,0,0,0,0,0,4,0,0,4,0,0,4,0,
+0,0,0,0,0,0,0,4,0,0,0,0,0,4,0,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,0
+</data>
+ </layer>
+ <layer name="details" width="15" height="8">
+  <data encoding="csv">
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+0,0,0,0,0,0,0,0,0,0,0,0,0,0,3
+</data>
+ </layer>
+ <objectgroup name="objects">
+  <object id="36" name="playerSpawn" x="174" y="161"/>
+ </objectgroup>
+ <objectgroup name="ladders">
+  <object id="38" x="96" y="32" width="32" height="192"/>
+ </objectgroup>
+ <objectgroup name="environment">
+  <object id="28" name="Water" type="water" x="0" y="237" width="480" height="19"/>
+ </objectgroup>
+ <objectgroup color="#55aa00" name="particles"/>
+ <objectgroup name="texts"/>
+ <objectgroup name="transfers"/>
+ <objectgroup name="npcs"/>
+</map>

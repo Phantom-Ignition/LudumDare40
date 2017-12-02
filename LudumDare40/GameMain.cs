@@ -1,83 +1,51 @@
-﻿using Microsoft.Xna.Framework;
+﻿using LudumDare40.Managers;
+using LudumDare40.Scenes;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Nez;
+using Nez.BitmapFonts;
 
 namespace LudumDare40
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
-    public class GameMain : Game
+    public class GameMain : Core
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
-        
-        public GameMain()
+        public static BitmapFont bigBitmapFont;
+        public static BitmapFont smallBitmapFont;
+
+        public GameMain() : base(width: 852, height: 480, isFullScreen: false, enableEntitySystems: true)
         {
-            graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+            Window.AllowUserResizing = true;
+            debugRenderEnabled = true;
+
+            IsFixedTimeStep = true;
+
+            // Register Global Managers
+            registerGlobalManager(new InputManager());
+            registerGlobalManager(new SystemManager());
+            registerGlobalManager(new PlayerManager());
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
-        protected override void Initialize()
-        {
-            // TODO: Add your initialization logic here
-
-            base.Initialize();
-        }
-
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
+            bigBitmapFont = content.Load<BitmapFont>(Nez.Content.Fonts.titleFont);
+            smallBitmapFont = content.Load<BitmapFont>(Nez.Content.Fonts.smallFont);
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
-        protected override void UnloadContent()
+        protected override void Initialize()
         {
-            // TODO: Unload any non ContentManager content here
-        }
+            base.Initialize();
+            Scene.setDefaultDesignResolution(427, 240, Scene.SceneResolutionPolicy.FixedHeight);
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
-        {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            // PP Fix
+            scene = Scene.createWithDefaultRenderer();
+            base.Update(new GameTime());
+            base.Draw(new GameTime());
 
-            // TODO: Add your update logic here
-
-            base.Update(gameTime);
-        }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
-
-            base.Draw(gameTime);
+            // Set first scene
+            getGlobalManager<SystemManager>().setMapId(4);
+            scene = new SceneMap();
         }
     }
 }
