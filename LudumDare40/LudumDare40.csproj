@@ -49,6 +49,7 @@
     <Compile Include="Components\Battle\BattleComponent.cs" />
     <Compile Include="Components\Battle\EnemyComponent.cs" />
     <Compile Include="Components\InteractionCollider.cs" />
+    <Compile Include="Components\Map\ReactorComponent.cs" />
     <Compile Include="Components\Map\LadderComponent.cs" />
     <Compile Include="Components\Map\RaftComponent.cs" />
     <Compile Include="Components\Map\TransferComponent.cs" />

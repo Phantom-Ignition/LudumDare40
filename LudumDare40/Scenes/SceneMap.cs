@@ -5,6 +5,7 @@ using LudumDare40.Components;
 using LudumDare40.Components.Battle;
 using LudumDare40.Components.Map;
 using LudumDare40.Components.Player;
+using LudumDare40.Components.Sprites;
 using LudumDare40.Components.Windows;
 using LudumDare40.Extensions;
 using LudumDare40.Managers;
@@ -45,9 +46,9 @@ namespace LudumDare40.Scenes
         private TiledMap _tiledMap;
 
         //--------------------------------------------------
-        // Map Extensions
+        // Reactors
 
-        private List<ISceneMapExtensionable> _mapExtensions;
+        private List<Entity> _reactors;
 
         //----------------------//------------------------//
 
@@ -57,13 +58,13 @@ namespace LudumDare40.Scenes
             setupMap();
             setupPlayer();
             setupEnemies();
+            setupReactors();
             setupEntityProcessors();
             setupNpcs();
             setupParticles();
             setupLadders();
             setupWater();
             setupMapTexts();
-            setupMapExtensions();
             setupPostProcessors();
             clearColor = new Color(58, 61, 101);
         }
@@ -124,11 +125,6 @@ namespace LudumDare40.Scenes
             playerComponent.coreSprite.renderLayer = MISC_RENDER_LAYER;
 
             Core.getGlobalManager<SystemManager>().setPlayer(player);
-
-            /*var inventory = createEntity("player-inventory");
-            inventory.addComponent<InventoryComponent>();
-            inventory.position = new Vector2(100, 20);
-            inventory.getComponent<InventoryComponent>().renderLayer = 1;*/
         }
 
         private void setupEnemies()
@@ -143,8 +139,22 @@ namespace LudumDare40.Scenes
             enemy.addComponent(new BoxCollider(-5f, -10f, 11f, 30f));
             enemy.addComponent<PlatformerObject>();
             enemy.addComponent<BattleComponent>();
-            var comp = enemy.addComponent<EnemyComponent>();
-            comp.sprite.renderLayer = ENEMIES_RENDER_LAYER;
+            var enemyComponent = enemy.addComponent<EnemyComponent>();
+            enemyComponent.sprite.renderLayer = ENEMIES_RENDER_LAYER;
+        }
+
+        private void setupReactors()
+        {
+            _reactors = new List<Entity>();
+            var coresGroup = _tiledMap.getObjectGroup("reactors");
+            foreach (var core in coresGroup.objects)
+            {
+                var entity = createEntity(core.name);
+                entity.transform.position = core.position + new Vector2(core.width, core.height) / 2.0f;
+                entity.addComponent<ReactorComponent>();
+                entity.addComponent(new BoxCollider(32, 32));
+                _reactors.Add(entity);
+            }
         }
 
         private void setupNpcs()
@@ -282,23 +292,6 @@ namespace LudumDare40.Scenes
                 textComponent.setRenderLayer(MISC_RENDER_LAYER);
             }
         }
-
-        private void setupMapExtensions()
-        {
-            _mapExtensions = new List<ISceneMapExtensionable>();
-
-            if (!_tiledMap.properties.ContainsKey("mapExtensions")) return;
-
-            var extensions = _tiledMap.properties["mapExtensions"].Split(',').Select(s => s.Trim()).ToArray();
-
-            foreach (var extension in extensions)
-            {
-                var extensionInstance = (ISceneMapExtensionable)Activator.CreateInstance(Type.GetType("AdvJam2017.Scenes.SceneMapExtensions." + extension));
-                extensionInstance.Scene = this;
-                extensionInstance.initialize();
-                _mapExtensions.Add(extensionInstance);
-            }
-        }
             
         private void setupPostProcessors()
         {
@@ -331,9 +324,6 @@ namespace LudumDare40.Scenes
                     Core.getGlobalManager<SystemManager>().flashPostProcessor.animate(1f)
                 );
             }
-
-            // Update extensions
-            _mapExtensions.ForEach(extension => extension.update());
 
             // Update cinematic
             /*

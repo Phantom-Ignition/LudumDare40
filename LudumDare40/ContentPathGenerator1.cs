@@ -32,6 +32,11 @@ namespace Nez
 			public const string tilesheet = @"maps\tilesheet";
 		}
 
+		public static class Misc
+		{
+			public const string reactor = @"misc\reactor";
+		}
+
 		public static class Nez
 		{
 			public static class Effects

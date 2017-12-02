@@ -37,7 +37,7 @@ namespace LudumDare40.FSM
             currentState.handleInput();
             currentState.update();
 
-            Console.WriteLine(currentState);
+            //Console.WriteLine(currentState);
 
             if (_requestingState != null)
             {

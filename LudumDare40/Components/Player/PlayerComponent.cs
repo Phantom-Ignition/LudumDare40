@@ -217,6 +217,7 @@ namespace LudumDare40.Components.Player
             // Update FSM
             _fsm.update();
 
+            // Match the core sprite with the default one
             coreSprite.spriteEffects = sprite.spriteEffects;
 
             var velocity = _forceMovement ? _forceMovementVelocity.X : _movementInput.value;
