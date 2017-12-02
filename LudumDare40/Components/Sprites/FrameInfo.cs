@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using LudumDare40.Components.Battle;
+using Nez;
 using Nez.Textures;
 
 namespace LudumDare40.Components.Sprites
@@ -13,8 +14,8 @@ namespace LudumDare40.Components.Sprites
 
         public FrameInfo(Subtexture subtexture, int offsetX, int offsetY)
         {
-            AttackColliders = new List<AttackCollider>();
             Subtexture = subtexture;
+            AttackColliders = new List<AttackCollider>();
             OffsetX = offsetX;
             OffsetY = offsetY;
         }

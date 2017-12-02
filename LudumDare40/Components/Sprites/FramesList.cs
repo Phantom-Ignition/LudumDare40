@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Nez;
 
 namespace LudumDare40.Components.Sprites
 {
@@ -8,8 +9,8 @@ namespace LudumDare40.Components.Sprites
         public List<FrameInfo> Frames { get; set; }
         public bool Loop { get; set; }
         public bool Reset { get; set; }
+        public BoxCollider Collider { get; set; }
         public List<int> FramesToAttack { get; set; }
-
         public FramesList(float delay)
         {
             Frames = new List<FrameInfo>();

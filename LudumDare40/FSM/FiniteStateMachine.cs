@@ -19,6 +19,7 @@ namespace LudumDare40.FSM
         private Stack<State<T, E>> _stateStack;
         private E _entity;
         private State<T, E> _requestingState;
+        private bool _requestingChange;
         private bool _requestingReset;
 
         public FiniteStateMachine(E entity, State<T, E> initialState)
@@ -44,10 +45,12 @@ namespace LudumDare40.FSM
                 if (_requestingReset)
                 {
                     _stateStack.Clear();
+                    _requestingReset = false;
                 }
-                else
+                else if (_requestingChange)
                 {
                     _stateStack.Pop();
+                    _requestingChange = false;
                 }
                 setupState(_requestingState);
                 _stateStack.Push(_requestingState);
@@ -64,8 +67,7 @@ namespace LudumDare40.FSM
 
         public void pushState(State<T, E> state)
         {
-            setupState(state);
-            _stateStack.Push(state);
+            _requestingState = state;
         }
 
         public void popState()
@@ -76,12 +78,13 @@ namespace LudumDare40.FSM
         public void changeState(State<T, E> state)
         {
             _requestingState = state;
+            _requestingChange = true;
         }
 
         public void resetStackTo(State<T, E> state)
         {
-            _requestingReset = true;
             _requestingState = state;
+            _requestingReset = true;
         }
     }
 }

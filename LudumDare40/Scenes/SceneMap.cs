@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LudumDare40.Components;
+using LudumDare40.Components.Battle;
 using LudumDare40.Components.Map;
 using LudumDare40.Components.Player;
 using LudumDare40.Components.Windows;
@@ -9,6 +10,7 @@ using LudumDare40.Extensions;
 using LudumDare40.Managers;
 using LudumDare40.NPCs;
 using LudumDare40.PostProcessors;
+using LudumDare40.Scenes.SceneMapExtensions;
 using LudumDare40.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -41,6 +43,11 @@ namespace LudumDare40.Scenes
         
         private TiledMap _tiledMap;
 
+        //--------------------------------------------------
+        // Map Extensions
+
+        private List<ISceneMapExtensionable> _mapExtensions;
+
         //----------------------//------------------------//
 
         public override void initialize()
@@ -48,12 +55,14 @@ namespace LudumDare40.Scenes
             addRenderer(new DefaultRenderer());
             setupMap();
             setupPlayer();
+            setupEnemies();
             setupEntityProcessors();
             setupNpcs();
             setupParticles();
             setupLadders();
             setupWater();
             setupMapTexts();
+            setupMapExtensions();
             setupPostProcessors();
         }
 
@@ -66,7 +75,7 @@ namespace LudumDare40.Scenes
         {
             var sysManager = Core.getGlobalManager<SystemManager>();
             var mapId = sysManager.MapId;
-            _tiledMap = content.Load<TiledMap>(string.Format("maps/map{0}", mapId));
+            _tiledMap = content.Load<TiledMap>(string.Format("maps/map", mapId));
             sysManager.setTiledMapComponent(_tiledMap);
 
             var tiledEntity = createEntity("tiled-map");
@@ -107,6 +116,7 @@ namespace LudumDare40.Scenes
             player.addComponent(new InteractionCollider(-30f, -6, 60, 22));
             player.addComponent<PlatformerObject>();
             player.addComponent<TextWindowComponent>();
+            player.addComponent<BattleComponent>();
             var playerComponent = player.addComponent<PlayerComponent>();
             playerComponent.sprite.renderLayer = PLAYER_RENDER_LAYER;
 
@@ -116,6 +126,21 @@ namespace LudumDare40.Scenes
             inventory.addComponent<InventoryComponent>();
             inventory.position = new Vector2(100, 20);
             inventory.getComponent<InventoryComponent>().renderLayer = 1;*/
+        }
+
+        private void setupEnemies()
+        {
+            var collisionLayer = _tiledMap.properties["collisionLayer"];
+            var enemy = createEntity("enemy");
+
+            var spawn = _tiledMap.getObjectGroup("objects").objectWithName("playerSpawn").position;
+            enemy.transform.position = spawn - 64 * Vector2.UnitX;
+
+            enemy.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
+            enemy.addComponent(new BoxCollider(-10f, -20f, 20f, 40f));
+            enemy.addComponent<PlatformerObject>();
+            enemy.addComponent<BattleComponent>();
+            enemy.addComponent<EnemyComponent>();
         }
 
         private void setupNpcs()
@@ -130,7 +155,7 @@ namespace LudumDare40.Scenes
                 names[npc.name] = names.ContainsKey(npc.name) ? ++names[npc.name] : 0;
 
                 var npcEntity = createEntity(string.Format("{0}:{1}", npc.name, names[npc.name]));
-                var npcComponent = (NpcBase)Activator.CreateInstance(Type.GetType("LudumDare40.NPCs." + npc.type), npc.name);
+                var npcComponent = (NpcBase)Activator.CreateInstance(Type.GetType("AdvJam2017.NPCs." + npc.type), npc.name);
                 npcComponent.setRenderLayer(MISC_RENDER_LAYER);
                 npcComponent.ObjectRect = new Rectangle(0, 0, npc.width, npc.height);
                 npcEntity.addComponent(npcComponent);
@@ -195,8 +220,10 @@ namespace LudumDare40.Scenes
             camera.addComponent(new CameraShake());
             var mapSize = new Vector2(_tiledMap.width * _tiledMap.tileWidth, _tiledMap.height * _tiledMap.tileHeight);
             addEntityProcessor(new CameraSystem(player) { mapLockEnabled = true, mapSize = mapSize, followLerp = 0.08f, deadzoneSize = new Vector2(20, 10) });
+            addEntityProcessor(new TransferSystem(new Matcher().all(typeof(TransferComponent)), player));
             addEntityProcessor(new NpcInteractionSystem(playerComponent));
             addEntityProcessor(new LadderSystem(new Matcher().all(typeof(LadderComponent)), playerComponent));
+            addEntityProcessor(new BattleSystem());
         }
 
         private void setupWater()
@@ -251,11 +278,43 @@ namespace LudumDare40.Scenes
                 textComponent.setRenderLayer(MISC_RENDER_LAYER);
             }
         }
+
+        private void setupMapExtensions()
+        {
+            _mapExtensions = new List<ISceneMapExtensionable>();
+
+            if (!_tiledMap.properties.ContainsKey("mapExtensions")) return;
+
+            var extensions = _tiledMap.properties["mapExtensions"].Split(',').Select(s => s.Trim()).ToArray();
+
+            foreach (var extension in extensions)
+            {
+                var extensionInstance = (ISceneMapExtensionable)Activator.CreateInstance(Type.GetType("AdvJam2017.Scenes.SceneMapExtensions." + extension));
+                extensionInstance.Scene = this;
+                extensionInstance.initialize();
+                _mapExtensions.Add(extensionInstance);
+            }
+        }
             
         private void setupPostProcessors()
         {
             Core.getGlobalManager<SystemManager>().cinematicLetterboxPostProcessor = addPostProcessor(new CinematicLetterboxPostProcessor(1));
             Core.getGlobalManager<SystemManager>().flashPostProcessor = addPostProcessor(new FlashPostProcessor(0));
+        }
+
+        public void reserveTransfer(TransferComponent transferComponent)
+        {
+            Core.getGlobalManager<SystemManager>().setMapId(transferComponent.destinyId);
+            Core.getGlobalManager<SystemManager>().setSpawnPosition(transferComponent.destinyPosition);
+            Core.startSceneTransition(new FadeTransition(() => new SceneMap()));
+        }
+
+        public void reserveTransfer(int mapId, int mapX, int mapY)
+        {
+            var spawnPosition = new Vector2(mapX, mapY);
+            Core.getGlobalManager<SystemManager>().setMapId(mapId);
+            Core.getGlobalManager<SystemManager>().setSpawnPosition(spawnPosition);
+            Core.startSceneTransition(new FadeTransition(() => new SceneMap()));
         }
 
         public override void update()
@@ -268,6 +327,9 @@ namespace LudumDare40.Scenes
                     Core.getGlobalManager<SystemManager>().flashPostProcessor.animate(1f)
                 );
             }
+
+            // Update extensions
+            _mapExtensions.ForEach(extension => extension.update());
 
             // Update cinematic
             /*

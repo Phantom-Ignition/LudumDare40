@@ -1,4 +1,5 @@
-﻿using LudumDare40.FSM;
+﻿using System.Runtime.Serialization;
+using LudumDare40.FSM;
 using LudumDare40.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -16,12 +17,8 @@ namespace LudumDare40.Components.Player
 
         public override void handleInput()
         {
-            if (Core.getGlobalManager<InputManager>().isMovementAvailable())
+            if (isMovementAvailable())
             {
-                if (Input.isKeyPressed(Keys.A))
-                {
-                    fsm.pushState(new SlashingState());
-                }
                 if (entity.isOnGround() && _input.JumpButton.isPressed)
                 {
                     fsm.resetStackTo(new JumpingState(true));
@@ -31,6 +28,11 @@ namespace LudumDare40.Components.Player
                     fsm.resetStackTo(new LadderState());
                 }
             }
+        }
+
+        protected bool isMovementAvailable()
+        {
+            return Core.getGlobalManager<InputManager>().isMovementAvailable();
         }
 
         public override void update() { }
@@ -58,6 +60,11 @@ namespace LudumDare40.Components.Player
             else
             {
                 fsm.changeState(new JumpingState(false));
+            }
+
+            if (isMovementAvailable() && Input.isKeyPressed(Keys.A))
+            {
+                fsm.pushState(new AttackStateOne());
             }
             base.handleInput();
         }
@@ -98,6 +105,11 @@ namespace LudumDare40.Components.Player
             else if (entity.platformerObject.collisionState.right)
             {
                 fsm.changeState(new WallJumpState(1));
+            }
+
+            if (isMovementAvailable() && Input.isKeyPressed(Keys.A))
+            {
+                fsm.pushState(new AttackStateOne());
             }
 
             _jumpTime += Time.deltaTime;
@@ -198,11 +210,48 @@ namespace LudumDare40.Components.Player
         }
     }
 
-    public class SlashingState : PlayerState
+    public class AttackStateOne : PlayerState
+    {
+        private bool _changeToAttack;
+
+        public override void begin()
+        {
+            entity.SetAnimation(PlayerComponent.Animations.AttackOne);
+        }
+
+        public override void update()
+        {
+            base.update();
+            if (entity.sprite.isOnCombableFrame() && Input.isKeyPressed(Keys.A))
+            {
+                _changeToAttack = true;
+            }
+            if (entity.sprite.Looped)
+            {
+                if (_changeToAttack)
+                {
+                    fsm.changeState(new AttackStateTwo());
+                }
+                else
+                {
+                    if (entity.isOnGround())
+                    {
+                        fsm.resetStackTo(new StandState());
+                    }
+                    else
+                    {
+                        fsm.popState();
+                    }
+                }
+            }
+        }
+    }
+
+    public class AttackStateTwo : PlayerState
     {
         public override void begin()
         {
-            entity.SetAnimation(PlayerComponent.Animations.Attack);
+            entity.SetAnimation(PlayerComponent.Animations.AttackTwo);
         }
 
         public override void update()
@@ -210,7 +259,14 @@ namespace LudumDare40.Components.Player
             base.update();
             if (entity.sprite.Looped)
             {
-                fsm.popState();
+                if (entity.isOnGround())
+                {
+                    fsm.resetStackTo(new StandState());
+                }
+                else
+                {
+                    fsm.popState();
+                }
             }
         }
     }

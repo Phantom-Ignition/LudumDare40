@@ -308,4 +308,29 @@ namespace LudumDare40.NPCs
             return true;
         }
     }
+
+    public class NpcMapTransferCommand : NpcCommand
+    {
+        private int _mapId;
+        private int _mapX;
+        private int _mapY;
+
+        public NpcMapTransferCommand(NpcBase npc, int mapId, int mapX, int mapY) : base(npc)
+        {
+            _mapId = mapId;
+            _mapX = mapX;
+            _mapY = mapY;
+        }
+
+        public override void start()
+        {
+            var mapScene = (SceneMap)_npc.entity.scene;
+            mapScene.reserveTransfer(_mapId, _mapX, _mapY);
+        }
+
+        public override bool update()
+        {
+            return true;
+        }
+    }
 }

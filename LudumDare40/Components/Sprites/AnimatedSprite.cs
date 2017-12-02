@@ -8,7 +8,7 @@ using Nez.Textures;
 
 namespace LudumDare40.Components.Sprites
 {
-    public class AnimatedSprite<T> : Sprite, IUpdatable
+    public class AnimatedSprite : Sprite, IUpdatable
     {
         //--------------------------------------------------
         // Frames stuff
@@ -16,8 +16,8 @@ namespace LudumDare40.Components.Sprites
         private int _currentFrame;
         public int CurrentFrame => _currentFrame;
 
-        private T _currentFrameList;
-        public T CurrentAnimation => _currentFrameList;
+        private string _currentFrameList;
+        public string CurrentAnimation => _currentFrameList;
 
         private bool _looped;
         public bool Looped => _looped;
@@ -25,32 +25,32 @@ namespace LudumDare40.Components.Sprites
         //--------------------------------------------------
         // Animations
 
-        private Dictionary<T, FramesList> _animations;
+        private Dictionary<string, FramesList> _animations;
         private float _delayTick;
 
         //----------------------//------------------------//
 
-        public AnimatedSprite(Texture2D texture, T initialFrame) : base(texture)
+        public AnimatedSprite(Texture2D texture, string initialFrame) : base(texture)
         {
             _currentFrame = 0;
             _currentFrameList = initialFrame;
             _delayTick = 0;
-            _animations = new Dictionary<T, FramesList>();
+            _animations = new Dictionary<string, FramesList>();
             _looped = false;
         }
         
-        public void CreateAnimation(T animation, float delay)
+        public void CreateAnimation(string animation, float delay)
         {
             _animations[animation] = new FramesList(delay);
         }
 
-        public void CreateAnimation(T animation, float delay, bool reset)
+        public void CreateAnimation(string animation, float delay, bool reset)
         {
             _animations[animation] = new FramesList(delay);
             _animations[animation].Reset = reset;
         }
 
-        public void CreateAnimation(T animation)
+        public void CreateAnimation(string animation)
         {
             _animations[animation] = new FramesList(0);
         }
@@ -62,7 +62,7 @@ namespace LudumDare40.Components.Sprites
             _delayTick = 0;
         }
 
-        public void AddFrames(T animation, List<Rectangle> frames, int[] offsetX, int[] offsetY)
+        public void AddFrames(string animation, List<Rectangle> frames, int[] offsetX, int[] offsetY)
         {
             for (var i = 0; i < frames.Count; i++)
             {
@@ -71,7 +71,14 @@ namespace LudumDare40.Components.Sprites
             }
         }
 
-        public void AddAttackCollider(T animation, List<List<Rectangle>> rectangleFrames)
+        public void AddFrames(string animation, List<Rectangle> frames)
+        {
+            var offsetX = new int[frames.Count];
+            var offsetY = new int[frames.Count];
+            AddFrames(animation, frames, offsetX, offsetY);
+        }
+
+        public void AddAttackCollider(string name, List<List<Rectangle>> rectangleFrames)
         {
             for (var i = 0; i < rectangleFrames.Count; i++)
             {
@@ -79,22 +86,15 @@ namespace LudumDare40.Components.Sprites
                 {
                     var collider = new AttackCollider(rectangleFrames[i][j].X, rectangleFrames[i][j].Y, rectangleFrames[i][j].Width, rectangleFrames[i][j].Height);
                     entity.addComponent(collider);
-                    _animations[animation].Frames[i].AttackColliders.Add(collider);
+                    _animations[name].Frames[i].AttackColliders.Add(collider);
                 }
             }
         }
 
-        public void AddFramesToAttack(T animation, params int[] frames)
+        public void AddFramesToAttack(string name, params int[] frames)
         {
             for (var i = 0; i < frames.Length; i++)
-                _animations[animation].FramesToAttack.Add(frames[i]);
-        }
-
-        public void AddFrames(T animation, List<Rectangle> frames)
-        {
-            var offsetX = new int[frames.Count];
-            var offsetY = new int[frames.Count];
-            AddFrames(animation, frames, offsetX, offsetY);
+                _animations[name].FramesToAttack.Add(frames[i]);
         }
 
         void IUpdatable.update()
@@ -105,9 +105,8 @@ namespace LudumDare40.Components.Sprites
                 {
                     var offsetX = 0f;
                     if (spriteEffects == SpriteEffects.FlipHorizontally)
-                        offsetX = -2 * collider.X;
+                        offsetX = -2.0f * collider.X;
                     collider.ApplyOffset(offsetX, 0);
-                    //collider.transform.setPosition(transform.position);
                 }
             }
 
@@ -137,7 +136,22 @@ namespace LudumDare40.Components.Sprites
             }
         }
 
-        public void play(T animation)
+        public bool isOnCombableFrame()
+        {
+            return _currentFrame >= _animations[_currentFrameList].Frames.Count - 2;
+        }
+
+        public FramesList getCurrentAnimation()
+        {
+            return _animations[_currentFrameList];
+        }
+
+        public FrameInfo getCurrentFrame()
+        {
+            return _animations[_currentFrameList].Frames[_currentFrame];
+        }
+
+        public void play(string animation)
         {
             _currentFrame = 0;
             _delayTick = 0;
@@ -152,13 +166,10 @@ namespace LudumDare40.Components.Sprites
         public override void debugRender(Graphics graphics)
         {
             base.debugRender(graphics);
-
-            foreach (var frame in _animations[_currentFrameList].Frames)
+            
+            foreach (var collider in _animations[_currentFrameList].Frames[_currentFrame].AttackColliders)
             {
-                foreach (var collider in frame.AttackColliders)
-                {
-                    collider.debugRender(graphics, true);
-                }
+                collider.debugRender(graphics, true);
             }
         }
     }

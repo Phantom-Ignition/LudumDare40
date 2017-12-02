@@ -20,7 +20,7 @@ namespace LudumDare40.NPCs
             Stand = 0
         }
 
-        public AnimatedSprite<Animations> sprite;
+        public AnimatedSprite sprite;
         public bool FlipX { get; set; }
 
         //--------------------------------------------------
@@ -109,7 +109,7 @@ namespace LudumDare40.NPCs
             {
                 createSprite();
                 createAnimations();
-                sprite.play(default(Animations));
+                sprite.play("stand");
             }
         }
 
@@ -130,7 +130,7 @@ namespace LudumDare40.NPCs
 
         private void createSprite()
         {
-            sprite = entity.addComponent(new AnimatedSprite<Animations>(_texture, default(Animations)));
+            sprite = entity.addComponent(new AnimatedSprite(_texture, "stand"));
             sprite.renderLayer = _renderLayer;
             sprite.flipX = FlipX;
         }
@@ -142,8 +142,8 @@ namespace LudumDare40.NPCs
 
         protected virtual void createAnimations()
         {
-            sprite.CreateAnimation(Animations.Stand);
-            sprite.AddFrames(Animations.Stand, new List<Rectangle>()
+            sprite.CreateAnimation("stand");
+            sprite.AddFrames("stand", new List<Rectangle>()
             {
                 new Rectangle(0, 0, 64, 64)
             }, new int[] { 0 }, new int[] { -12 });
@@ -292,6 +292,11 @@ namespace LudumDare40.NPCs
         protected void hideTexture()
         {
             _commands.Add(new NpcHideTextureCommand(this, true));
+        }
+
+        protected void mapTransfer(int mapId, int mapX, int mapY)
+        {
+            _commands.Add(new NpcMapTransferCommand(this, mapId, mapX, mapY));
         }
 
         #endregion

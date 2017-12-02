@@ -25,13 +25,16 @@ namespace LudumDare40.Components.Player
             JumpFalling,
             JumpLanding,
             Hit,
-            Attack
+            AttackOne,
+            AttackTwo
         }
+
+        private Dictionary<Animations, string> _animationMap;
 
         //--------------------------------------------------
         // Sprite
 
-        public AnimatedSprite<Animations> sprite;
+        public AnimatedSprite sprite;
 
         //--------------------------------------------------
         // Movement Input
@@ -74,9 +77,24 @@ namespace LudumDare40.Components.Player
         {
             var texture = entity.scene.content.Load<Texture2D>(Content.Characters.elliot);
 
-            sprite = entity.addComponent(new AnimatedSprite<Animations>(texture, Animations.Stand));
-            sprite.CreateAnimation(Animations.Stand, 0.25f);
-            sprite.AddFrames(Animations.Stand, new List<Rectangle>()
+            _animationMap = new Dictionary<Animations, string>
+            {
+                {Animations.Stand, "stand"},
+                {Animations.Walking, "walking"},
+                {Animations.JumpPreparation, "jumpPreparation"},
+                {Animations.JumpUpwards, "jumpUpwards"},
+                {Animations.JumpFalling, "jumpFalling"},
+                {Animations.JumpLanding, "jumpLanding"},
+                {Animations.Hit, "jumpLanding"},
+                {Animations.AttackOne, "attack1"},
+                {Animations.AttackTwo, "attack2"},
+            };
+
+            var am = _animationMap;
+
+            sprite = entity.addComponent(new AnimatedSprite(texture, am[Animations.Stand]));
+            sprite.CreateAnimation(am[Animations.Stand], 0.25f);
+            sprite.AddFrames(am[Animations.Stand], new List<Rectangle>()
             {
                 new Rectangle(0, 0, 64, 64),
                 new Rectangle(64, 0, 64, 64),
@@ -84,8 +102,8 @@ namespace LudumDare40.Components.Player
                 new Rectangle(192, 0, 64, 64),
             }, new int[] { 0, 0, 0, 0 }, new int[] { -12, -12, -12, -12 });
 
-            sprite.CreateAnimation(Animations.Walking, 0.1f);
-            sprite.AddFrames(Animations.Walking, new List<Rectangle>()
+            sprite.CreateAnimation(am[Animations.Walking], 0.1f);
+            sprite.AddFrames(am[Animations.Walking], new List<Rectangle>()
             {
                 new Rectangle(0, 64, 64, 64),
                 new Rectangle(64, 64, 64, 64),
@@ -94,53 +112,71 @@ namespace LudumDare40.Components.Player
                 new Rectangle(256, 64, 64, 64),
             }, new int[] { 0, 0, 0, 0, 0 }, new int[] { -12, -12, -12, -12, -12 });
 
-            sprite.CreateAnimation(Animations.JumpPreparation, 0.1f);
-            sprite.AddFrames(Animations.JumpPreparation, new List<Rectangle>()
+            sprite.CreateAnimation(am[Animations.JumpPreparation], 0.1f);
+            sprite.AddFrames(am[Animations.JumpPreparation], new List<Rectangle>()
             {
                 new Rectangle(0, 0, 64, 64),
             }, new int[] { 0 }, new int[] { -12, -12, -12, -12 });
 
-            sprite.CreateAnimation(Animations.JumpUpwards, 0.1f);
-            sprite.AddFrames(Animations.JumpUpwards, new List<Rectangle>()
+            sprite.CreateAnimation(am[Animations.JumpUpwards], 0.1f);
+            sprite.AddFrames(am[Animations.JumpUpwards], new List<Rectangle>()
             {
                 new Rectangle(0, 0, 64, 64),
             }, new int[] { 0 }, new int[] { -12, -12, -12, -12 });
 
-            sprite.CreateAnimation(Animations.JumpFalling, 0.1f);
-            sprite.AddFrames(Animations.JumpFalling, new List<Rectangle>()
+            sprite.CreateAnimation(am[Animations.JumpFalling], 0.1f);
+            sprite.AddFrames(am[Animations.JumpFalling], new List<Rectangle>()
             {
                 new Rectangle(0, 0, 64, 64),
             }, new int[] { 0 }, new int[] { -12, -12, -12, -12 });
 
-            sprite.CreateAnimation(Animations.JumpLanding, 0.1f);
-            sprite.AddFrames(Animations.JumpLanding, new List<Rectangle>()
+            sprite.CreateAnimation(am[Animations.JumpLanding], 0.1f);
+            sprite.AddFrames(am[Animations.JumpLanding], new List<Rectangle>()
             {
                 new Rectangle(0, 0, 64, 64),
             }, new int[] { 0 }, new int[] { -12, -12, -12, -12 });
 
-            sprite.CreateAnimation(Animations.Hit, 0.1f);
-            sprite.AddFrames(Animations.Hit, new List<Rectangle>()
+            sprite.CreateAnimation(am[Animations.Hit], 0.1f);
+            sprite.AddFrames(am[Animations.Hit], new List<Rectangle>()
             {
                 new Rectangle(224, 32, 32, 32),
                 new Rectangle(256, 32, 32, 32),
                 new Rectangle(224, 32, 32, 32),
             });
 
-            sprite.CreateAnimation(Animations.Attack, 0.1f, false);
-            sprite.AddFrames(Animations.Attack, new List<Rectangle>
+            sprite.CreateAnimation(am[Animations.AttackOne], 0.1f, false);
+            sprite.AddFrames(am[Animations.AttackOne], new List<Rectangle>
             {
                 new Rectangle(0, 128, 64, 64),
                 new Rectangle(64, 128, 64, 64),
                 new Rectangle(128, 128, 64, 64),
                 new Rectangle(192, 128, 64, 64),
             }, new int[] { 0, 0, 0, 0 }, new int[] { -12, -12, -12, -12 });
-            sprite.AddAttackCollider(Animations.Attack, new List<List<Rectangle>>
+            sprite.AddAttackCollider(am[Animations.AttackOne], new List<List<Rectangle>>
             {
                 new List<Rectangle>() { new Rectangle(0, 0, 16, 16) },
-                new List<Rectangle>() { new Rectangle(0, 0, 16, 16) },
-                new List<Rectangle>() { new Rectangle(0, 0, 16, 16) },
-                new List<Rectangle>() { new Rectangle(0, 0, 16, 16) },
+                new List<Rectangle>() { new Rectangle(16, 16, 16, 16) },
+                new List<Rectangle>() { new Rectangle(32, 16, 16, 16) },
+                new List<Rectangle>() { new Rectangle(64, 16, 16, 16) },
             });
+            sprite.AddFramesToAttack(am[Animations.AttackOne], new[]{0, 1, 2, 3});
+            
+            sprite.CreateAnimation(am[Animations.AttackTwo], 0.1f, false);
+            sprite.AddFrames(am[Animations.AttackTwo], new List<Rectangle>
+            {
+                new Rectangle(0, 192, 64, 64),
+                new Rectangle(64, 192, 64, 64),
+                new Rectangle(128, 192, 64, 64),
+                new Rectangle(192, 192, 64, 64),
+            }, new int[] { 0, 0, 0, 0 }, new int[] { -12, -12, -12, -12 });
+            sprite.AddAttackCollider(am[Animations.AttackTwo], new List<List<Rectangle>>
+            {
+                new List<Rectangle>() { new Rectangle(0, 0, 16, 16) },
+                new List<Rectangle>() { new Rectangle(16, 16, 16, 16) },
+                new List<Rectangle>() { new Rectangle(32, 16, 16, 16) },
+                new List<Rectangle>() { new Rectangle(64, 16, 16, 16) },
+            });
+            sprite.AddFramesToAttack(am[Animations.AttackTwo], new[] { 0, 1, 2, 3 });
 
             _fsm = new FiniteStateMachine<PlayerState, PlayerComponent>(this, new StandState());
 
@@ -207,8 +243,9 @@ namespace LudumDare40.Components.Player
 
         public void SetAnimation(Animations animation)
         {
-            if (sprite.CurrentAnimation != animation)
-                sprite.play(animation);
+            var animationStr = _animationMap[animation];
+            if (sprite.CurrentAnimation != animationStr)
+                sprite.play(animationStr);
         }
 
         public void Jump()
