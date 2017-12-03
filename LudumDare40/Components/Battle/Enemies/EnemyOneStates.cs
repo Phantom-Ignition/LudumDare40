@@ -20,12 +20,11 @@ namespace LudumDare40.Components.Battle.Enemies
 
     public class EnemyOnePatrolState : EnemyOneState
     {
-        private float _side;
+        private float _side = -1;
         private ITimer _timer;
 
         public override void begin()
         {
-            _side = -1;
             switchSide();
             entity.sprite.play("walking");
         }
@@ -34,7 +33,7 @@ namespace LudumDare40.Components.Battle.Enemies
         {
             _side *= -1;
             entity.forceMovement(Vector2.UnitX * _side);
-            _timer = Core.schedule(3f, entity, t =>
+            _timer = Core.schedule(1.5f, entity, t =>
             {
                 switchSide();
             });
@@ -54,14 +53,24 @@ namespace LudumDare40.Components.Battle.Enemies
     public class EnemyOneFollowState : EnemyOneState
     {
         private float _electricalDischargeCooldown;
+        private float _followLimitTick;
 
         public override void begin()
         {
             entity.sprite.play("walking");
+            _followLimitTick = 0.0f;
         }
 
         public override void update()
         {
+            if (!entity.canSeeThePlayer())
+            {
+                _followLimitTick += Time.deltaTime;
+                if (_followLimitTick >= 3.0f)
+                {
+                    fsm.resetStackTo(new EnemyOnePatrolState());
+                }
+            }
             if (_electricalDischargeCooldown > 0.0f)
             {
                 _electricalDischargeCooldown = Math.Max(0, _electricalDischargeCooldown - Time.deltaTime);

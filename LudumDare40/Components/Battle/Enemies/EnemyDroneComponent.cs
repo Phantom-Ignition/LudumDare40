@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using System.Collections.Generic;
 using LudumDare40.FSM;
+using LudumDare40.Scenes;
 
 namespace LudumDare40.Components.Battle.Enemies
 {
@@ -24,7 +25,7 @@ namespace LudumDare40.Components.Battle.Enemies
             // sprite init
             var texture = entity.scene.content.Load<Texture2D>(Content.Characters.enemyDrone);
             sprite = entity.addComponent(new AnimatedSprite(texture, "floating"));
-            sprite.CreateAnimation("floating", 0.25f);
+            sprite.CreateAnimation("floating", 0.2f);
             sprite.AddFrames("floating", new List<Rectangle>
             {
                 new Rectangle(0, 0, 64, 64),
@@ -33,9 +34,9 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(192, 0, 64, 64),
                 new Rectangle(256, 0, 64, 64),
                 new Rectangle(320, 0, 64, 64),
-            });
+            }, new[] { 0, 0, 0, 0, 0, 0 }, new[] { -28, -28, -28, -28, -28, -28 });
 
-            sprite.CreateAnimation("attack", 0.1f);
+            sprite.CreateAnimation("attack", 0.1f, false);
             sprite.AddFrames("attack", new List<Rectangle>
             {
                 new Rectangle(0, 64, 64, 64),
@@ -44,18 +45,18 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(192, 64, 64, 64),
                 new Rectangle(256, 64, 64, 64),
                 new Rectangle(320, 64, 64, 64),
-            }, new[] { 0, 0, 0, 0, 0, 0 }, new[] { -40, -40, -40, -40, -40, -40 });
+            }, new[] { 0, 0, 0, 0, 0, 0 }, new[] { -28, -28, -28, -28, -28, -28 });
 
-            sprite.CreateAnimation("hit", 0.1f);
+            sprite.CreateAnimation("hit", 0.1f, false);
             sprite.AddFrames("hit", new List<Rectangle>
             {
                 new Rectangle(0, 128, 64, 64),
                 new Rectangle(64, 128, 64, 64),
                 new Rectangle(128, 128, 64, 64),
                 new Rectangle(192, 128, 64, 64),
-            }, new[] { 0, 0, 0, 0 }, new[] { -40, -40, -40, -40 });
+            }, new[] { 0, 0, 0, 0 }, new[] { -28, -28, -28, -28 });
 
-            sprite.CreateAnimation("dying", 0.1f);
+            sprite.CreateAnimation("dying", 0.1f, false);
             sprite.AddFrames("dying", new List<Rectangle>
             {
                 new Rectangle(0, 192, 64, 64),
@@ -65,16 +66,18 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(256, 192, 64, 64),
                 new Rectangle(320, 192, 64, 64),
                 new Rectangle(0, 256, 64, 64),
-            }, new[] { 0, 0, 0, 0, 0, 0, 0 }, new[] { -40, -40, -40, -40, -40, -40, -40 });
+            }, new[] { 0, 0, 0, 0, 0, 0, 0 }, new[] { -28, -28, -28, -28, -28, -28, -28 });
 
             // collisor init
-            entity.addComponent(new BoxCollider(-12f, -32f, 32f, 35f));
+            var collider = entity.addComponent(new HurtCollider(-17f, -39f, 33f, 23f));
+            Flags.setFlagExclusive(ref collider.collidesWithLayers, 2);
+            Flags.setFlagExclusive(ref collider.physicsLayer, 2);
 
             // FSM
-            _fsm = new FiniteStateMachine<EnemyDroneState, EnemyDroneComponent>(this, new EnemyDronePatrol());
+            _fsm = new FiniteStateMachine<EnemyDroneState, EnemyDroneComponent>(this, new EnemyDronePatrolState());
 
             // View range
-            areaOfSight = entity.addComponent(new AreaOfSightCollider(-24, -12, 92, 32));
+            areaOfSight = entity.addComponent(new AreaOfSightCollider(-24, -28, 110, 48));
         }
 
         public override void onAddedToEntity()
@@ -85,13 +88,29 @@ namespace LudumDare40.Components.Battle.Enemies
             platformerObject.moveSpeed = 60;
         }
 
+        public void createShot()
+        {
+            var shots = entity.scene.findEntitiesWithTag(SceneMap.SHOTS);
+            var shot = entity.scene.createEntity($"shot:${shots.Count}");
+            var direction = sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1;
+            shot.addComponent(new ShotComponent(direction, dangerousStage));
+
+            var position = entity.getComponent<HurtCollider>().absolutePosition;
+            shot.transform.position = position;
+            if (sprite.spriteEffects == SpriteEffects.FlipHorizontally)
+            {
+                shot.transform.position += new Vector2(-12, 12);
+            }
+            else
+            {
+                shot.transform.position += 12 * Vector2.One;
+            }
+        }
+
         public override void onHit(Vector2 knockback)
         {
-            if (dangerousStage <= 1)
-            {
-                base.onHit(knockback);
-                FSM.changeState(new EnemyDroneHitState());
-            }
+            base.onHit(knockback);
+            FSM.changeState(new EnemyDroneHitState());
         }
 
         public override void onDeath()

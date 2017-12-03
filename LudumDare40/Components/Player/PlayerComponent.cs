@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using LudumDare40.Components.Battle;
+﻿using LudumDare40.Components.Battle;
 using LudumDare40.Components.Map;
 using LudumDare40.Components.Sprites;
 using LudumDare40.FSM;
@@ -8,10 +6,10 @@ using LudumDare40.Managers;
 using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Nez;
-using Nez.AI.GOAP;
 using Nez.Tiled;
+using System;
+using System.Collections.Generic;
 
 namespace LudumDare40.Components.Player
 {
@@ -210,20 +208,20 @@ namespace LudumDare40.Components.Player
                 new Rectangle(256, 320, 64, 64),
             }, new int[] { 0, 0, 0, 0, 0, 0, 0 }, new int[] { -9, -9, -9, -9, -9, -9, -9 });
 
-            sprite.CreateAnimation(am[Animations.Hit], 0.1f);
+            sprite.CreateAnimation(am[Animations.Hit], 0.1f, false);
             sprite.AddFrames(am[Animations.Hit], new List<Rectangle>()
             {
-                new Rectangle(0, 256, 32, 32),
-                new Rectangle(64, 256, 32, 32),
-                new Rectangle(128, 256, 32, 32),
+                new Rectangle(0, 256, 64, 64),
+                new Rectangle(64, 256, 64, 64),
+                new Rectangle(128, 256, 64, 64),
             }, new int[] { 0, 0, 0, 0, 0, 0 }, new int[] { -9, -9, -9, -9, -9, -9 });
 
-            sprite.CreateAnimation(am[Animations.Dying], 0.1f);
+            sprite.CreateAnimation(am[Animations.Dying], 0.1f, false);
             sprite.AddFrames(am[Animations.Dying], new List<Rectangle>()
             {
-                new Rectangle(224, 32, 32, 32),
-                new Rectangle(256, 32, 32, 32),
-                new Rectangle(224, 32, 32, 32),
+                new Rectangle(224, 32, 64, 64),
+                new Rectangle(256, 32, 64, 64),
+                new Rectangle(224, 32, 64, 64),
             }, new int[] { 0, 0, 0, 0, 0, 0 }, new int[] { -9, -9, -9, -9, -9, -9 });
 
             // Create the core sprite
@@ -250,10 +248,12 @@ namespace LudumDare40.Components.Player
         {
             _knockbackTick = new Vector2(0.06f, 0.04f);
             _knockbackVelocity = new Vector2(knockback.X * 60, -5);
+            FSM.changeState(new HitState());
         }
 
         public void onDeath()
         {
+            FSM.changeState(new DyingState());
         }
 
         public void forceMovement(Vector2 velocity, bool walljumpForcedMovement = false)

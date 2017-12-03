@@ -52,6 +52,12 @@ namespace LudumDare40.Components.Player
         {
             base.update();
 
+            if (!entity.isOnGround())
+            {
+                fsm.changeState(new JumpingState(false));
+                return;
+            }
+
             if (entity.isOnGround())
             {
                 if (_input.RollButton.isPressed)
@@ -66,10 +72,6 @@ namespace LudumDare40.Components.Player
                 {
                     entity.SetAnimation(PlayerComponent.Animations.Stand);
                 }
-            }
-            else
-            {
-                fsm.changeState(new JumpingState(false));
             }
 
             if (_input.TakeThrowButton.isPressed)
@@ -145,6 +147,7 @@ namespace LudumDare40.Components.Player
     public class RollingState : PlayerState
     {
         private int[] _immunityFrames;
+        private ITimer _timer;
 
         public override void begin()
         {
@@ -152,9 +155,9 @@ namespace LudumDare40.Components.Player
             entity.SetAnimation(PlayerComponent.Animations.Rolling);
             entity.forceMovement(Vector2.UnitX * (entity.sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1));
             entity.isRolling = true;
-            Core.schedule(0.35f, entity, t =>
+            _timer = Core.schedule(0.35f, entity, t =>
             {
-                fsm.popState();
+                fsm.resetStackTo(new StandState());
             });
         }
 
@@ -165,6 +168,7 @@ namespace LudumDare40.Components.Player
 
         public override void end()
         {
+            _timer.stop();
             entity.isRolling = false;
             entity.forceMovement(Vector2.Zero);
         }
@@ -275,14 +279,7 @@ namespace LudumDare40.Components.Player
                 }
                 else
                 {
-                    if (entity.isOnGround())
-                    {
-                        fsm.resetStackTo(new StandState());
-                    }
-                    else
-                    {
-                        fsm.popState();
-                    }
+                    fsm.resetStackTo(new StandState());
                 }
             }
         }
@@ -306,20 +303,37 @@ namespace LudumDare40.Components.Player
             base.update();
             if (entity.sprite.Looped)
             {
-                if (entity.isOnGround())
-                {
-                    fsm.resetStackTo(new StandState());
-                }
-                else
-                {
-                    fsm.popState();
-                }
+                fsm.resetStackTo(new StandState());
             }
         }
 
         public override void end()
         {
             _input.IsLocked = false;
+        }
+    }
+
+    public class HitState : PlayerState
+    {
+        public override void begin()
+        {
+            entity.SetAnimation(PlayerComponent.Animations.Hit);
+        }
+
+        public override void update()
+        {
+            if (entity.sprite.Looped)
+            {
+                fsm.resetStackTo(new StandState());
+            }
+        }
+    }
+
+    public class DyingState : PlayerState
+    {
+        public override void begin()
+        {
+            entity.SetAnimation(PlayerComponent.Animations.Dying);
         }
     }
 }

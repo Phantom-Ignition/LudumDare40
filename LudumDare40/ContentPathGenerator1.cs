@@ -36,6 +36,8 @@ namespace Nez
 
 		public static class Misc
 		{
+			public const string bullet = @"misc\bullet";
+			public const string cannon = @"misc\cannon";
 			public const string coreDrop = @"misc\coreDrop";
 			public const string reactor = @"misc\reactor";
 		}
@@ -82,8 +84,6 @@ namespace Nez
 
 		public const string map = @"map";
 		public const string tileset = @"tileset";
-
-
     }
 }
 

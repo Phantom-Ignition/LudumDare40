@@ -25,9 +25,9 @@
 0,0,0,0,0,0,0,0,0,0,7,7,7,7,7,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-2,0,0,0,0,0,0,0,0,0,0,0,0,7,7,
-2,2,0,8,8,8,8,0,0,0,0,0,0,7,0,
-2,2,2,0,0,0,0,0,0,0,0,0,0,7,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,
+0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,
+0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,
 6,6,6,6,6,6,6,6,6,6,6,6,6,6,0
 </data>
  </layer>
@@ -38,9 +38,9 @@
   <object id="43" name="coredrop" x="42.6667" y="111.167" width="25.3333" height="26"/>
  </objectgroup>
  <objectgroup name="enemies">
-  <object id="44" name="Enemy Drone" type="EnemyOne" x="237" y="110.333" width="32" height="32"/>
+  <object id="44" name="Enemy Drone" type="EnemyDrone" x="264" y="175.667" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="objects">
-  <object id="36" name="playerSpawn" x="145.917" y="131.667"/>
+  <object id="36" name="playerSpawn" x="320.917" y="198"/>
  </objectgroup>
 </map>

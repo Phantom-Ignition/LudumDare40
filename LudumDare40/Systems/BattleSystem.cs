@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LudumDare40.Components.Battle;
+﻿using LudumDare40.Components.Battle;
+using LudumDare40.Components.Player;
 using LudumDare40.Components.Sprites;
 using Nez;
 
@@ -23,7 +19,7 @@ namespace LudumDare40.Systems
                     if (otherEntity == entity) continue;
                     var otherBattler = otherEntity.getComponent<BattleComponent>();
                     if (otherBattler.isOnImmunity()) continue;
-                    var collider = otherEntity.getComponent<BoxCollider>();
+                    var collider = getBattleCollider(otherEntity);
                     foreach (var attackCollider in sprite.getCurrentFrame().AttackColliders)
                     {
                         CollisionResult collisionResult;
@@ -34,6 +30,12 @@ namespace LudumDare40.Systems
                     }
                 }
             }
+        }
+
+        private BoxCollider getBattleCollider(Entity entity)
+        {
+            var hurtCollider = entity.getComponent<HurtCollider>();
+            return hurtCollider ?? entity.getComponent<BoxCollider>();
         }
     }
 }

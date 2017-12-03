@@ -44,6 +44,7 @@ namespace LudumDare40.Scenes
         public const int REACTORS = 1;
         public const int COREDROPS = 2;
         public const int ENEMIES = 3;
+        public const int SHOTS = 4;
 
         //--------------------------------------------------
         // PostProcessors
@@ -288,6 +289,7 @@ namespace LudumDare40.Scenes
             addEntityProcessor(new NpcInteractionSystem(playerComponent));
             addEntityProcessor(new LadderSystem(new Matcher().all(typeof(LadderComponent)), playerComponent));
             addEntityProcessor(new BattleSystem());
+            addEntityProcessor(new ShotsBattleSystem(player));
         }
 
         private void setupWater()

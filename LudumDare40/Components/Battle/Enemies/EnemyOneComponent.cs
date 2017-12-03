@@ -51,7 +51,7 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(201, 186, 67, 62),
             }, new[] { 0, 0, 0, 0, 0, 0 }, new[] { -4, -4, -4, -4, -4, -4 });
 
-            sprite.CreateAnimation("punch", 0.1f);
+            sprite.CreateAnimation("punch", 0.1f, false);
             sprite.AddFrames("punch", new List<Rectangle>
             {
                 new Rectangle(402, 0, 67, 62),
@@ -71,7 +71,7 @@ namespace LudumDare40.Components.Battle.Enemies
             });
             sprite.AddFramesToAttack("punch", 3, 4);
 
-            sprite.CreateAnimation("electricalDischarge", 0.1f);
+            sprite.CreateAnimation("electricalDischarge", 0.1f, false);
             sprite.AddFrames("electricalDischarge", new List<Rectangle>
             {
                 new Rectangle(335, 62, 67, 62),
