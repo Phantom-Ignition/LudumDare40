@@ -11,6 +11,7 @@ namespace Nez
 			public const string core = @"characters\Core";
 			public const string elderMouse = @"characters\ElderMouse";
 			public const string elliotMother = @"characters\ElliotMother";
+			public const string enemyDrone = @"characters\enemyDrone";
 			public const string enemyOne = @"characters\enemyOne";
 			public const string player = @"characters\Player";
 		}
@@ -81,6 +82,7 @@ namespace Nez
 
 		public const string map = @"map";
 		public const string tileset = @"tileset";
+
 
     }
 }

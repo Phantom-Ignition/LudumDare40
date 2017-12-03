@@ -26,6 +26,7 @@ namespace LudumDare40.Components.Battle.Enemies
         {
             base.initialize();
 
+            // Init sprite
             var texture = entity.scene.content.Load<Texture2D>(Content.Characters.enemyOne);
             sprite = entity.addComponent(new AnimatedSprite(texture, "stand"));
             sprite.CreateAnimation("stand", 0.25f);
@@ -111,6 +112,9 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(201, 248, 67, 62),
                 new Rectangle(268, 248, 67, 62),
             }, new[] { 0, 0, 0, 0, 0, 0, 0 }, new[] { -4, -4, -4, -4, -4, -4, -4 });
+
+            // Init collisors
+            entity.addComponent(new BoxCollider(-10f, -15f, 20f, 35f));
 
             // FSM
             _fsm = new FiniteStateMachine<EnemyOneState, EnemyOneComponent>(this, new EnemyOnePatrolState());

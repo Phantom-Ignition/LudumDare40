@@ -38,9 +38,9 @@
   <object id="43" name="coredrop" x="42.6667" y="111.167" width="25.3333" height="26"/>
  </objectgroup>
  <objectgroup name="enemies">
-  <object id="44" name="Enemy ONE" type="EnemyOne" x="96" y="192" width="32" height="32"/>
+  <object id="44" name="Enemy Drone" type="EnemyDrone" x="224" y="192" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="objects">
-  <object id="36" name="playerSpawn" x="295.25" y="150.667"/>
+  <object id="36" name="playerSpawn" x="145.917" y="131.667"/>
  </objectgroup>
 </map>

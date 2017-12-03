@@ -79,6 +79,11 @@ namespace LudumDare40.Components.Player
         private Vector2 _knockbackTick;
 
         //--------------------------------------------------
+        // Rolling
+
+        public bool isRolling;
+
+        //--------------------------------------------------
         // Player Manager
 
         private PlayerManager _playerManager;
@@ -307,7 +312,12 @@ namespace LudumDare40.Components.Player
                 {
                     po.velocity.X = 0;
                 }
-                
+
+                if (isRolling)
+                {
+                    moveSpeed *= 1.5f;
+                    mms *= 1.5f;
+                }
                 po.velocity.X = (int)MathHelper.Clamp(po.velocity.X + moveSpeed * velocity * Time.deltaTime, -mms, mms);
                 sprite.spriteEffects = velocity < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
             }

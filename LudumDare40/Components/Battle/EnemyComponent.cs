@@ -98,7 +98,6 @@ namespace LudumDare40.Components.Battle
         {
             _knockbackTick = new Vector2(0.06f, 0.1f);
             _knockbackVelocity = new Vector2(knockback.X * 60, -5);
-            Console.WriteLine(knockback);
         }
 
         public virtual void onDeath() { }

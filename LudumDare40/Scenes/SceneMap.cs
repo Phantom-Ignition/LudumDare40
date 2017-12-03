@@ -147,7 +147,6 @@ namespace LudumDare40.Scenes
                 var name = findEntitiesWithTag(ENEMIES).Count;
                 var entity = createEntity($"enemy:{name}");
                 entity.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
-                entity.addComponent(new BoxCollider(-10f, -15f, 20f, 35f));
                 entity.addComponent<PlatformerObject>();
                 entity.addComponent<BattleComponent>();
 

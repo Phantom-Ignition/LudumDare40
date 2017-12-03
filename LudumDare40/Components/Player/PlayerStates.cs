@@ -1,7 +1,7 @@
-﻿using System.Runtime.Serialization;
-using LudumDare40.FSM;
+﻿using LudumDare40.FSM;
 using LudumDare40.Managers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Nez;
 
@@ -54,6 +54,10 @@ namespace LudumDare40.Components.Player
 
             if (entity.isOnGround())
             {
+                if (_input.InteractionButton.isPressed)
+                {
+                    fsm.pushState(new RollingState());
+                }
                 if (entity.Velocity.X > 0 || entity.Velocity.X < 0)
                 {
                     entity.SetAnimation(PlayerComponent.Animations.Walking);
@@ -83,7 +87,6 @@ namespace LudumDare40.Components.Player
     public class JumpingState : PlayerState
     {
         private float _jumpTime;
-        private float _landTime;
         private bool _needJump;
 
         public JumpingState(bool needJump)
@@ -95,7 +98,10 @@ namespace LudumDare40.Components.Player
         {
             entity.SetAnimation(PlayerComponent.Animations.JumpPreparation);
             if (_needJump)
+            {
+                _needJump = false;
                 entity.Jump();
+            }
         }
 
         public override void update()
@@ -133,6 +139,26 @@ namespace LudumDare40.Components.Player
                     entity.SetAnimation(PlayerComponent.Animations.JumpFalling);
                 }
             }
+        }
+    }
+
+    public class RollingState : PlayerState
+    {
+        public override void begin()
+        {
+            entity.SetAnimation(PlayerComponent.Animations.Hit);
+            entity.forceMovement(Vector2.UnitX * (entity.sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1));
+            entity.isRolling = true;
+            Core.schedule(0.3f, entity, t =>
+            {
+                fsm.popState();
+            });
+        }
+
+        public override void end()
+        {
+            entity.isRolling = false;
+            entity.forceMovement(Vector2.Zero);
         }
     }
 
