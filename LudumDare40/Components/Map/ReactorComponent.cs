@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using LudumDare40.Components.Sprites;
+using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
@@ -9,6 +10,8 @@ namespace LudumDare40.Components.Map
     public class ReactorComponent : Component
     {
         public AnimatedSprite sprite;
+
+        private bool _isActivated;
 
         public override void initialize()
         {
@@ -28,6 +31,18 @@ namespace LudumDare40.Components.Map
                 new Rectangle(64, 0, 32, 32),
                 new Rectangle(96, 0, 32, 32),
             });
+        }
+
+        public override void onAddedToEntity()
+        {
+            base.onAddedToEntity();
+            entity.setTag(SceneMap.REACTORS);
+        }
+
+        public void setActivated()
+        {
+            _isActivated = true;
+            sprite.play("activated");
         }
     }
 }

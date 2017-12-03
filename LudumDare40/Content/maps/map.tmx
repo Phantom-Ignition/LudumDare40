@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="15" height="8" tilewidth="32" tileheight="32" nextobjectid="43">
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="15" height="8" tilewidth="32" tileheight="32" nextobjectid="45">
  <properties>
   <property name="collisionLayer" value="collision"/>
   <property name="defaultLayers" value="collision"/>
@@ -31,10 +31,16 @@
 6,6,6,6,6,6,6,6,6,6,6,6,6,6,0
 </data>
  </layer>
- <objectgroup name="reactors">
-  <object id="42" name="core1" x="160" y="192" width="32" height="32"/>
+ <objectgroup color="#595642" name="reactors">
+  <object id="42" name="reactor1" x="352" y="192" width="32" height="32"/>
+ </objectgroup>
+ <objectgroup color="#bdbd00" name="coreDrops">
+  <object id="43" name="coredrop" x="42.6667" y="111.167" width="25.3333" height="26"/>
+ </objectgroup>
+ <objectgroup name="enemies">
+  <object id="44" name="Enemy ONE" type="EnemyOne" x="96" y="192" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="objects">
-  <object id="36" name="playerSpawn" x="310.25" y="192"/>
+  <object id="36" name="playerSpawn" x="193.583" y="128.667"/>
  </objectgroup>
 </map>

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using LudumDare40.Components;
 using LudumDare40.Components.Battle;
+using LudumDare40.Components.Battle.Enemies;
 using LudumDare40.Components.Map;
 using LudumDare40.Components.Player;
 using LudumDare40.Components.Sprites;
@@ -18,6 +20,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Nez;
 using Nez.Particles;
+using Nez.Sprites;
 using Nez.Tiled;
 
 namespace LudumDare40.Scenes
@@ -34,6 +37,13 @@ namespace LudumDare40.Scenes
         public const int ENEMIES_RENDER_LAYER = 4; // NPCs, Text, etc.
         public const int PLAYER_RENDER_LAYER = 3;
         public const int PARTICLES_RENDER_LAYER = 2;
+
+        //--------------------------------------------------
+        // Scene tags
+
+        public const int REACTORS = 1;
+        public const int COREDROPS = 2;
+        public const int ENEMIES = 3;
 
         //--------------------------------------------------
         // PostProcessors
@@ -59,6 +69,7 @@ namespace LudumDare40.Scenes
             setupPlayer();
             setupEnemies();
             setupReactors();
+            setupCoreDrops();
             setupEntityProcessors();
             setupNpcs();
             setupParticles();
@@ -129,24 +140,42 @@ namespace LudumDare40.Scenes
         private void setupEnemies()
         {
             var collisionLayer = _tiledMap.properties["collisionLayer"];
-            var enemy = createEntity("enemy");
 
-            var spawn = _tiledMap.getObjectGroup("objects").objectWithName("playerSpawn").position;
-            enemy.transform.position = spawn - 64 * Vector2.UnitX;
+            var enemiesGroup = _tiledMap.getObjectGroup("enemies");
+            foreach (var enemy in enemiesGroup.objects)
+            {
+                var name = findEntitiesWithTag(ENEMIES).Count;
+                var entity = createEntity($"enemy:{name}");
+                entity.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
+                entity.addComponent(new BoxCollider(-5f, -10f, 11f, 30f));
+                entity.addComponent<PlatformerObject>();
+                entity.addComponent<BattleComponent>();
 
-            enemy.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
-            enemy.addComponent(new BoxCollider(-5f, -10f, 11f, 30f));
-            enemy.addComponent<PlatformerObject>();
-            enemy.addComponent<BattleComponent>();
-            var enemyComponent = enemy.addComponent<EnemyComponent>();
-            enemyComponent.sprite.renderLayer = ENEMIES_RENDER_LAYER;
+                var instance = createEnemyInstance(enemy.type);
+                var enemyComponent = entity.addComponent(instance);
+                enemyComponent.sprite.renderLayer = ENEMIES_RENDER_LAYER;
+                enemyComponent.playerCollider = findEntity("player").getComponent<BoxCollider>();
+
+                entity.transform.position = enemy.position + new Vector2(enemy.width, enemy.height) / 2;
+            }
+        }
+
+        private EnemyComponent createEnemyInstance(string enemyName)
+        {
+            var enemiesNamespace = typeof(BattleComponent).Namespace + ".Enemies";
+            var type = Type.GetType(enemiesNamespace + "." + enemyName + "Component");
+            if (type != null)
+            {
+                return Activator.CreateInstance(type) as EnemyComponent;
+            }
+            return null;
         }
 
         private void setupReactors()
         {
             _reactors = new List<Entity>();
-            var coresGroup = _tiledMap.getObjectGroup("reactors");
-            foreach (var core in coresGroup.objects)
+            var reactorsGroup = _tiledMap.getObjectGroup("reactors");
+            foreach (var core in reactorsGroup.objects)
             {
                 var entity = createEntity(core.name);
                 entity.transform.position = core.position + new Vector2(core.width, core.height) / 2.0f;
@@ -154,6 +183,29 @@ namespace LudumDare40.Scenes
                 entity.addComponent(new BoxCollider(32, 32));
                 _reactors.Add(entity);
             }
+        }
+
+        private void setupCoreDrops()
+        {
+            var coreDropsGroup = _tiledMap.getObjectGroup("coreDrops");
+            foreach (var coreDrop in coreDropsGroup.objects)
+            {
+                createCoreDrop(coreDrop.position + new Vector2(coreDrop.width, coreDrop.height) / 2.0f);
+            }
+        }
+
+        public void createCoreDrop(Vector2 position)
+        {
+            var collisionLayer = _tiledMap.properties["collisionLayer"];
+            var texture = content.Load<Texture2D>(Content.Misc.coreDrop);
+            var name = findEntitiesWithTag(COREDROPS).Count;
+            var entity = createEntity($"coredrop:{name}");
+            entity.addComponent(new Sprite(texture) { renderLayer = MISC_RENDER_LAYER });
+            entity.addComponent(new BoxCollider(16, 16));
+            entity.addComponent<CoreDropComponent>();
+            entity.addComponent<PlatformerObject>();
+            entity.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
+            entity.transform.position = position;
         }
 
         private void setupNpcs()

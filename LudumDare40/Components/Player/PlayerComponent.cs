@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using LudumDare40.Components.Map;
 using LudumDare40.Components.Sprites;
 using LudumDare40.FSM;
 using LudumDare40.Managers;
+using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -186,6 +188,7 @@ namespace LudumDare40.Components.Player
             var coreTexture = entity.scene.content.Load<Texture2D>(Content.Characters.core);
             coreSprite = entity.addComponent(new AnimatedSprite(coreTexture, am[Animations.Stand]));
             coreSprite.CloneAnimationsFrom(sprite, coreTexture);
+            coreSprite.setEnabled(false);
 
             _fsm = new FiniteStateMachine<PlayerState, PlayerComponent>(this, new StandState());
 
@@ -210,6 +213,43 @@ namespace LudumDare40.Components.Player
                 _forceMovementVelocity = velocity;
             }
             _walljumpForcedMovement = walljumpForcedMovement;
+        }
+
+        public void takeThrow()
+        {
+            var collider = entity.getComponent<BoxCollider>();
+
+            if (_playerManager.HoldingCore)
+            {
+                var reactors = entity.scene.findEntitiesWithTag(SceneMap.REACTORS);
+                foreach (var reactor in reactors)
+                {
+                    var reactorCollider = reactor.getComponent<BoxCollider>();
+                    CollisionResult collisionResult;
+                    if (collider.collidesWith(reactorCollider, out collisionResult))
+                    {
+                        var reactorComponent = reactor.getComponent<ReactorComponent>();
+                        reactorComponent.setActivated();
+                        _playerManager.HoldingCore = false;
+                        return;
+                    }
+                }
+                (entity.scene as SceneMap)?.createCoreDrop(transform.position);
+                _playerManager.HoldingCore = false;
+                return;
+            }
+
+            var coreDrops = entity.scene.findEntitiesWithTag(SceneMap.COREDROPS);
+            foreach (var coreDrop in coreDrops)
+            {
+                var reactorCollider = coreDrop.getComponent<BoxCollider>();
+                CollisionResult collisionResult;
+                if (collider.collidesWith(reactorCollider, out collisionResult))
+                {
+                    coreDrop.destroy();
+                    _playerManager.HoldingCore = true;
+                }
+            }
         }
 
         public void update()

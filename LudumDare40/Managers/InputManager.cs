@@ -11,6 +11,9 @@ namespace LudumDare40.Managers
         private VirtualButton _attackButton;
         public VirtualButton AttackButton => _attackButton;
 
+        private VirtualButton _takeThrowButton;
+        public VirtualButton TakeThrowButton => _takeThrowButton;
+
         private VirtualButton _jumpButton;
         public VirtualButton JumpButton => _jumpButton;
 
@@ -22,8 +25,6 @@ namespace LudumDare40.Managers
 
         private VirtualIntegerAxis _movementAxis;
         public VirtualIntegerAxis MovementAxis => _movementAxis;
-
-
         
         // Blocks all the interaction stuff
         public bool IsBusy { get; set; }
@@ -35,12 +36,16 @@ namespace LudumDare40.Managers
         {
             _interactionButton = new VirtualButton();
             _interactionButton.nodes.Add(new VirtualButton.KeyboardKey(Keys.F));
-
-
+            
             _attackButton = new VirtualButton();
             _attackButton
                 .addKeyboardKey(Keys.A)
                 .addGamePadButton(0, Buttons.X);
+
+            _takeThrowButton = new VirtualButton();
+            _takeThrowButton
+                .addKeyboardKey(Keys.D)
+                .addGamePadButton(0, Buttons.Y);
 
             _jumpButton = new VirtualButton();
             _jumpButton
@@ -52,11 +57,15 @@ namespace LudumDare40.Managers
                 .addKeyboardKey(Keys.Up)
                 .addGamePadButton(0, Buttons.DPadUp);
 
+            _downButton = new VirtualButton();
+            _downButton
+                .addKeyboardKey(Keys.Down)
+                .addGamePadButton(0, Buttons.DPadDown);
+
             _movementAxis = new VirtualIntegerAxis();
             _movementAxis
                 .addKeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Left, Keys.Right)
                 .addGamePadDPadLeftRight();
-            
         }
 
         public bool isMovementAvailable()

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LudumDare40.Components.Sprites;
+﻿using LudumDare40.Components.Sprites;
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Sprites;
@@ -17,15 +12,45 @@ namespace LudumDare40.Components.Battle
 
     class BattleComponent: Component, IUpdatable
     {
+        //--------------------------------------------------
+        // Battle Entity
+
         public IBattleEntity battleEntity;
+
+        //--------------------------------------------------
+        // HP
+
+        private float _hp;
+        public float HP => _hp;
+
+        //--------------------------------------------------
+        // Death animation
+
+        private bool _dying;
+        public bool Dying => _dying;
+
+        private const float DeathDuration = 0.2f;
+        private float _deathTime;
+
+        //--------------------------------------------------
+        // Immunity Duration
+
         private const float ImmunityDuration = 0.3f;
         public float ImmunityTime { get; set; }
+
+        //--------------------------------------------------
+        // Hit Animation
 
         private const float HitAnimationDuration = 0.3f;
         private float _hitAnimation;
 
+        //--------------------------------------------------
+        // Sprites
+
         private SpriteMime _spriteMime;
         private AnimatedSprite _animatedSprite;
+
+        //----------------------//------------------------//
 
         public override void onAddedToEntity()
         {
@@ -34,11 +59,26 @@ namespace LudumDare40.Components.Battle
             _animatedSprite = entity.getComponent<AnimatedSprite>();
         }
 
+        public void setHp(int hp)
+        {
+            _hp = hp;
+        }
+
         public void onHit()
         {
+            if (_dying) return;
+
             battleEntity?.onHit();
             _hitAnimation = 0.25f;
             ImmunityTime = ImmunityDuration;
+
+            _hp--;
+            if (_hp <= 0)
+            {
+                _animatedSprite.play("dying");
+                _dying = true;
+                _deathTime = DeathDuration;
+            }
         }
 
         public void update()
@@ -59,7 +99,22 @@ namespace LudumDare40.Components.Battle
                     _spriteMime.setColor(Color.Transparent);
                 }
             }
+
             _spriteMime.setLocalOffset(_animatedSprite.localOffset);
+
+            if (_dying && _animatedSprite.Looped)
+            {
+                _deathTime = MathHelper.Max(0, _deathTime - Time.deltaTime);
+                if (_deathTime > 0.0f)
+                {
+                    var color = Color.White * (_deathTime / DeathDuration);
+                    _animatedSprite.setColor(color);
+                }
+                else
+                {
+                    entity.destroy();
+                }
+            }
         }
     }
 }

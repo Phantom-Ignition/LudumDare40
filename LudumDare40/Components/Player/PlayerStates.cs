@@ -15,7 +15,7 @@ namespace LudumDare40.Components.Player
 
         public override void end() { }
 
-        public override void handleInput()
+        public void handleInput()
         {
             if (isMovementAvailable())
             {
@@ -35,7 +35,10 @@ namespace LudumDare40.Components.Player
             return Core.getGlobalManager<InputManager>().isMovementAvailable();
         }
 
-        public override void update() { }
+        public override void update()
+        {
+            handleInput();
+        }
     }
 
     public class StandState : PlayerState
@@ -44,8 +47,11 @@ namespace LudumDare40.Components.Player
         {
             entity.SetAnimation(PlayerComponent.Animations.Stand);
         }
+
         public override void update()
         {
+            base.update();
+
             if (entity.isOnGround())
             {
                 if (entity.Velocity.X > 0 || entity.Velocity.X < 0)
@@ -62,11 +68,15 @@ namespace LudumDare40.Components.Player
                 fsm.changeState(new JumpingState(false));
             }
 
+            if (_input.TakeThrowButton.isPressed)
+            {
+                entity.takeThrow();
+            }
+
             if (isMovementAvailable() && _input.AttackButton.isPressed)
             {
                 fsm.pushState(new AttackStateOne());
             }
-            base.handleInput();
         }
     }
 
@@ -90,6 +100,8 @@ namespace LudumDare40.Components.Player
 
         public override void update()
         {
+            base.update();
+
             if (entity.isOnGround())
             {
                 fsm.resetStackTo(new StandState());
@@ -121,8 +133,6 @@ namespace LudumDare40.Components.Player
                     entity.SetAnimation(PlayerComponent.Animations.JumpFalling);
                 }
             }
-
-            base.handleInput();
         }
     }
 
@@ -143,6 +153,8 @@ namespace LudumDare40.Components.Player
 
         public override void update()
         {
+            base.update();
+
             var collisionState = entity.platformerObject.collisionState;
             if (entity.isOnGround())
             {
@@ -157,13 +169,11 @@ namespace LudumDare40.Components.Player
                     var self = t.context as PlayerComponent;
                     self.forceMovement(Vector2.Zero);
                 });
-                return;
             }
             else if ((_side == -1 && !collisionState.left) || (_side == 1 && !collisionState.right))
             {
                 fsm.changeState(new JumpingState(false));
             }
-            base.handleInput();
         }
 
         public override void end()

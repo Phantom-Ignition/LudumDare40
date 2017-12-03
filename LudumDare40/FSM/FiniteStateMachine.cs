@@ -9,7 +9,6 @@ namespace LudumDare40.FSM
         public E entity;
 
         public abstract void begin();
-        public abstract void handleInput();
         public abstract void update();
         public abstract void end();
     }
@@ -34,7 +33,6 @@ namespace LudumDare40.FSM
         public void update()
         {
             var currentState = _stateStack.Peek();
-            currentState.handleInput();
             currentState.update();
 
             //Console.WriteLine(currentState);
