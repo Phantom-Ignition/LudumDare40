@@ -1,4 +1,5 @@
-﻿using LudumDare40.Components.Sprites;
+﻿using System;
+using LudumDare40.Components.Sprites;
 using Microsoft.Xna.Framework;
 using Nez;
 using Nez.Sprites;
@@ -7,7 +8,7 @@ namespace LudumDare40.Components.Battle
 {
     public interface IBattleEntity
     {
-        void onHit();
+        void onHit(Vector2 knockback);
     }
 
     class BattleComponent: Component, IUpdatable
@@ -64,11 +65,12 @@ namespace LudumDare40.Components.Battle
             _hp = hp;
         }
 
-        public void onHit()
+        public void onHit(CollisionResult collisionResult)
         {
             if (_dying) return;
 
-            battleEntity?.onHit();
+            var knockback = new Vector2(Math.Sign(collisionResult.minimumTranslationVector.X), 0);
+            battleEntity?.onHit(knockback);
             _hitAnimation = 0.25f;
             ImmunityTime = ImmunityDuration;
 

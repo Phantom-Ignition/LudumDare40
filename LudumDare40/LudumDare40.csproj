@@ -45,6 +45,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Components\Battle\AreaOfSightCollider.cs" />
     <Compile Include="Components\Battle\AttackCollider.cs" />
     <Compile Include="Components\Battle\BattleComponent.cs" />
     <Compile Include="Components\Battle\Enemies\EnemyOneComponent.cs" />

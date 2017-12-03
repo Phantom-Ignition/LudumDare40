@@ -126,7 +126,7 @@ namespace LudumDare40.Scenes
             player.transform.position = playerSpawn.Value;
             player.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
             player.addComponent(new BoxCollider(-5f, -10f, 11f, 30f));
-            player.addComponent(new InteractionCollider(-30f, -6, 60, 22));
+            //player.addComponent(new InteractionCollider(-30f, -6, 60, 22));
             player.addComponent<PlatformerObject>();
             player.addComponent<TextWindowComponent>();
             player.addComponent<BattleComponent>();
@@ -147,7 +147,7 @@ namespace LudumDare40.Scenes
                 var name = findEntitiesWithTag(ENEMIES).Count;
                 var entity = createEntity($"enemy:{name}");
                 entity.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
-                entity.addComponent(new BoxCollider(-5f, -10f, 11f, 30f));
+                entity.addComponent(new BoxCollider(-10f, -15f, 20f, 35f));
                 entity.addComponent<PlatformerObject>();
                 entity.addComponent<BattleComponent>();
 

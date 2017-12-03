@@ -29,7 +29,7 @@ namespace LudumDare40.Systems
                         CollisionResult collisionResult;
                         if (attackCollider.collidesWith(collider, out collisionResult))
                         {
-                            otherBattler.onHit();
+                            otherBattler.onHit(collisionResult);
                         }
                     }
                 }

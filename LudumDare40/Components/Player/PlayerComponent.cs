@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using LudumDare40.Components.Battle;
 using LudumDare40.Components.Map;
 using LudumDare40.Components.Sprites;
 using LudumDare40.FSM;
@@ -28,7 +29,8 @@ namespace LudumDare40.Components.Player
             JumpLanding,
             Hit,
             AttackOne,
-            AttackTwo
+            AttackTwo,
+            Dying
         }
 
         private Dictionary<Animations, string> _animationMap;
@@ -91,6 +93,7 @@ namespace LudumDare40.Components.Player
                 {Animations.Hit, "jumpLanding"},
                 {Animations.AttackOne, "attack1"},
                 {Animations.AttackTwo, "attack2"},
+                {Animations.Dying, "dying"},
             };
 
             var am = _animationMap;
@@ -184,6 +187,14 @@ namespace LudumDare40.Components.Player
             });
             sprite.AddFramesToAttack(am[Animations.AttackTwo], 0, 1, 2, 3);
 
+            sprite.CreateAnimation(am[Animations.Dying], 0.1f);
+            sprite.AddFrames(am[Animations.Dying], new List<Rectangle>()
+            {
+                new Rectangle(224, 32, 32, 32),
+                new Rectangle(256, 32, 32, 32),
+                new Rectangle(224, 32, 32, 32),
+            });
+
             // Create the core sprite
             var coreTexture = entity.scene.content.Load<Texture2D>(Content.Characters.core);
             coreSprite = entity.addComponent(new AnimatedSprite(coreTexture, am[Animations.Stand]));
@@ -199,6 +210,9 @@ namespace LudumDare40.Components.Player
         public override void onAddedToEntity()
         {
             _platformerObject = entity.getComponent<PlatformerObject>();
+            var battleComponent = entity.getComponent<BattleComponent>();
+            battleComponent.setHp(5);
+            //battleComponent.battleEntity = this;
         }
 
         public void forceMovement(Vector2 velocity, bool walljumpForcedMovement = false)

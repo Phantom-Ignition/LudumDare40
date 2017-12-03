@@ -71,6 +71,7 @@ namespace LudumDare40.FSM
         public void popState()
         {
             _stateStack.Pop();
+            _stateStack.Peek()?.begin();
         }
 
         public void changeState(State<T, E> state)

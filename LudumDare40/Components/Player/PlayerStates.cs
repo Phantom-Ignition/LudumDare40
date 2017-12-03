@@ -222,6 +222,7 @@ namespace LudumDare40.Components.Player
 
         public override void begin()
         {
+            _input.IsLocked = true;
             entity.SetAnimation(PlayerComponent.Animations.AttackOne);
         }
 
@@ -251,12 +252,18 @@ namespace LudumDare40.Components.Player
                 }
             }
         }
+
+        public override void end()
+        {
+            _input.IsLocked = false;
+        }
     }
 
     public class AttackStateTwo : PlayerState
     {
         public override void begin()
         {
+            _input.IsLocked = true;
             entity.SetAnimation(PlayerComponent.Animations.AttackTwo);
         }
 
@@ -274,6 +281,11 @@ namespace LudumDare40.Components.Player
                     fsm.popState();
                 }
             }
+        }
+
+        public override void end()
+        {
+            _input.IsLocked = false;
         }
     }
 }

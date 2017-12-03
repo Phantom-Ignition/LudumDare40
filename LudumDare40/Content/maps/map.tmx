@@ -41,6 +41,6 @@
   <object id="44" name="Enemy ONE" type="EnemyOne" x="96" y="192" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="objects">
-  <object id="36" name="playerSpawn" x="193.583" y="128.667"/>
+  <object id="36" name="playerSpawn" x="295.25" y="150.667"/>
  </objectgroup>
 </map>
