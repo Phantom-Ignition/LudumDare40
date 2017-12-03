@@ -35,7 +35,7 @@ namespace LudumDare40.Components.Battle
         // Knockback
 
         private Vector2 _knockbackVelocity;
-        private float _knockbackTick;
+        private Vector2 _knockbackTick;
 
         //--------------------------------------------------
         // Platformer Object
@@ -96,8 +96,9 @@ namespace LudumDare40.Components.Battle
 
         public virtual void onHit(Vector2 knockback)
         {
-            _knockbackTick = 0.08f;
-            _knockbackVelocity = knockback.X * Vector2.UnitX * 60;
+            _knockbackTick = new Vector2(0.06f, 0.1f);
+            _knockbackVelocity = new Vector2(knockback.X * 60, -5);
+            Console.WriteLine(knockback);
         }
 
         public virtual void onDeath() { }
@@ -139,20 +140,30 @@ namespace LudumDare40.Components.Battle
 
         private bool applyKnockback()
         {
-            if (_knockbackTick > 0)
+            if (_knockbackTick.X > 0)
             {
-                _knockbackTick -= Time.deltaTime;
+                _knockbackTick.X -= Time.deltaTime;
+            }
+            if (_knockbackTick.Y > 0)
+            {
+                _knockbackTick.Y -= Time.deltaTime;
             }
 
             var mms = _platformerObject.maxMoveSpeed;
             var velx = _platformerObject.velocity.X;
-            if (_knockbackTick > 0 && (_knockbackVelocity.X > 0 || _knockbackVelocity.X < 0))
+            var vely = _platformerObject.velocity.Y;
+            bool appliedKb = false;
+            if (_knockbackTick.X > 0)
             {
-                _platformerObject.velocity.X = MathHelper.Clamp(velx + _platformerObject.moveSpeed * _knockbackVelocity.X * Time.deltaTime, -mms, mms);
-                return true;
+                _platformerObject.velocity.X = MathHelper.Clamp(velx + 1000 * _knockbackVelocity.X * Time.deltaTime, -mms, mms);
+                appliedKb = true;
             }
-
-            return false;
+            if (_knockbackTick.Y > 0)
+            {
+                _platformerObject.velocity.Y = MathHelper.Clamp(vely + 1000 * _knockbackVelocity.Y * Time.deltaTime, -mms, mms);
+                appliedKb = true;
+            }
+            return appliedKb;
         }
 
         public bool canSeeThePlayer()

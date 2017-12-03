@@ -10,11 +10,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Nez;
+using Nez.AI.GOAP;
 using Nez.Tiled;
 
 namespace LudumDare40.Components.Player
 {
-    public class PlayerComponent : Component, IUpdatable
+    public class PlayerComponent : Component, IUpdatable, IBattleEntity
     {
         //--------------------------------------------------
         // Animations
@@ -70,6 +71,12 @@ namespace LudumDare40.Components.Player
         private bool _forceMovement;
         private Vector2 _forceMovementVelocity;
         private bool _walljumpForcedMovement;
+
+        //--------------------------------------------------
+        // Knockback
+
+        private Vector2 _knockbackVelocity;
+        private Vector2 _knockbackTick;
 
         //--------------------------------------------------
         // Player Manager
@@ -211,8 +218,18 @@ namespace LudumDare40.Components.Player
         {
             _platformerObject = entity.getComponent<PlatformerObject>();
             var battleComponent = entity.getComponent<BattleComponent>();
-            battleComponent.setHp(5);
-            //battleComponent.battleEntity = this;
+            battleComponent.setHp(50);
+            battleComponent.battleEntity = this;
+        }
+
+        public void onHit(Vector2 knockback)
+        {
+            _knockbackTick = new Vector2(0.06f, 0.04f);
+            _knockbackVelocity = new Vector2(knockback.X * 60, -5);
+        }
+
+        public void onDeath()
+        {
         }
 
         public void forceMovement(Vector2 velocity, bool walljumpForcedMovement = false)
@@ -275,6 +292,10 @@ namespace LudumDare40.Components.Player
             coreSprite.spriteEffects = sprite.spriteEffects;
             coreSprite.setEnabled(_playerManager.HoldingCore);
 
+            // apply knockback before movement
+            if (applyKnockback())
+                return;
+
             var velocity = _forceMovement ? _forceMovementVelocity.X : Core.getGlobalManager<InputManager>().MovementAxis.value;
             if (canMove() && (velocity > 0 || velocity < 0))
             {
@@ -296,6 +317,34 @@ namespace LudumDare40.Components.Player
             }
 
             ForcedGround = false;
+        }
+
+        private bool applyKnockback()
+        {
+            if (_knockbackTick.X > 0)
+            {
+                _knockbackTick.X -= Time.deltaTime;
+            }
+            if (_knockbackTick.Y > 0)
+            {
+                _knockbackTick.Y -= Time.deltaTime;
+            }
+
+            var mms = _platformerObject.maxMoveSpeed;
+            var velx = _platformerObject.velocity.X;
+            var vely = _platformerObject.velocity.Y;
+            bool appliedKb = false;
+            if (_knockbackTick.X > 0)
+            {
+                _platformerObject.velocity.X = MathHelper.Clamp(velx + _platformerObject.moveSpeed * _knockbackVelocity.X * Time.deltaTime, -mms, mms);
+                appliedKb = true;
+            }
+            if (_knockbackTick.Y > 0)
+            {
+                _platformerObject.velocity.Y = MathHelper.Clamp(vely + _platformerObject.moveSpeed * _knockbackVelocity.Y * Time.deltaTime, -mms, mms);
+                appliedKb = true;
+            }
+            return appliedKb;
         }
 
         private bool canMove()
