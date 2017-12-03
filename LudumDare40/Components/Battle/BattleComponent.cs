@@ -39,6 +39,7 @@ namespace LudumDare40.Components.Battle
 
         private const float ImmunityDuration = 0.3f;
         public float ImmunityTime { get; set; }
+        public bool ForceImmunity { get; set; }
 
         //--------------------------------------------------
         // Hit Animation
@@ -119,6 +120,11 @@ namespace LudumDare40.Components.Battle
                     entity.destroy();
                 }
             }
+        }
+
+        public bool isOnImmunity()
+        {
+            return ForceImmunity || ImmunityTime > 0.0f;
         }
     }
 }

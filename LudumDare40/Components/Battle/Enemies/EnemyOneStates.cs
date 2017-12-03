@@ -140,7 +140,7 @@ namespace LudumDare40.Components.Battle.Enemies
         {
             if (entity.sprite.Looped)
             {
-                fsm.resetStackTo(new EnemyOnePatrolState());
+                fsm.resetStackTo(new EnemyOneFollowState());
             }
         }
     }

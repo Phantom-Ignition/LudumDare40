@@ -28,9 +28,10 @@ namespace LudumDare40.Components.Player
             JumpUpwards,
             JumpFalling,
             JumpLanding,
-            Hit,
             AttackOne,
             AttackTwo,
+            Hit,
+            Rolling,
             Dying
         }
 
@@ -107,9 +108,10 @@ namespace LudumDare40.Components.Player
                 {Animations.JumpUpwards, "jumpUpwards"},
                 {Animations.JumpFalling, "jumpFalling"},
                 {Animations.JumpLanding, "jumpLanding"},
-                {Animations.Hit, "jumpLanding"},
                 {Animations.AttackOne, "attack1"},
                 {Animations.AttackTwo, "attack2"},
+                {Animations.Rolling, "rolling"},
+                {Animations.Hit, "jumpLanding"},
                 {Animations.Dying, "dying"},
             };
 
@@ -162,14 +164,6 @@ namespace LudumDare40.Components.Player
                 new Rectangle(0, 128, 64, 64),
             }, new int[] { 0 }, new int[] { -9 });
 
-            sprite.CreateAnimation(am[Animations.Hit], 0.1f);
-            sprite.AddFrames(am[Animations.Hit], new List<Rectangle>()
-            {
-                new Rectangle(224, 32, 32, 32),
-                new Rectangle(256, 32, 32, 32),
-                new Rectangle(224, 32, 32, 32),
-            });
-
             sprite.CreateAnimation(am[Animations.AttackOne], 0.08f, false);
             sprite.AddFrames(am[Animations.AttackOne], new List<Rectangle>
             {
@@ -204,13 +198,33 @@ namespace LudumDare40.Components.Player
             });
             sprite.AddFramesToAttack(am[Animations.AttackTwo], 0, 1, 2, 3);
 
+            sprite.CreateAnimation(am[Animations.Rolling], 0.05f, false);
+            sprite.AddFrames(am[Animations.Rolling], new List<Rectangle>()
+            {
+                new Rectangle(256, 256, 64, 64),
+                new Rectangle(320, 256, 64, 64),
+                new Rectangle(0, 320, 64, 64),
+                new Rectangle(64, 320, 64, 64),
+                new Rectangle(128, 320, 64, 64),
+                new Rectangle(192, 320, 64, 64),
+                new Rectangle(256, 320, 64, 64),
+            }, new int[] { 0, 0, 0, 0, 0, 0, 0 }, new int[] { -9, -9, -9, -9, -9, -9, -9 });
+
+            sprite.CreateAnimation(am[Animations.Hit], 0.1f);
+            sprite.AddFrames(am[Animations.Hit], new List<Rectangle>()
+            {
+                new Rectangle(0, 256, 32, 32),
+                new Rectangle(64, 256, 32, 32),
+                new Rectangle(128, 256, 32, 32),
+            }, new int[] { 0, 0, 0, 0, 0, 0 }, new int[] { -9, -9, -9, -9, -9, -9 });
+
             sprite.CreateAnimation(am[Animations.Dying], 0.1f);
             sprite.AddFrames(am[Animations.Dying], new List<Rectangle>()
             {
                 new Rectangle(224, 32, 32, 32),
                 new Rectangle(256, 32, 32, 32),
                 new Rectangle(224, 32, 32, 32),
-            });
+            }, new int[] { 0, 0, 0, 0, 0, 0 }, new int[] { -9, -9, -9, -9, -9, -9 });
 
             // Create the core sprite
             var coreTexture = entity.scene.content.Load<Texture2D>(Content.Characters.core);

@@ -54,7 +54,7 @@ namespace LudumDare40.Components.Player
 
             if (entity.isOnGround())
             {
-                if (_input.InteractionButton.isPressed)
+                if (_input.RollButton.isPressed)
                 {
                     fsm.pushState(new RollingState());
                 }
@@ -144,16 +144,23 @@ namespace LudumDare40.Components.Player
 
     public class RollingState : PlayerState
     {
+        private int[] _immunityFrames;
+
         public override void begin()
         {
-            entity.SetAnimation(PlayerComponent.Animations.Hit);
+            _immunityFrames = new[] {1, 2};
+            entity.SetAnimation(PlayerComponent.Animations.Rolling);
             entity.forceMovement(Vector2.UnitX * (entity.sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1));
-            entity.battleComponent.ImmunityTime = 0.3f;
             entity.isRolling = true;
-            Core.schedule(0.3f, entity, t =>
+            Core.schedule(0.35f, entity, t =>
             {
                 fsm.popState();
             });
+        }
+
+        public override void update()
+        {
+            entity.battleComponent.ForceImmunity = _immunityFrames.contains(entity.sprite.CurrentFrame);
         }
 
         public override void end()

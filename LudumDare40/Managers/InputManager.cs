@@ -14,6 +14,9 @@ namespace LudumDare40.Managers
         private VirtualButton _takeThrowButton;
         public VirtualButton TakeThrowButton => _takeThrowButton;
 
+        private VirtualButton _rollButton;
+        public VirtualButton RollButton => _rollButton;
+
         private VirtualButton _jumpButton;
         public VirtualButton JumpButton => _jumpButton;
 
@@ -44,12 +47,17 @@ namespace LudumDare40.Managers
 
             _takeThrowButton = new VirtualButton();
             _takeThrowButton
-                .addKeyboardKey(Keys.D)
+                .addKeyboardKey(Keys.S)
                 .addGamePadButton(0, Buttons.Y);
+
+            _rollButton = new VirtualButton();
+            _rollButton
+                .addKeyboardKey(Keys.D)
+                .addGamePadButton(0, Buttons.B);
 
             _jumpButton = new VirtualButton();
             _jumpButton
-                .addKeyboardKey(Keys.S)
+                .addKeyboardKey(Keys.W)
                 .addGamePadButton(0, Buttons.A);
 
             _upButton = new VirtualButton();

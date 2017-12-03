@@ -42,7 +42,7 @@ namespace LudumDare40
             base.Draw(new GameTime());
 
             // Set first scene
-            scene = new SceneTitle();
+            scene = new SceneMap();
         }
     }
 }
