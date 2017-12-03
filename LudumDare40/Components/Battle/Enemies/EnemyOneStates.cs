@@ -79,7 +79,7 @@ namespace LudumDare40.Components.Battle.Enemies
             {
                 fsm.pushState(new EnemyOnePunchState());
             }
-            else if (_electricalDischargeCooldown <= 0.0f && entity.canSeeThePlayer() && Math.Abs(distance) < 40)
+            else if (entity.dangerousStage > 1 && _electricalDischargeCooldown <= 0.0f && entity.canSeeThePlayer() && Math.Abs(distance) < 40)
             {
                 _electricalDischargeCooldown = 0.8f;
                 var ran = Random.nextFloat();
@@ -133,6 +133,30 @@ namespace LudumDare40.Components.Battle.Enemies
             {
                 fsm.popState();
             }
+        }
+    }
+
+    public class EnemyOneHitState : EnemyOneState
+    {
+        public override void begin()
+        {
+            entity.sprite.play("hit");
+        }
+
+        public override void update()
+        {
+            if (entity.sprite.Looped)
+            {
+                fsm.resetStackTo(new EnemyOnePatrolState());
+            }
+        }
+    }
+
+    public class EnemyOneDyingState : EnemyOneState
+    {
+        public override void begin()
+        {
+            entity.sprite.play("dying");
         }
     }
 }

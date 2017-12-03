@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LudumDare40.Components.Player;
 using LudumDare40.Components.Sprites;
 using LudumDare40.Managers;
+using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
@@ -71,6 +72,13 @@ namespace LudumDare40.Components.Battle
             _battleComponent = entity.getComponent<BattleComponent>();
             _battleComponent.setHp(5);
             _battleComponent.battleEntity = this;
+
+            entity.setTag(SceneMap.ENEMIES);
+        }
+
+        public void increaseDangerousStage()
+        {
+            dangerousStage++;
         }
 
         public void forceMovement(Vector2 velocity)
@@ -88,10 +96,11 @@ namespace LudumDare40.Components.Battle
 
         public virtual void onHit(Vector2 knockback)
         {
-            //platformerObject.velocity.X = knockback.X * 200;
-            _knockbackTick = 0.1f;
+            _knockbackTick = 0.08f;
             _knockbackVelocity = knockback.X * Vector2.UnitX * 60;
         }
+
+        public virtual void onDeath() { }
 
         public virtual void update()
         {
@@ -121,7 +130,6 @@ namespace LudumDare40.Components.Battle
 
                 po.velocity.X = (int)MathHelper.Clamp(po.velocity.X + moveSpeed * velocity * Time.deltaTime, -mms, mms);
                 sprite.spriteEffects = velocity < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-
             }
             else
             {

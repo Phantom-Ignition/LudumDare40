@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using LudumDare40.Components.Battle;
 using LudumDare40.Components.Sprites;
 using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
@@ -43,6 +44,12 @@ namespace LudumDare40.Components.Map
         {
             _isActivated = true;
             sprite.play("activated");
+
+            var enemies = entity.scene.findEntitiesWithTag(SceneMap.ENEMIES);
+            foreach (var enemy in enemies)
+            {
+                enemy.getComponent<EnemyComponent>().increaseDangerousStage();
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ namespace LudumDare40.Components.Battle
     public interface IBattleEntity
     {
         void onHit(Vector2 knockback);
+        void onDeath();
     }
 
     class BattleComponent: Component, IUpdatable
@@ -80,6 +81,7 @@ namespace LudumDare40.Components.Battle
                 _animatedSprite.play("dying");
                 _dying = true;
                 _deathTime = DeathDuration;
+                battleEntity?.onDeath();
             }
         }
 

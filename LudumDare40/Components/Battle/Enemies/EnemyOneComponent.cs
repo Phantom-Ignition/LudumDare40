@@ -24,6 +24,8 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void initialize()
         {
+            base.initialize();
+
             var texture = entity.scene.content.Load<Texture2D>(Content.Characters.enemyOne);
             sprite = entity.addComponent(new AnimatedSprite(texture, "stand"));
             sprite.CreateAnimation("stand", 0.25f);
@@ -91,12 +93,24 @@ namespace LudumDare40.Components.Battle.Enemies
             });
             sprite.AddFramesToAttack("electricalDischarge", 0, 1, 2, 3, 4, 5, 6);
 
-            sprite.CreateAnimation("dying", 0.2f, false);
+            sprite.CreateAnimation("hit", 0.1f, false);
+            sprite.AddFrames("hit", new List<Rectangle>
+            {
+                new Rectangle(268, 186, 67, 62),
+                new Rectangle(335, 186, 67, 62),
+            }, new[] { 0, 0, 0, 0, 0, 0 }, new[] { -4, -4, -4, -4, -4, -4 });
+
+            sprite.CreateAnimation("dying", 0.1f, false);
             sprite.AddFrames("dying", new List<Rectangle>
             {
-                new Rectangle(268, 186, 64, 64),
-                new Rectangle(335, 186, 64, 64),
-            }, new[] { 0, 0, 0, 0, 0, 0 }, new[] { -4, -4, -4, -4, -4, -4 });
+                new Rectangle(402, 186, 67, 62),
+                new Rectangle(0, 248, 67, 62),
+                new Rectangle(67, 248, 67, 62),
+                new Rectangle(134, 248, 67, 62),
+                new Rectangle(201, 248, 67, 62),
+                new Rectangle(201, 248, 67, 62),
+                new Rectangle(268, 248, 67, 62),
+            }, new[] { 0, 0, 0, 0, 0, 0, 0 }, new[] { -4, -4, -4, -4, -4, -4, -4 });
 
             // FSM
             _fsm = new FiniteStateMachine<EnemyOneState, EnemyOneComponent>(this, new EnemyOnePatrolState());
@@ -111,6 +125,20 @@ namespace LudumDare40.Components.Battle.Enemies
             // Change move speed
             platformerObject.maxMoveSpeed = 60;
             platformerObject.moveSpeed = 60;
+        }
+
+        public override void onHit(Vector2 knockback)
+        {
+            if (dangerousStage <= 1)
+            {
+                base.onHit(knockback);
+                FSM.changeState(new EnemyOneHitState());
+            }
+        }
+
+        public override void onDeath()
+        {
+            FSM.changeState(new EnemyOneDyingState());
         }
 
         public override void update()
