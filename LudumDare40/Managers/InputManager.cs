@@ -65,6 +65,7 @@ namespace LudumDare40.Managers
             _movementAxis = new VirtualIntegerAxis();
             _movementAxis
                 .addKeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Left, Keys.Right)
+                .addGamePadLeftStickX()
                 .addGamePadDPadLeftRight();
         }
 
