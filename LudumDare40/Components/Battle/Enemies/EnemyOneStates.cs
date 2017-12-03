@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using LudumDare40.Components.Player;
-using LudumDare40.FSM;
-using LudumDare40.Managers;
+﻿using LudumDare40.FSM;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
+using System;
 using Random = Nez.Random;
 
 namespace LudumDare40.Components.Battle.Enemies

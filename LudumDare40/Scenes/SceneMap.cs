@@ -65,6 +65,7 @@ namespace LudumDare40.Scenes
         public override void initialize()
         {
             addRenderer(new DefaultRenderer());
+            clearColor = new Color(58, 61, 101);
             setupMap();
             setupPlayer();
             setupEnemies();
@@ -77,7 +78,6 @@ namespace LudumDare40.Scenes
             setupWater();
             setupMapTexts();
             setupPostProcessors();
-            clearColor = new Color(58, 61, 101);
         }
 
         public override void onStart()
@@ -149,6 +149,7 @@ namespace LudumDare40.Scenes
                 entity.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
                 entity.addComponent<PlatformerObject>();
                 entity.addComponent<BattleComponent>();
+                entity.addComponent(new BoxCollider(-10f, -15f, 20f, 35f));
 
                 var instance = createEnemyInstance(enemy.type);
                 var enemyComponent = entity.addComponent(instance);

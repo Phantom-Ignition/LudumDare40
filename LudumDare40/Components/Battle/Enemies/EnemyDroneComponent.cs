@@ -33,7 +33,7 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(192, 0, 64, 64),
                 new Rectangle(256, 0, 64, 64),
                 new Rectangle(320, 0, 64, 64),
-            }, new[] { 0, 0, 0, 0, 0, 0 }, new[] { -40, -40, -40, -40, -40, -40 });
+            });
 
             sprite.CreateAnimation("attack", 0.1f);
             sprite.AddFrames("attack", new List<Rectangle>

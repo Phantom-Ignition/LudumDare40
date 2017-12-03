@@ -113,9 +113,6 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(268, 248, 67, 62),
             }, new[] { 0, 0, 0, 0, 0, 0, 0 }, new[] { -4, -4, -4, -4, -4, -4, -4 });
 
-            // Init collisors
-            entity.addComponent(new BoxCollider(-10f, -15f, 20f, 35f));
-
             // FSM
             _fsm = new FiniteStateMachine<EnemyOneState, EnemyOneComponent>(this, new EnemyOnePatrolState());
 

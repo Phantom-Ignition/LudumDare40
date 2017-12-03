@@ -79,6 +79,11 @@ namespace LudumDare40.Components.Player
         private Vector2 _knockbackTick;
 
         //--------------------------------------------------
+        // Battle Component
+
+        public BattleComponent battleComponent;
+
+        //--------------------------------------------------
         // Rolling
 
         public bool isRolling;
@@ -222,7 +227,7 @@ namespace LudumDare40.Components.Player
         public override void onAddedToEntity()
         {
             _platformerObject = entity.getComponent<PlatformerObject>();
-            var battleComponent = entity.getComponent<BattleComponent>();
+            battleComponent = entity.getComponent<BattleComponent>();
             battleComponent.setHp(50);
             battleComponent.battleEntity = this;
         }

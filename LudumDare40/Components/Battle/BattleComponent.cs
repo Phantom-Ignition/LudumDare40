@@ -12,7 +12,7 @@ namespace LudumDare40.Components.Battle
         void onDeath();
     }
 
-    class BattleComponent: Component, IUpdatable
+    public class BattleComponent: Component, IUpdatable
     {
         //--------------------------------------------------
         // Battle Entity

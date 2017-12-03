@@ -148,6 +148,7 @@ namespace LudumDare40.Components.Player
         {
             entity.SetAnimation(PlayerComponent.Animations.Hit);
             entity.forceMovement(Vector2.UnitX * (entity.sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1));
+            entity.battleComponent.ImmunityTime = 0.3f;
             entity.isRolling = true;
             Core.schedule(0.3f, entity, t =>
             {
