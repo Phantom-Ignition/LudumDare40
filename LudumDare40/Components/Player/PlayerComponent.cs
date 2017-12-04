@@ -111,6 +111,11 @@ namespace LudumDare40.Components.Player
 
         public PlayerManager playerManager;
 
+        //--------------------------------------------------
+        // Can take damage
+
+        public virtual bool canTakeDamage => true;
+
         //----------------------//------------------------//
 
         public override void initialize()

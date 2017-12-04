@@ -53,7 +53,7 @@ namespace LudumDare40.Scenes
         public const int PLAYER = 5;
 
         //--------------------------------------------------
-        // PostProcessors
+        // Post Processors
 
         private CinematicLetterboxPostProcessor _cinematicPostProcessor;
 
@@ -72,6 +72,11 @@ namespace LudumDare40.Scenes
         // Reactors
 
         private List<Entity> _reactors;
+
+        //--------------------------------------------------
+        // Boss battle active
+
+        private bool _bossBattleActive;
 
         //--------------------------------------------------
         // HUD
@@ -202,7 +207,6 @@ namespace LudumDare40.Scenes
                 if (enemy.type == "EnemyBoss")
                 {
                     entity.name = "boss";
-                    entity.setEnabled(false);
                 }
             }
         }
@@ -428,21 +432,10 @@ namespace LudumDare40.Scenes
             base.update();
 
             _backgroundSprite.entity.position = _camera.camera.position;
-
-
+            
             updateHud();
 
-            if (Input.isKeyPressed(Keys.C))
-            {
-                Core.startCoroutine(
-                    Core.getGlobalManager<SystemManager>().flashPostProcessor.animate(0.5f)
-                );
-            }
-
-            if (Input.isKeyPressed(Keys.P))
-            {
-                _camera.startCameraShake(1, 500);
-            }
+            updateBossActivation();
 
             // Update cinematic
             /*
@@ -458,6 +451,17 @@ namespace LudumDare40.Scenes
             }*/
         }
 
+        private void updateBossActivation()
+        {
+            if (_bossBattleActive) return;
+            if (Core.getGlobalManager<PlayerManager>().CoresCollected == 3)
+            {
+                _bossBattleActive = true;
+                var boss = findEntity("boss").getComponent<EnemyBossComponent>();
+                boss.wakeUp();
+            }
+        }
+
         private void updateHud()
         {
             var camerapos = _camera.camera.position - virtualSize.ToVector2() / 2;
@@ -468,12 +472,14 @@ namespace LudumDare40.Scenes
             _playerHudFillSprite.setSubtexture(recreateSubtextureWithRate(playerSubtexture, player.hpRate()));
             _playerHudFillSprite.setOriginNormalized(Vector2.Zero);
 
-            var boss = findEntity("boss").getComponent<EnemyBossComponent>();
+            var boss = findEntity("boss");
+            if (boss == null) return;
+            var bossBattler = boss.getComponent<EnemyBossComponent>();
             var bossSubtexture = _playerHudFillSprite.subtexture;
-            _bossHudFillSprite.setSubtexture(recreateSubtextureWithRate(bossSubtexture, boss.hpRate()));
+            _bossHudFillSprite.setSubtexture(recreateSubtextureWithRate(bossSubtexture, bossBattler.hpRate()));
             _bossHudFillSprite.setOriginNormalized(Vector2.Zero);
-            _hudEntities[2].enabled = boss.isBattleActive;
-            _hudEntities[3].enabled = boss.isBattleActive;
+            _hudEntities[2].enabled = bossBattler.isBattleActive;
+            _hudEntities[3].enabled = bossBattler.isBattleActive;
         }
 
         private Subtexture recreateSubtextureWithRate(Subtexture subtexture, float rate)

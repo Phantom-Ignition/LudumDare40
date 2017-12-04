@@ -64,6 +64,11 @@ namespace LudumDare40.Components.Battle
 
         public int dangerousStage;
 
+        //--------------------------------------------------
+        // Can take damage
+
+        public virtual bool canTakeDamage => true;
+
         //----------------------//------------------------//
 
         public EnemyComponent(bool patrolStartRight)

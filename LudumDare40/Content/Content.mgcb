@@ -725,3 +725,9 @@
 /processorParam:TextureFormat=Color
 /build:hud/player_hp.png
 
+#begin audios/robot.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/robot.ogg
+

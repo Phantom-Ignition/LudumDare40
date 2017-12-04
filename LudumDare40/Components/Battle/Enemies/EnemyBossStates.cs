@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LudumDare40.Components.Sprites;
+﻿using LudumDare40.Components.Sprites;
+using LudumDare40.Extensions;
 using LudumDare40.FSM;
 using LudumDare40.Managers;
 using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
-using Nez.Sprites;
+using System.Collections.Generic;
 using Random = Nez.Random;
-using LudumDare40.Extensions;
 
 namespace LudumDare40.Components.Battle.Enemies
 {
@@ -25,6 +20,47 @@ namespace LudumDare40.Components.Battle.Enemies
         public override void end() { }
 
         public override void update() { }
+    }
+
+    public class EnemyBossInactive : EnemyBossStates
+    {
+        public override void begin()
+        {
+            entity.sprite.play("inactive");
+        }
+    }
+
+    public class EnemyBossWakingUp : EnemyBossStates
+    {
+        private bool _playedEffects;
+
+        public override void begin()
+        {
+            Core.getGlobalManager<InputManager>().IsLocked = true;
+            entity.sprite.play("wakingUp");
+        }
+
+        public override void update()
+        {
+            if (entity.sprite.Looped)
+            {
+                if (!_playedEffects)
+                {
+                    _playedEffects = true;
+                    AudioManager.robot.Play(1.0f);
+                    Core.startCoroutine(
+                        Core.getGlobalManager<SystemManager>().flashPostProcessor.animate(1.5f)
+                    );
+                }
+                fsm.resetStackTo(new EnemyBossWaiting());
+            }
+        }
+
+        public override void end()
+        {
+            entity.isBattleActive = true;
+            Core.getGlobalManager<InputManager>().IsLocked = false;
+        }
     }
 
     public class EnemyBossWaiting : EnemyBossStates
@@ -282,6 +318,12 @@ namespace LudumDare40.Components.Battle.Enemies
         public override void begin()
         {
             entity.sprite.play("dying");
+            Core.getGlobalManager<InputManager>().IsLocked = true;
+        }
+
+        public override void end()
+        {
+            Core.getGlobalManager<InputManager>().IsLocked = true;
         }
     }
 }

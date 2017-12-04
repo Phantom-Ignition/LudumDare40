@@ -18,6 +18,8 @@ namespace LudumDare40.Managers
             }
         }
 
+        public int CoresCollected { get; set; }
+
         public void update() { }
     }
 }

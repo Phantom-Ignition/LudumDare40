@@ -26,6 +26,7 @@ namespace Nez
 			public const string missile = @"audios\missile";
 			public const string mystOnTheMoor = @"audios\mystOnTheMoor";
 			public const string punch = @"audios\punch";
+			public const string robot = @"audios\robot";
 			public const string roll = @"audios\roll";
 			public const string select = @"audios\select";
 			public const string shot = @"audios\shot";

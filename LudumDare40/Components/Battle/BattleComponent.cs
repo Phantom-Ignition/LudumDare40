@@ -8,6 +8,8 @@ namespace LudumDare40.Components.Battle
 {
     public interface IBattleEntity
     {
+        bool canTakeDamage { get; }
+
         void onHit(Vector2 knockback);
         void onDeath();
     }
@@ -82,7 +84,7 @@ namespace LudumDare40.Components.Battle
 
         public void onHit(Vector2 knockback)
         {
-            if (_dying) return;
+            if (_dying || battleEntity != null && !battleEntity.canTakeDamage) return;
 
             knockback *= Vector2.UnitX;
             battleEntity?.onHit(knockback);

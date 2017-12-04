@@ -26,6 +26,7 @@ namespace LudumDare40.Managers
         public static SoundEffect laser;
         public static SoundEffect missile;
         public static SoundEffect punch;
+        public static SoundEffect robot;
         public static SoundEffect roll;
         public static SoundEffect select;
         public static SoundEffect shot;
@@ -60,6 +61,7 @@ namespace LudumDare40.Managers
             laser = load(Content.Audios.laser);
             missile = load(Content.Audios.missile);
             punch = load(Content.Audios.punch);
+            robot = load(Content.Audios.robot);
             roll = load(Content.Audios.roll);
             select = load(Content.Audios.select);
             shot = load(Content.Audios.shot);

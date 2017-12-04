@@ -33,6 +33,11 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public bool isBattleActive;
 
+        //--------------------------------------------------
+        // Can take damage
+
+        public override bool canTakeDamage => isBattleActive;
+
         //----------------------//------------------------//
 
         public EnemyBossComponent(bool patrolStartRight) : base(patrolStartRight) { }
@@ -43,7 +48,8 @@ namespace LudumDare40.Components.Battle.Enemies
 
             // Init sprite
             var texture = entity.scene.content.Load<Texture2D>(Content.Characters.boss);
-            sprite = entity.addComponent(new AnimatedSprite(texture, "stand"));
+            sprite = entity.addComponent(new AnimatedSprite(texture, "inactive"));
+
             sprite.CreateAnimation("stand", 0.25f);
             sprite.AddFrames("stand", new List<Rectangle>
             {
@@ -53,6 +59,29 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(705, 0, 235, 140),
                 new Rectangle(940, 0, 235, 140),
                 new Rectangle(1175, 0, 235, 140),
+            });
+
+            sprite.CreateAnimation("inactive", 0.25f, false);
+            sprite.AddFrames("inactive", new List<Rectangle>
+            {
+                new Rectangle(705, 980, 235, 140),
+            });
+
+            sprite.CreateAnimation("wakingUp", 0.15f, false);
+            sprite.AddFrames("wakingUp", new List<Rectangle>
+            {
+                new Rectangle(705, 980, 235, 140),
+                new Rectangle(940, 980, 235, 140),
+                new Rectangle(1175, 980, 235, 140),
+                new Rectangle(1410, 980, 235, 140),
+                new Rectangle(1645, 980, 235, 140),
+                new Rectangle(1880, 980, 235, 140),
+                new Rectangle(2115, 980, 235, 140),
+                new Rectangle(2350, 980, 235, 140),
+                new Rectangle(2585, 980, 235, 140),
+                new Rectangle(0, 1120, 235, 140),
+                new Rectangle(235, 1120, 235, 140),
+                new Rectangle(470, 1120, 235, 140),
             });
 
             sprite.CreateAnimation("clawAttack", 0.08f, false);
@@ -195,7 +224,7 @@ namespace LudumDare40.Components.Battle.Enemies
             };
 
             // FSM
-            _fsm = new FiniteStateMachine<EnemyBossStates, EnemyBossComponent>(this, new EnemyBossWaiting());
+            _fsm = new FiniteStateMachine<EnemyBossStates, EnemyBossComponent>(this, new EnemyBossInactive());
 
             // add hurt box
             entity.addComponent(new HurtCollider(-30, -55, 146, 102));
@@ -203,7 +232,7 @@ namespace LudumDare40.Components.Battle.Enemies
             // View range
             areaOfSight = entity.addComponent(new AreaOfSightCollider(-120, -50, 250, 96));
 
-            // Deaticvate from battle
+            // Deactivate from battle
             isBattleActive = false;
         }
 
@@ -220,6 +249,11 @@ namespace LudumDare40.Components.Battle.Enemies
 
             var collider = entity.getComponent<BoxCollider>();
             collider.height += 27;
+        }
+
+        public void wakeUp()
+        {
+            _fsm.changeState(new EnemyBossWakingUp());
         }
 
         public void launchMissiles(int index)

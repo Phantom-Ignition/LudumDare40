@@ -15,7 +15,7 @@ namespace LudumDare40
         {
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
-            //debugRenderEnabled = true;
+            debugRenderEnabled = true;
 
             IsFixedTimeStep = true;
 

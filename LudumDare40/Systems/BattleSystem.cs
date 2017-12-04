@@ -17,7 +17,7 @@ namespace LudumDare40.Systems
                 {
                     if (otherEntity == entity) continue;
                     var otherBattler = otherEntity.getComponent<BattleComponent>();
-                    if (otherBattler.isOnImmunity() || otherBattler.Dying) continue;
+                    if (otherBattler.isOnImmunity() || otherBattler.Dying || !otherBattler.battleEntity.canTakeDamage) continue;
                     var collider = getBattleCollider(otherEntity);
                     foreach (var attackCollider in sprite.getCurrentFrame().AttackColliders)
                     {

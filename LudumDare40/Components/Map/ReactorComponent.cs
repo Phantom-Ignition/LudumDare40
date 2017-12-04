@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using LudumDare40.Components.Battle;
 using LudumDare40.Components.Sprites;
+using LudumDare40.Managers;
 using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -50,6 +51,8 @@ namespace LudumDare40.Components.Map
             {
                 enemy.getComponent<EnemyComponent>().increaseDangerousStage();
             }
+
+            Core.getGlobalManager<PlayerManager>().CoresCollected++;
         }
     }
 }
