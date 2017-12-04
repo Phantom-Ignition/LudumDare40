@@ -1,5 +1,4 @@
 ﻿using LudumDare40.Components.Battle;
-using LudumDare40.Components.Player;
 using LudumDare40.Components.Sprites;
 using Nez;
 
@@ -18,13 +17,19 @@ namespace LudumDare40.Systems
                 {
                     if (otherEntity == entity) continue;
                     var otherBattler = otherEntity.getComponent<BattleComponent>();
-                    if (otherBattler.isOnImmunity()) continue;
+                    if (otherBattler.isOnImmunity() || otherBattler.Dying) continue;
                     var collider = getBattleCollider(otherEntity);
                     foreach (var attackCollider in sprite.getCurrentFrame().AttackColliders)
                     {
                         CollisionResult collisionResult;
                         if (attackCollider.collidesWith(collider, out collisionResult))
                         {
+                            // Freeze time
+                            Time.timeScale = 0.2f;
+                            Core.schedule(0.01f, t =>
+                            {
+                                Time.timeScale = 1;
+                            });
                             otherBattler.onHit(collisionResult);
                         }
                     }

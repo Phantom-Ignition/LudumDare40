@@ -67,7 +67,7 @@ namespace LudumDare40.FSM
         {
             _requestingState = state;
         }
-
+        
         public void popState()
         {
             _stateStack.Peek()?.end();

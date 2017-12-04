@@ -147,7 +147,7 @@ namespace LudumDare40.Components.Battle.Enemies
             }
             if (entity.sprite.Looped)
             {
-                fsm.popState();
+                fsm.resetStackTo(new EnemyDroneFollowState());
             }
         }
     }
@@ -171,7 +171,7 @@ namespace LudumDare40.Components.Battle.Enemies
             }
             if (entity.sprite.Looped)
             {
-                fsm.popState();
+                fsm.resetStackTo(new EnemyDroneFollowState());
             }
         }
     }

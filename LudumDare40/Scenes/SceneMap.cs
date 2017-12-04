@@ -376,6 +376,10 @@ namespace LudumDare40.Scenes
                 );
             }
 
+            if (Input.isKeyPressed(Keys.F))
+            {
+            }
+
             // Update cinematic
             /*
             var cinematicAmount = Core.getGlobalManager<SystemManager>().cinematicAmount;

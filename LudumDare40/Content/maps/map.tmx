@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="58">
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" nextobjectid="60">
  <properties>
   <property name="collisionLayer" value="collision"/>
   <property name="defaultLayers" value="collision"/>
@@ -239,6 +239,18 @@
  </objectgroup>
  <objectgroup name="enemies">
   <object id="53" name="Enemy Drone" type="EnemyDrone" x="258.333" y="223.667" width="32" height="32">
+   <properties>
+    <property name="patrolStartRight" type="bool" value="false"/>
+    <property name="patrolTime" type="float" value="1.5"/>
+   </properties>
+  </object>
+  <object id="58" name="Enemy Drone" type="EnemyOne" x="704" y="582" width="32" height="32">
+   <properties>
+    <property name="patrolStartRight" type="bool" value="false"/>
+    <property name="patrolTime" type="float" value="1.5"/>
+   </properties>
+  </object>
+  <object id="59" name="Enemy Drone" type="EnemyOne" x="509" y="583" width="32" height="32">
    <properties>
     <property name="patrolStartRight" type="bool" value="false"/>
     <property name="patrolTime" type="float" value="1.5"/>

@@ -127,7 +127,7 @@ namespace LudumDare40.Components.Battle.Enemies
         {
             if (entity.sprite.Looped)
             {
-                fsm.popState();
+                fsm.pushState(new EnemyOneFollowState());
             }
         }
     }
@@ -149,7 +149,7 @@ namespace LudumDare40.Components.Battle.Enemies
         {
             if (entity.sprite.Looped)
             {
-                fsm.popState();
+                fsm.pushState(new EnemyOneFollowState());
             }
         }
     }
