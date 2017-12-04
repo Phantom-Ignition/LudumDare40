@@ -26,7 +26,7 @@ namespace Nez
 			public const string roll = @"audios\roll";
 			public const string select = @"audios\select";
 			public const string shot = @"audios\shot";
-			public const string switchSe = @"audios\switch";
+			public const string switchSe = @"audios\switchSe";
 			public const string sword1 = @"audios\sword1";
 			public const string sword2 = @"audios\sword2";
 			public const string sword3 = @"audios\sword3";
@@ -41,6 +41,14 @@ namespace Nez
 			public const string enemyDrone = @"characters\enemyDrone";
 			public const string enemyOne = @"characters\enemyOne";
 			public const string player = @"characters\Player";
+		}
+
+		public static class Effects
+		{
+			public const string bulletEffect = @"effects\bulletEffect";
+			public const string jumpEffect = @"effects\jumpEffect";
+			public const string rollEffect = @"effects\rollEffect";
+			public const string wallSlideEffect = @"effects\wallSlideEffect";
 		}
 
 		public static class Fonts
@@ -111,6 +119,8 @@ namespace Nez
 
 		public const string map = @"map";
 		public const string tileset = @"tileset";
+
+
     }
 }
 

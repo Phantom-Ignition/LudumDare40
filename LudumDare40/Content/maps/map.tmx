@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="15" height="8" tilewidth="32" tileheight="32" nextobjectid="52">
+<map version="1.0" tiledversion="1.0.2" orientation="orthogonal" renderorder="right-down" width="15" height="8" tilewidth="32" tileheight="32" nextobjectid="54">
  <properties>
   <property name="collisionLayer" value="collision"/>
   <property name="defaultLayers" value="collision"/>
@@ -32,15 +32,15 @@
 </data>
  </layer>
  <objectgroup color="#595642" name="reactors">
-  <object id="42" name="reactor1" x="352" y="192" width="32" height="32"/>
+  <object id="42" name="reactor1" x="224" y="192" width="32" height="32"/>
  </objectgroup>
  <objectgroup color="#bdbd00" name="coreDrops">
   <object id="43" name="coredrop" x="42.6667" y="111.167" width="25.3333" height="26"/>
  </objectgroup>
  <objectgroup name="enemies">
-  <object id="44" name="Enemy Drone" type="EnemyDrone" x="264" y="175.667" width="32" height="32"/>
+  <object id="53" name="Enemy Drone" type="EnemyDrone" x="320" y="124.667" width="32" height="32"/>
  </objectgroup>
  <objectgroup name="objects">
-  <object id="36" name="playerSpawn" x="320.917" y="198"/>
+  <object id="36" name="playerSpawn" x="387.583" y="149.334"/>
  </objectgroup>
 </map>

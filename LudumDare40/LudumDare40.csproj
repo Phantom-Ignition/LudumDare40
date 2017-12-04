@@ -60,6 +60,7 @@
     <Compile Include="Components\Map\ReactorComponent.cs" />
     <Compile Include="Components\Map\LadderComponent.cs" />
     <Compile Include="Components\Map\RaftComponent.cs" />
+    <Compile Include="Components\Map\SpriteEffectComponent.cs" />
     <Compile Include="Components\Map\TransferComponent.cs" />
     <Compile Include="Components\PlatformerObject.cs" />
     <Compile Include="Components\Player\PlayerComponent.cs" />

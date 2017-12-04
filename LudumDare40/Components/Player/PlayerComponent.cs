@@ -86,6 +86,14 @@ namespace LudumDare40.Components.Player
         private Vector2 _knockbackTick;
 
         //--------------------------------------------------
+        // Effects
+
+        private Texture2D _wallSlideEffectTexture;
+        private Texture2D _jumpEffectTexture;
+        private Texture2D _rollEffectTexture;
+        private int _effectsCount;
+
+        //--------------------------------------------------
         // Battle Component
 
         public BattleComponent battleComponent;
@@ -178,7 +186,7 @@ namespace LudumDare40.Components.Player
                 new Rectangle(192, 128, 64, 64),
                 new Rectangle(256, 128, 64, 64),
                 new Rectangle(320, 128, 64, 64),
-            }, new [] { 0, 0, 0, 0 }, new[] { -12, -12, -12, -12 });
+            }, new [] { 0, 0, 0, 0 }, new[] { -9, -9, -9, -9 });
             sprite.AddAttackCollider(am[Animations.AttackOne], new List<List<Rectangle>>
             {
                 new List<Rectangle>() { },
@@ -245,7 +253,13 @@ namespace LudumDare40.Components.Player
             coreSprite.CloneAnimationsFrom(sprite, coreTexture);
             coreSprite.setEnabled(false);
 
+            // init fsm
             _fsm = new FiniteStateMachine<PlayerState, PlayerComponent>(this, new StandState());
+
+            // init effects
+            _wallSlideEffectTexture = entity.scene.content.Load<Texture2D>(Content.Effects.wallSlideEffect);
+            _jumpEffectTexture = entity.scene.content.Load<Texture2D>(Content.Effects.jumpEffect);
+            _rollEffectTexture = entity.scene.content.Load<Texture2D>(Content.Effects.rollEffect);
 
             // Set player manager
             _playerManager = Core.getGlobalManager<PlayerManager>();
@@ -401,6 +415,66 @@ namespace LudumDare40.Components.Player
                 appliedKb = true;
             }
             return appliedKb;
+        }
+
+        public void createJumpEffect()
+        {
+            var effect = entity.scene.createEntity($"effect:playerComponent({getEffectCount()})");
+            var effectSprite = effect.addComponent(new AnimatedSprite(_jumpEffectTexture, "default"));
+            effectSprite.CreateAnimation("default", 0.08f, false);
+            effectSprite.AddFrames("default", new List<Rectangle>()
+            {
+                new Rectangle(0, 0, 17, 10),
+                new Rectangle(17, 0, 17, 10),
+                new Rectangle(34, 0, 17, 10),
+            });
+            effectSprite.spriteEffects = sprite.spriteEffects;
+            var collider = entity.getComponent<BoxCollider>();
+            effect.position = new Vector2(collider.bounds.center.X, collider.bounds.bottom - effectSprite.height / 2);
+            effect.addComponent<SpriteEffectComponent>();
+        }
+
+        public void createRollEffect()
+        {
+            var effect = entity.scene.createEntity($"effect:playerComponent({getEffectCount()})");
+            var effectSprite = effect.addComponent(new AnimatedSprite(_rollEffectTexture, "default"));
+            effectSprite.CreateAnimation("default", 0.08f, false);
+            effectSprite.AddFrames("default", new List<Rectangle>()
+            {
+                new Rectangle(0, 0, 17, 10),
+                new Rectangle(17, 0, 17, 10),
+                new Rectangle(34, 0, 17, 10),
+            });
+            effectSprite.spriteEffects = sprite.spriteEffects;
+            var collider = entity.getComponent<BoxCollider>();
+            effect.position = new Vector2(collider.bounds.center.X, collider.bounds.bottom - effectSprite.height / 2);
+            effect.position += effectSprite.getDirection() * -7 * Vector2.UnitX;
+            effect.addComponent<SpriteEffectComponent>();
+        }
+
+        public void createWallSlideEffect()
+        {
+            var effect = entity.scene.createEntity($"effect:playerComponent({getEffectCount()})");
+            var effectSprite = effect.addComponent(new AnimatedSprite(_wallSlideEffectTexture, "default"));
+            effectSprite.CreateAnimation("default", 0.08f, false);
+            effectSprite.AddFrames("default", new List<Rectangle>()
+            {
+                new Rectangle(0, 0, 10, 17),
+                new Rectangle(10, 0, 10, 17),
+                new Rectangle(20, 0, 10, 17),
+            });
+            effectSprite.spriteEffects = sprite.spriteEffects;
+            var collider = entity.getComponent<BoxCollider>();
+            effect.position = new Vector2(collider.bounds.center.X, collider.bounds.top + effectSprite.height / 2 - 4);
+            effect.position += ((effectSprite.getDirection() * collider.bounds.width / 2) - 3) * Vector2.UnitX;
+            effect.addComponent<SpriteEffectComponent>();
+        }
+
+        private int getEffectCount()
+        {
+            _effectsCount++;
+            _effectsCount %= 100;
+            return _effectsCount;
         }
 
         private bool canMove()

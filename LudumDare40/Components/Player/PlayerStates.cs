@@ -57,7 +57,6 @@ namespace LudumDare40.Components.Player
             if (!entity.isOnGround())
             {
                 fsm.changeState(new JumpingState(false));
-                return;
             }
 
             if (entity.isOnGround())
@@ -107,6 +106,7 @@ namespace LudumDare40.Components.Player
                 AudioManager.roll.Play(0.7f, 1.0f, 0f);
                 _needJump = false;
                 entity.Jump();
+                entity.createJumpEffect();
             }
         }
 
@@ -125,10 +125,9 @@ namespace LudumDare40.Components.Player
             else if (entity.platformerObject.collisionState.right)
             {
                 fsm.changeState(new WallJumpState(1));
-            }
-
-            if (isMovementAvailable() && Input.isKeyPressed(Keys.A))
+            } else if (isMovementAvailable() && Input.isKeyPressed(Keys.A))
             {
+                Console.WriteLine("attack button pressed 2");
                 fsm.pushState(new AttackStateOne());
             }
 
@@ -156,6 +155,7 @@ namespace LudumDare40.Components.Player
         public override void begin()
         {
             AudioManager.roll.Play(0.6f, 0.4f, 0f);
+            entity.createRollEffect();
             _immunityFrames = new[] {1, 2};
             entity.SetAnimation(PlayerComponent.Animations.Rolling);
             entity.forceMovement(Vector2.UnitX * (entity.sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1));
@@ -181,6 +181,7 @@ namespace LudumDare40.Components.Player
 
     public class WallJumpState : PlayerState
     {
+        private float _effectCooldown;
         private int _side;
 
         public WallJumpState(int side)
@@ -190,6 +191,8 @@ namespace LudumDare40.Components.Player
 
         public override void begin()
         {
+            entity.createWallSlideEffect();
+            _effectCooldown = 0.5f;
             entity.SetAnimation(PlayerComponent.Animations.SlidingWall);
             entity.platformerObject.grabbingWall = true;
         }
@@ -197,6 +200,16 @@ namespace LudumDare40.Components.Player
         public override void update()
         {
             base.update();
+
+            if (_effectCooldown <= 0.0f)
+            {
+                _effectCooldown = 0.5f;
+                entity.createWallSlideEffect();
+            }
+            else
+            {
+                _effectCooldown -= Time.deltaTime;
+            }
 
             var collisionState = entity.platformerObject.collisionState;
             if (entity.isOnGround())

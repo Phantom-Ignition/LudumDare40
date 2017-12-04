@@ -164,6 +164,11 @@ namespace LudumDare40.Components.Sprites
             return _currentFrame >= _animations[_currentFrameList].Frames.Count - 3;
         }
 
+        public int getDirection()
+        {
+            return spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1;
+        }
+
         public FramesList getCurrentAnimation()
         {
             return _animations[_currentFrameList];
