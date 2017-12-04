@@ -40,23 +40,52 @@ namespace LudumDare40.Components.Battle.Enemies
                 return;
             }
 
-            if (!entity.canSeeThePlayer()) return;
+            float rand;
 
-            _attackCooldown = 0.5f;
+            if (!entity.canSeeThePlayer())
+            {
+                if (entity.hpRate() > 0.5f)
+                {
+                    fsm.pushState(new EnemyBossMissilesAttack());
+                    _attackCooldown = 1.5f;
+                }
+                else
+                {
+                    rand = Random.nextFloat();
+                    if (rand > 0.3f)
+                    {
+                        fsm.pushState(new EnemyBossMissilesAttack());
+                        _attackCooldown = 1.5f;
+                    }
+                    else
+                    {
+                        fsm.pushState(new EnemyBossBigLaserAttack());
+                        _attackCooldown = 3f;
+                    }
+                }
+                return;
+            }
 
-
-            fsm.pushState(new EnemyBossBigLaserAttack());
-            return;
-
-            var rand = Random.nextFloat();
-            if (rand > 0.3f)
+            rand = Random.nextFloat();
+            if (rand > 0.6f)
             {
                 fsm.pushState(new EnemyBossClawAttack());
+                _attackCooldown = 1f;
+            }
+            else if (rand > 0.4f)
+            {
+                fsm.pushState(new EnemyBossLaserAttack());
+                _attackCooldown = 1f;
+            }
+            else if (rand > 0.2f)
+            {
                 fsm.pushState(new EnemyBossMissilesAttack());
+                _attackCooldown = 1.5f;
             }
             else
             {
-                fsm.pushState(new EnemyBossLaserAttack());
+                fsm.pushState(new EnemyBossBigLaserAttack());
+                _attackCooldown = 3f;
             }
         }
     }

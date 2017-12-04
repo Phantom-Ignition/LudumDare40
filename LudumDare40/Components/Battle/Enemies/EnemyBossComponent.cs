@@ -22,6 +22,11 @@ namespace LudumDare40.Components.Battle.Enemies
         public FiniteStateMachine<EnemyBossStates, EnemyBossComponent> FSM => _fsm;
 
         //--------------------------------------------------
+        // HP
+
+        private const int _maxHp = 10;
+
+        //--------------------------------------------------
         // Laser
 
         public int laserStartFrame { get; private set; }
@@ -205,7 +210,7 @@ namespace LudumDare40.Components.Battle.Enemies
         public override void onAddedToEntity()
         {
             base.onAddedToEntity();
-            _battleComponent.HP = 200;
+            _battleComponent.setHp(_maxHp);
 
             var collider = entity.getComponent<BoxCollider>();
             collider.height += 27;
@@ -235,6 +240,11 @@ namespace LudumDare40.Components.Battle.Enemies
 
             missile.setInitialPosition(basePosition + positions[index]);
             shot.transform.position = basePosition + positions[index];
+        }
+
+        public float hpRate()
+        {
+            return _battleComponent.HP / _maxHp;
         }
 
         public override void onHit(Vector2 knockback) { }

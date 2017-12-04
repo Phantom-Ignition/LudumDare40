@@ -23,11 +23,7 @@ namespace LudumDare40.Components.Battle
         // HP
 
         private float _hp;
-        public float HP
-        {
-            get { return _hp; }
-            set { _hp = value; }
-        }
+        public float HP => _hp;
 
         //--------------------------------------------------
         // Death animation
