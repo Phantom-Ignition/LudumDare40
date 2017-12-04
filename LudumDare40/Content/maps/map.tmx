@@ -46,6 +46,6 @@
   </object>
  </objectgroup>
  <objectgroup name="objects">
-  <object id="36" name="playerSpawn" x="113.333" y="184"/>
+  <object id="36" name="playerSpawn" x="17.3333" y="75.5"/>
  </objectgroup>
 </map>

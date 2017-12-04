@@ -7,7 +7,9 @@ using LudumDare40.Components.Sprites;
 using LudumDare40.FSM;
 using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Nez;
+using Nez.Sprites;
 using Random = Nez.Random;
 
 namespace LudumDare40.Components.Battle.Enemies
@@ -184,11 +186,42 @@ namespace LudumDare40.Components.Battle.Enemies
     public class EnemyBossBigLaserAttack : EnemyBossStates
     {
         private BattleComponent _playerBattler;
+        private AnimatedSprite _bigLaserSprite;
 
         public override void begin()
         {
+            createLaserSprite();
             _playerBattler = entity.playerCollider.entity.getComponent<BattleComponent>();
             entity.sprite.play("bigLaserAttack");
+        }
+
+        private void createLaserSprite()
+        {
+            var texture = entity.entity.scene.content.Load<Texture2D>(Content.Misc.bigLaser);
+            var laser = entity.entity.scene.createEntity("big-laser-sprite");
+
+            _bigLaserSprite = laser.addComponent(new AnimatedSprite(texture, "default"));
+            _bigLaserSprite.CreateAnimation("default", 0.08f, false);
+            _bigLaserSprite.AddFrames("default", new List<Rectangle>()
+            {
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 101, 8),
+                new Rectangle(0, 8, 101, 8),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+            });
+            laser.position = entity.entity.position + new Vector2(-125, 24);
         }
 
         public override void update()
@@ -198,13 +231,9 @@ namespace LudumDare40.Components.Battle.Enemies
                 fsm.popState();
             }
 
-            if (_playerBattler.isOnImmunity() ||
-                entity.sprite.CurrentFrame < entity.laserStartFrame ||
-                entity.sprite.CurrentFrame >= entity.laserEndFrame) return;
+            if (_playerBattler.isOnImmunity() || entity.sprite.CurrentFrame != 10) return;
 
-            var index = entity.sprite.CurrentFrame - entity.laserStartFrame - 1;
-            if (index < 0) return;
-            var start = new Vector2(0, entity.entity.position.Y + 20);
+            var start = new Vector2(0, entity.entity.position.Y + 21);
             var end = new Vector2(Scene.virtualSize.X, entity.entity.position.Y + 20);
 
             RaycastHit[] hits = new RaycastHit[10];
@@ -218,6 +247,14 @@ namespace LudumDare40.Components.Battle.Enemies
                     player.onHit(knockback);
                 }
             }
+        }
+    }
+
+    public class EnemyBossDying : EnemyBossStates
+    {
+        public override void begin()
+        {
+            entity.sprite.play("dying");
         }
     }
 }

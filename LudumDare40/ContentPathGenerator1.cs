@@ -74,6 +74,7 @@ namespace Nez
 
 		public static class Misc
 		{
+			public const string bigLaser = @"misc\bigLaser";
 			public const string bullet = @"misc\bullet";
 			public const string cannon = @"misc\cannon";
 			public const string coreDrop = @"misc\coreDrop";

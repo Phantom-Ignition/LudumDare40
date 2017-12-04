@@ -112,25 +112,22 @@ namespace LudumDare40.Components.Battle.Enemies
             sprite.CreateAnimation("bigLaserAttack", 0.08f, false);
             sprite.AddFrames("bigLaserAttack", new List<Rectangle>
             {
-                new Rectangle(1410, 140, 235, 140),
-                new Rectangle(1645, 140, 235, 140),
-                new Rectangle(1880, 140, 235, 140),
-                new Rectangle(2115, 140, 235, 140),
-                new Rectangle(2350, 140, 235, 140),
-                new Rectangle(2585, 140, 235, 140),
-                new Rectangle(0, 280, 235, 140),
-                new Rectangle(235, 280, 235, 140),
-                new Rectangle(470, 280, 235, 140),
-                new Rectangle(705, 280, 235, 140),
-                new Rectangle(940, 280, 235, 140),
-                new Rectangle(1175, 280, 235, 140),
-                new Rectangle(1410, 280, 235, 140),
-                new Rectangle(1645, 280, 235, 140),
-                new Rectangle(1880, 280, 235, 140),
-                new Rectangle(2115, 280, 235, 140),
-                new Rectangle(2350, 280, 235, 140),
-                new Rectangle(2585, 280, 235, 140),
-                new Rectangle(0, 420, 235, 140),
+                new Rectangle(470, 840, 235, 140),
+                new Rectangle(705, 840, 235, 140),
+                new Rectangle(940, 840, 235, 140),
+                new Rectangle(1175, 840, 235, 140),
+                new Rectangle(1410, 840, 235, 140),
+                new Rectangle(1645, 840, 235, 140),
+                new Rectangle(1880, 840, 235, 140),
+                new Rectangle(1410, 840, 235, 140),
+                new Rectangle(1645, 840, 235, 140),
+                new Rectangle(1880, 840, 235, 140),
+                new Rectangle(2115, 840, 235, 140),
+                new Rectangle(2350, 840, 235, 140),
+                new Rectangle(2585, 840, 235, 140),
+                new Rectangle(0, 980, 235, 140),
+                new Rectangle(235, 980, 235, 140),
+                new Rectangle(470, 980, 235, 140),
             });
 
             sprite.CreateAnimation("missilesLaunch", 0.1f);
@@ -151,7 +148,7 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(235, 840, 235, 140),
             });
 
-            sprite.CreateAnimation("dying", 0.25f);
+            sprite.CreateAnimation("dying", 0.1f, false);
             sprite.AddFrames("dying", new List<Rectangle>
             {
                 new Rectangle(235, 420, 235, 140),
@@ -249,6 +246,11 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void onHit(Vector2 knockback) { }
 
+        public override void onDeath()
+        {
+            FSM.changeState(new EnemyBossDying());
+        }
+
         public override void debugRender(Graphics graphics)
         {
             base.debugRender(graphics);
@@ -262,10 +264,9 @@ namespace LudumDare40.Components.Battle.Enemies
 
             if (sprite.CurrentAnimation == "bigLaserAttack")
             {
-                index = sprite.CurrentFrame - laserStartFrame - 1;
-                if (index < 0) return;
-                start = new Vector2(0, entity.position.Y + 20);
-                end = new Vector2(Scene.virtualSize.X, entity.position.Y + 20);
+                if (sprite.CurrentFrame != 10) return;
+                start = new Vector2(0, entity.position.Y + 21);
+                end = new Vector2(Scene.virtualSize.X, entity.position.Y + 21);
 
                 graphics.batcher.drawLine(start, end, Color.Black);
                 return;
