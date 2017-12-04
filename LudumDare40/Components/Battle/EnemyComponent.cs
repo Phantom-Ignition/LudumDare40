@@ -178,6 +178,7 @@ namespace LudumDare40.Components.Battle
 
         public bool canSeeThePlayer()
         {
+            if (!playerCollider.entity.enabled) return false;
             CollisionResult collisionResult;
             return areaOfSight.collidesWith(playerCollider, out collisionResult);
         }

@@ -86,6 +86,7 @@ namespace LudumDare40.Systems
         protected override void lateProcess(List<Entity> entities)
         {
             var entity = _targetEntity;
+            if (entity.scene == null || entity.scene?.sceneRenderTarget == null) return;
             // translate the deadzone to be in world space
             var halfScreen = entity.scene.sceneRenderTargetSize.ToVector2() * 0.5f;
             _worldSpaceDeadzone.x = (int)(camera.position.X - halfScreen.X + deadzone.x + focusOffset.X);

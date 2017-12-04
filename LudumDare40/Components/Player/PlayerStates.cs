@@ -373,6 +373,7 @@ namespace LudumDare40.Components.Player
     {
         public override void begin()
         {
+            _input.IsLocked = true;
             entity.SetAnimation(PlayerComponent.Animations.Dying);
         }
     }

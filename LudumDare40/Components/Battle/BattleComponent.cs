@@ -53,6 +53,11 @@ namespace LudumDare40.Components.Battle
         private SpriteMime _spriteMime;
         private AnimatedSprite _animatedSprite;
 
+        //--------------------------------------------------
+        // Destroy entity
+
+        public Action destroyEntityAction;
+
         //----------------------//------------------------//
 
         public override void onAddedToEntity()
@@ -60,6 +65,8 @@ namespace LudumDare40.Components.Battle
             _spriteMime = entity.addComponent<SpriteMime>();
             _spriteMime.color = Color.Transparent;
             _animatedSprite = entity.getComponent<AnimatedSprite>();
+
+            destroyEntityAction = destroyEntity;
         }
 
         public void setHp(int hp)
@@ -123,9 +130,14 @@ namespace LudumDare40.Components.Battle
                 }
                 else
                 {
-                    entity.destroy();
+                    destroyEntityAction?.Invoke();
                 }
             }
+        }
+
+        public virtual void destroyEntity()
+        {
+            entity.destroy();
         }
 
         public bool isOnImmunity()

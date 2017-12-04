@@ -238,13 +238,26 @@ namespace LudumDare40.Components.Player
                 new Rectangle(128, 256, 64, 64),
             }, new int[] { 0, 0, 0, 0, 0, 0 }, new int[] { -9, -9, -9, -9, -9, -9 });
 
-            sprite.CreateAnimation(am[Animations.Dying], 0.1f, false);
+            sprite.CreateAnimation(am[Animations.Dying], 0.2f, false);
             sprite.AddFrames(am[Animations.Dying], new List<Rectangle>()
             {
-                new Rectangle(224, 32, 64, 64),
-                new Rectangle(256, 32, 64, 64),
-                new Rectangle(224, 32, 64, 64),
-            }, new int[] { 0, 0, 0, 0, 0, 0 }, new int[] { -9, -9, -9, -9, -9, -9 });
+                new Rectangle(0, 384, 64, 64),
+                new Rectangle(64, 384, 64, 64),
+                new Rectangle(128, 384, 64, 64),
+                new Rectangle(192, 384, 64, 64),
+                new Rectangle(256, 384, 64, 64),
+                new Rectangle(320, 384, 64, 64),
+                new Rectangle(0, 448, 64, 64),
+                new Rectangle(64, 448, 64, 64),
+                new Rectangle(128, 448, 64, 64),
+                new Rectangle(192, 448, 64, 64),
+                new Rectangle(256, 448, 64, 64),
+                new Rectangle(256, 448, 64, 64),
+                new Rectangle(256, 448, 64, 64),
+                new Rectangle(256, 448, 64, 64),
+                new Rectangle(256, 448, 64, 64),
+                new Rectangle(256, 448, 64, 64),
+            }, new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, new int[] { -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9, -9 });
 
             // Create the core sprite
             var coreTexture = entity.scene.content.Load<Texture2D>(Content.Characters.core);
@@ -269,9 +282,10 @@ namespace LudumDare40.Components.Player
         {
             _platformerObject = entity.getComponent<PlatformerObject>();
             battleComponent = entity.getComponent<BattleComponent>();
-            battleComponent.setHp(50);
+            battleComponent.setHp(1);
             battleComponent.battleEntity = this;
             battleComponent.ImmunityDuration = 0.5f;
+            battleComponent.destroyEntityAction = destroyEntity;
 
             entity.setTag(SceneMap.PLAYER);
         }
@@ -283,10 +297,16 @@ namespace LudumDare40.Components.Player
             _knockbackVelocity = new Vector2(knockback.X * 60, -5);
             FSM.changeState(new HitState());
         }
-
+        
         public void onDeath()
         {
             FSM.changeState(new DyingState());
+        }
+
+        public void destroyEntity()
+        {
+            entity.setEnabled(false);
+            Core.startSceneTransition(new SquaresTransition(() => new SceneMap()));
         }
 
         public void forceMovement(Vector2 velocity, bool walljumpForcedMovement = false)
