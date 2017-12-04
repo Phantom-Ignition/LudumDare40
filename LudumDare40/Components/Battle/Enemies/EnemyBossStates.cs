@@ -42,12 +42,17 @@ namespace LudumDare40.Components.Battle.Enemies
 
             if (!entity.canSeeThePlayer()) return;
 
-            _attackCooldown = 2.0f;
+            _attackCooldown = 0.5f;
+
+
+            fsm.pushState(new EnemyBossBigLaserAttack());
+            return;
 
             var rand = Random.nextFloat();
             if (rand > 0.3f)
             {
                 fsm.pushState(new EnemyBossClawAttack());
+                fsm.pushState(new EnemyBossMissilesAttack());
             }
             else
             {
@@ -114,11 +119,47 @@ namespace LudumDare40.Components.Battle.Enemies
 
     public class EnemyBossMissilesAttack : EnemyBossStates
     {
-        private bool _shot;
+        private bool[] _shot;
 
         public override void begin()
         {
-            entity.sprite.play("laserAttack");
+            _shot = new[] {false, false, false};
+            entity.sprite.play("missilesLaunch");
+        }
+
+        public override void update()
+        {
+            if (entity.sprite.Looped)
+            {
+                fsm.popState();
+            }
+            
+            if (!_shot[0] && entity.sprite.CurrentFrame == 3)
+            {
+                _shot[0] = true;
+                entity.launchMissiles(0);
+            }
+            if (!_shot[1] && entity.sprite.CurrentFrame == 5)
+            {
+                _shot[1] = true;
+                entity.launchMissiles(1);
+            }
+            if (!_shot[2] && entity.sprite.CurrentFrame == 7)
+            {
+                _shot[2] = true;
+                entity.launchMissiles(2);
+            }
+        }
+    }
+
+    public class EnemyBossBigLaserAttack : EnemyBossStates
+    {
+        private BattleComponent _playerBattler;
+
+        public override void begin()
+        {
+            _playerBattler = entity.playerCollider.entity.getComponent<BattleComponent>();
+            entity.sprite.play("bigLaserAttack");
         }
 
         public override void update()
@@ -128,12 +169,25 @@ namespace LudumDare40.Components.Battle.Enemies
                 fsm.popState();
             }
 
-            if (_shot) return;
+            if (_playerBattler.isOnImmunity() ||
+                entity.sprite.CurrentFrame < entity.laserStartFrame ||
+                entity.sprite.CurrentFrame >= entity.laserEndFrame) return;
 
-            if (entity.sprite.CurrentFrame == 3)
+            var index = entity.sprite.CurrentFrame - entity.laserStartFrame - 1;
+            if (index < 0) return;
+            var start = new Vector2(0, entity.entity.position.Y + 20);
+            var end = new Vector2(Scene.virtualSize.X, entity.entity.position.Y + 20);
+
+            RaycastHit[] hits = new RaycastHit[10];
+            var hitCount = Physics.linecastAll(start, end, hits);
+            for (int i = 0; i < hitCount; i++)
             {
-                _shot = true;
-                entity.launchMissiles();
+                if (hits[i].collider.entity.tag == SceneMap.PLAYER)
+                {
+                    var player = hits[i].collider.entity.getComponent<BattleComponent>();
+                    var knockback = new Vector2(-hits[i].normal.X, hits[i].normal.Y);
+                    player.onHit(knockback);
+                }
             }
         }
     }

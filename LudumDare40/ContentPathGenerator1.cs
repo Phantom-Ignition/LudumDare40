@@ -47,6 +47,8 @@ namespace Nez
 		public static class Effects
 		{
 			public const string bulletEffect = @"effects\bulletEffect";
+			public const string explosionEffect = @"effects\explosionEffect";
+			public const string explosionEffect2 = @"effects\explosionEffect2";
 			public const string jumpEffect = @"effects\jumpEffect";
 			public const string rollEffect = @"effects\rollEffect";
 			public const string wallSlideEffect = @"effects\wallSlideEffect";
@@ -75,6 +77,7 @@ namespace Nez
 			public const string bullet = @"misc\bullet";
 			public const string cannon = @"misc\cannon";
 			public const string coreDrop = @"misc\coreDrop";
+			public const string missile = @"misc\missile";
 			public const string reactor = @"misc\reactor";
 		}
 

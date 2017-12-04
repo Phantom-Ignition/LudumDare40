@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LudumDare40.Components.Sprites;
 using LudumDare40.FSM;
+using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -103,6 +104,48 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(0, 420, 235, 140),
             });
 
+            sprite.CreateAnimation("bigLaserAttack", 0.08f, false);
+            sprite.AddFrames("bigLaserAttack", new List<Rectangle>
+            {
+                new Rectangle(1410, 140, 235, 140),
+                new Rectangle(1645, 140, 235, 140),
+                new Rectangle(1880, 140, 235, 140),
+                new Rectangle(2115, 140, 235, 140),
+                new Rectangle(2350, 140, 235, 140),
+                new Rectangle(2585, 140, 235, 140),
+                new Rectangle(0, 280, 235, 140),
+                new Rectangle(235, 280, 235, 140),
+                new Rectangle(470, 280, 235, 140),
+                new Rectangle(705, 280, 235, 140),
+                new Rectangle(940, 280, 235, 140),
+                new Rectangle(1175, 280, 235, 140),
+                new Rectangle(1410, 280, 235, 140),
+                new Rectangle(1645, 280, 235, 140),
+                new Rectangle(1880, 280, 235, 140),
+                new Rectangle(2115, 280, 235, 140),
+                new Rectangle(2350, 280, 235, 140),
+                new Rectangle(2585, 280, 235, 140),
+                new Rectangle(0, 420, 235, 140),
+            });
+
+            sprite.CreateAnimation("missilesLaunch", 0.1f);
+            sprite.AddFrames("missilesLaunch", new List<Rectangle>
+            {
+                new Rectangle(235, 700, 235, 140),
+                new Rectangle(470, 700, 235, 140),
+                new Rectangle(705, 700, 235, 140),
+                new Rectangle(940, 700, 235, 140),
+                new Rectangle(1175, 700, 235, 140),
+                new Rectangle(1410, 700, 235, 140),
+                new Rectangle(1645, 700, 235, 140),
+                new Rectangle(1880, 700, 235, 140),
+                new Rectangle(2115, 700, 235, 140),
+                new Rectangle(2350, 700, 235, 140),
+                new Rectangle(2585, 700, 235, 140),
+                new Rectangle(0, 840, 235, 140),
+                new Rectangle(235, 840, 235, 140),
+            });
+
             sprite.CreateAnimation("dying", 0.25f);
             sprite.AddFrames("dying", new List<Rectangle>
             {
@@ -168,9 +211,30 @@ namespace LudumDare40.Components.Battle.Enemies
             collider.height += 27;
         }
 
-        public void launchMissiles()
+        public void launchMissiles(int index)
         {
-            
+            var shots = entity.scene.findEntitiesWithTag(SceneMap.SHOTS);
+            var shot = entity.scene.createEntity($"shot:${shots.Count}");
+
+            var rotations = new[]
+            {
+                -9.0f,
+                -15.0f,
+                -20.0f,
+            };
+
+            var missile = shot.addComponent(new MissileComponent(rotations[index]));
+
+            var basePosition = entity.getComponent<HurtCollider>().absolutePosition;
+            var positions = new[]
+            {
+                new Vector2(8, -30),
+                new Vector2(13, -26),
+                new Vector2(18, -20),
+            };
+
+            missile.setInitialPosition(basePosition + positions[index]);
+            shot.transform.position = basePosition + positions[index];
         }
 
         public override void onHit(Vector2 knockback) { }
@@ -181,12 +245,28 @@ namespace LudumDare40.Components.Battle.Enemies
 
             if (sprite.CurrentFrame < laserStartFrame) return;
             if (sprite.CurrentFrame >= laserEndFrame) return;
+
+            int index;
+            Vector2 start;
+            Vector2 end;
+
+            if (sprite.CurrentAnimation == "bigLaserAttack")
+            {
+                index = sprite.CurrentFrame - laserStartFrame - 1;
+                if (index < 0) return;
+                start = new Vector2(0, entity.position.Y + 20);
+                end = new Vector2(Scene.virtualSize.X, entity.position.Y + 20);
+
+                graphics.batcher.drawLine(start, end, Color.Black);
+                return;
+            }
+
             if (sprite.CurrentAnimation != "laserAttack") return;
 
-            var index = sprite.CurrentFrame - laserStartFrame-1;
+            index = sprite.CurrentFrame - laserStartFrame-1;
             if (index < 0) return;
-            var start = laserPoints[index, 0] + entity.position;
-            var end = laserPoints[index, 1] + entity.position;
+            start = laserPoints[index, 0] + entity.position;
+            end = laserPoints[index, 1] + entity.position;
 
             graphics.batcher.drawLine(start, end, Color.Black);
         }
