@@ -136,6 +136,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void onHit(Vector2 knockback)
         {
+            (entity.scene as SceneMap)?.startScreenShake(0.7f, 100);
             base.onHit(knockback);
             FSM.changeState(new EnemyDroneHitState());
         }

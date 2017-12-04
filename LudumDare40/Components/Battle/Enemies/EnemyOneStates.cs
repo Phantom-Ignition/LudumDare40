@@ -173,10 +173,20 @@ namespace LudumDare40.Components.Battle.Enemies
 
     public class EnemyOneDyingState : EnemyOneState
     {
+        private bool _playedSe;
+
         public override void begin()
         {
-            AudioManager.explosion.Play();
             entity.sprite.play("dying");
+        }
+
+        public override void update()
+        {
+            if (!_playedSe && entity.sprite.CurrentFrame == 4)
+            {
+                _playedSe = true;
+                AudioManager.explosion.Play();
+            }
         }
     }
 }

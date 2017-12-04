@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using LudumDare40.Components.Player;
 using LudumDare40.Components.Sprites;
 using LudumDare40.FSM;
+using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
@@ -136,6 +137,7 @@ namespace LudumDare40.Components.Battle.Enemies
         {
             if (dangerousStage <= 1)
             {
+                (entity.scene as SceneMap)?.startScreenShake(0.7f, 100);
                 base.onHit(knockback);
                 FSM.changeState(new EnemyOneHitState());
             }

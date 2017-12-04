@@ -59,6 +59,11 @@ namespace LudumDare40.Scenes
         private TiledMap _tiledMap;
 
         //--------------------------------------------------
+        // Camera
+
+        private CameraSystem _camera;
+
+        //--------------------------------------------------
         // Reactors
 
         private List<Entity> _reactors;
@@ -139,7 +144,6 @@ namespace LudumDare40.Scenes
             player.transform.position = playerSpawn.Value;
             player.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>(collisionLayer)));
             player.addComponent(new BoxCollider(-5f, -10f, 11f, 30f));
-            //player.addComponent(new InteractionCollider(-30f, -6, 60, 22));
             player.addComponent<PlatformerObject>();
             player.addComponent<TextWindowComponent>();
             player.addComponent<BattleComponent>();
@@ -155,6 +159,7 @@ namespace LudumDare40.Scenes
             var collisionLayer = _tiledMap.properties["collisionLayer"];
 
             var enemiesGroup = _tiledMap.getObjectGroup("enemies");
+            if (enemiesGroup == null) return;
             foreach (var enemy in enemiesGroup.objects)
             {
                 var name = findEntitiesWithTag(ENEMIES).Count;
@@ -190,6 +195,7 @@ namespace LudumDare40.Scenes
         {
             _reactors = new List<Entity>();
             var reactorsGroup = _tiledMap.getObjectGroup("reactors");
+            if (reactorsGroup == null) return;
             foreach (var core in reactorsGroup.objects)
             {
                 var entity = createEntity(core.name);
@@ -203,6 +209,7 @@ namespace LudumDare40.Scenes
         private void setupCoreDrops()
         {
             var coreDropsGroup = _tiledMap.getObjectGroup("coreDrops");
+            if (coreDropsGroup == null) return;
             foreach (var coreDrop in coreDropsGroup.objects)
             {
                 createCoreDrop(coreDrop.position + new Vector2(coreDrop.width, coreDrop.height) / 2.0f);
@@ -299,7 +306,14 @@ namespace LudumDare40.Scenes
 
             camera.addComponent(new CameraShake());
             var mapSize = new Vector2(_tiledMap.width * _tiledMap.tileWidth, _tiledMap.height * _tiledMap.tileHeight);
-            addEntityProcessor(new CameraSystem(player) { mapLockEnabled = true, mapSize = mapSize, followLerp = 0.08f, deadzoneSize = new Vector2(20, 10) });
+            _camera = new CameraSystem(player)
+            {
+                mapLockEnabled = true,
+                mapSize = mapSize,
+                followLerp = 0.08f,
+                deadzoneSize = new Vector2(20, 10)
+            };
+            addEntityProcessor(_camera);
             addEntityProcessor(new NpcInteractionSystem(playerComponent));
             addEntityProcessor(new LadderSystem(new Matcher().all(typeof(LadderComponent)), playerComponent));
             addEntityProcessor(new BattleSystem());
@@ -363,6 +377,18 @@ namespace LudumDare40.Scenes
         {
             Core.getGlobalManager<SystemManager>().cinematicLetterboxPostProcessor = addPostProcessor(new CinematicLetterboxPostProcessor(1));
             Core.getGlobalManager<SystemManager>().flashPostProcessor = addPostProcessor(new FlashPostProcessor(0));
+
+            var bloom = addPostProcessor(new BloomPostProcessor(2));
+            bloom.setBloomSettings(new BloomSettings(0.5f, 2, 0.9f, 1, 1, 1));
+
+            var scanlines = addPostProcessor(new ScanlinesPostProcessor(1));
+            scanlines.effect.attenuation = 0.04f;
+            scanlines.effect.linesFactor = 1500f;
+        }
+
+        public void startScreenShake(float magnitude, float duration)
+        {
+            _camera.startCameraShake(magnitude, duration);
         }
         
         public override void update()
@@ -376,8 +402,9 @@ namespace LudumDare40.Scenes
                 );
             }
 
-            if (Input.isKeyPressed(Keys.F))
+            if (Input.isKeyPressed(Keys.P))
             {
+                _camera.startCameraShake(1, 500);
             }
 
             // Update cinematic

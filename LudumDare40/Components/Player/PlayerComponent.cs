@@ -277,6 +277,7 @@ namespace LudumDare40.Components.Player
 
         public void onHit(Vector2 knockback)
         {
+            (entity.scene as SceneMap)?.startScreenShake(1, 200);
             _knockbackTick = new Vector2(0.06f, 0.04f);
             _knockbackVelocity = new Vector2(knockback.X * 60, -5);
             FSM.changeState(new HitState());

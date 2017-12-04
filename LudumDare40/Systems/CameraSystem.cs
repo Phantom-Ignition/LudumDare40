@@ -45,7 +45,18 @@ namespace LudumDare40.Systems
         Collider _targetCollider;
         Vector2 _desiredPositionDelta;
         RectangleF _worldSpaceDeadzone;
-        
+
+        //--------------------------------------------------
+        // Camera Shake
+
+        private bool _shakeEnabled;
+        private float _shakeDuration;
+        private float _shakeElapsed;
+        private float _shakeMagnitude;
+        private Vector2 _shakeOffset;
+
+        //----------------------//------------------------//
+
         public CameraSystem(Entity target, Camera camera) : base(new Matcher().all(typeof(NpcBase)))
         {
             _targetEntity = target;
@@ -64,6 +75,14 @@ namespace LudumDare40.Systems
             _targetEntity = target;
         }
 
+        public void startCameraShake(float magnitude, float duration)
+        {
+            _shakeMagnitude = _shakeEnabled ? _shakeMagnitude + magnitude * 0.1f : magnitude;
+            _shakeEnabled = true;
+            _shakeElapsed = 0;
+            _shakeDuration = duration;
+        }
+
         protected override void lateProcess(List<Entity> entities)
         {
             var entity = _targetEntity;
@@ -77,7 +96,10 @@ namespace LudumDare40.Systems
             if (_targetEntity != null)
                 updateFollow();
 
+            updateCameraShake();
+
             _camera.position = Vector2.Lerp(_camera.position, _camera.position + _desiredPositionDelta, followLerp);
+            _camera.position += _shakeOffset;
             _camera.entity.transform.roundPosition();
 
             if (mapLockEnabled)
@@ -145,9 +167,30 @@ namespace LudumDare40.Systems
         {
             _targetEntity = targetEntity;
             var cameraBounds = _camera.bounds;
-            var w = (cameraBounds.width / 6);
-            var h = (cameraBounds.height / 3);
             deadzone = new RectangleF(cameraBounds.width / 2, cameraBounds.height / 2, deadzoneSize.X, deadzoneSize.Y);
+        }
+
+        private void updateCameraShake()
+        {
+            if (_shakeEnabled)
+            {
+                if (_shakeElapsed > _shakeDuration)
+                {
+                    _shakeEnabled = false;
+                    _shakeOffset = Vector2.Zero;
+                }
+                else
+                {
+                    _shakeElapsed += Time.deltaTime * 1000;
+                    var percentComplete = _shakeElapsed / _shakeDuration;
+                    var damper = 1.0f - MathHelper.Clamp(4.0f * percentComplete - 3.0f, 0.0f, 1.0f);
+                    var x = Random.nextFloat() * 2.0f - 1.0f;
+                    var y = Random.nextFloat() * 2.0f - 1.0f;
+                    x *= _shakeMagnitude * damper;
+                    y *= _shakeMagnitude * damper;
+                    _shakeOffset = new Vector2(x, y);
+                }
+            }
         }
 
 
