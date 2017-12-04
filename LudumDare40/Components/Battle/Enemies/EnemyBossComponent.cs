@@ -28,6 +28,11 @@ namespace LudumDare40.Components.Battle.Enemies
         public int laserEndFrame { get; private set; }
         public Vector2[,] laserPoints { get; private set; }
 
+        //--------------------------------------------------
+        // Battle Active
+
+        public bool isBattleActive;
+
         //----------------------//------------------------//
 
         public EnemyBossComponent(bool patrolStartRight) : base(patrolStartRight) { }
@@ -197,6 +202,9 @@ namespace LudumDare40.Components.Battle.Enemies
 
             // View range
             areaOfSight = entity.addComponent(new AreaOfSightCollider(-120, -50, 250, 96));
+
+            // Deaticvate from battle
+            isBattleActive = false;
         }
 
         public override void update()
@@ -242,6 +250,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public float hpRate()
         {
+            if (_battleComponent == null) return 1;
             return _battleComponent.HP / _maxHp;
         }
 

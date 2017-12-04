@@ -65,6 +65,14 @@ namespace Nez
 			public const string titleFont_0 = @"fonts\titleFont_0";
 		}
 
+		public static class Hud
+		{
+			public const string boss_hp = @"hud\boss_hp";
+			public const string boss_hud = @"hud\boss_hud";
+			public const string player_hp = @"hud\player_hp";
+			public const string player_hud = @"hud\player_hud";
+		}
+
 		public static class Maps
 		{
 			public const string background = @"maps\background";

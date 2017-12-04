@@ -23,6 +23,7 @@ using Microsoft.Xna.Framework.Media;
 using Nez;
 using Nez.Particles;
 using Nez.Sprites;
+using Nez.Textures;
 using Nez.Tiled;
 
 namespace LudumDare40.Scenes
@@ -39,6 +40,8 @@ namespace LudumDare40.Scenes
         public const int ENEMIES_RENDER_LAYER = 4; // NPCs, Text, etc.
         public const int PLAYER_RENDER_LAYER = 3;
         public const int PARTICLES_RENDER_LAYER = 2;
+        public const int HUD_BACK_RENDER_LAYER = 1;
+        public const int HUD_FILL_RENDER_LAYER = 0;
 
         //--------------------------------------------------
         // Scene tags
@@ -71,6 +74,12 @@ namespace LudumDare40.Scenes
         private List<Entity> _reactors;
 
         //--------------------------------------------------
+        // HUD
+
+        private Sprite _playerHudFillSprite;
+        private Sprite _bossHudFillSprite;
+
+        //--------------------------------------------------
         // Ambience
 
         private SoundEffectInstance _ambienceEffectInstance;
@@ -90,7 +99,7 @@ namespace LudumDare40.Scenes
             setupParticles();
             setupLadders();
             setupWater();
-            setupMapTexts();
+            setupHud();
             setupPostProcessors();
         }
 
@@ -192,6 +201,7 @@ namespace LudumDare40.Scenes
 
                 if (enemy.type == "EnemyBoss")
                 {
+                    entity.name = "boss";
                     entity.setEnabled(false);
                 }
             }
@@ -360,36 +370,41 @@ namespace LudumDare40.Scenes
             }
         }
 
-        private void setupMapTexts()
+        private Entity[] _hudEntities;
+        private Vector2[] _hudPositions;
+        private void setupHud()
         {
-            var textObjects = _tiledMap.getObjectGroup("texts");
-            if (textObjects == null) return;
-            
-            var names = new Dictionary<string, int>();
-            foreach (var textObj in textObjects.objects)
-            {
-                names[textObj.name] = names.ContainsKey(textObj.name) ? ++names[textObj.name] : 0;
-                var font = Graphics.instance.bitmapFont;
-                var position = textObj.position.round();
-                var text = textObj.properties["text"];
+            _hudEntities = new Entity[4];
+            _hudPositions = new Vector2[4];
 
-                if (textObj.properties.ContainsKey("shadowColor"))
-                {
-                    var shadowColor = textObj.properties["shadowColor"].FromHex();
-                    var shadowEntity = createEntity(string.Format("[Shadow] {0}:{1}", textObj.name, names[textObj.name]));
-                    shadowEntity.position = textObj.position.round() + Vector2.One;
-                    var shadowTextComponent = shadowEntity.addComponent(new Text(font, text, Vector2.Zero, shadowColor));
-                    shadowTextComponent.setRenderLayer(MISC_RENDER_LAYER);
-                }
+            _hudEntities[0] = createEntity("playerHudBack");
+            _hudEntities[0].addComponent(new Sprite(content.Load<Texture2D>(Content.Hud.player_hud)) { renderLayer = HUD_BACK_RENDER_LAYER })
+                .setOriginNormalized(Vector2.Zero)
+                .transform.localPosition = new Vector2(3, 5);
+            _hudPositions[0] = new Vector2(6, 17);
 
-                var color = textObj.properties["color"].FromHex();
-                var entity = createEntity(string.Format("{0}:{1}", textObj.name, names[textObj.name]));
-                entity.position = textObj.position.round();
-                var textComponent = entity.addComponent(new Text(font, text, Vector2.Zero, color));
-                textComponent.setRenderLayer(MISC_RENDER_LAYER);
-            }
+            _hudEntities[1] = createEntity("playerHudFill");
+            _hudEntities[1].addComponent(new Sprite(content.Load<Texture2D>(Content.Hud.player_hp)) { renderLayer = HUD_FILL_RENDER_LAYER })
+                .setOriginNormalized(Vector2.Zero)
+                .transform.localPosition = new Vector2(3, 5);
+            _hudPositions[1] = new Vector2(6, 17);
+
+            _hudEntities[2] = createEntity("bossHudBack");
+            _hudEntities[2].addComponent(new Sprite(content.Load<Texture2D>(Content.Hud.boss_hud)) { renderLayer = HUD_BACK_RENDER_LAYER })
+                .setOriginNormalized(Vector2.Zero)
+                .transform.localPosition = new Vector2(144, 4);
+            _hudPositions[2] = new Vector2(142, 17);
+
+            _hudEntities[3] = createEntity("bossHudFill");
+            _hudEntities[3].addComponent(new Sprite(content.Load<Texture2D>(Content.Hud.boss_hp)) { renderLayer = HUD_FILL_RENDER_LAYER })
+                .setOriginNormalized(Vector2.Zero)
+                .transform.localPosition = new Vector2(144, 4);
+            _hudPositions[3] = new Vector2(142, 17);
+
+            _playerHudFillSprite = findEntity("playerHudFill").getComponent<Sprite>();
+            _bossHudFillSprite = findEntity("bossHudFill").getComponent<Sprite>();
         }
-            
+
         private void setupPostProcessors()
         {
             Core.getGlobalManager<SystemManager>().cinematicLetterboxPostProcessor = addPostProcessor(new CinematicLetterboxPostProcessor(1));
@@ -413,6 +428,9 @@ namespace LudumDare40.Scenes
             base.update();
 
             _backgroundSprite.entity.position = _camera.camera.position;
+
+
+            updateHud();
 
             if (Input.isKeyPressed(Keys.C))
             {
@@ -438,6 +456,31 @@ namespace LudumDare40.Scenes
             {
                 _cinematicPostProcessor.enabled = false;
             }*/
+        }
+
+        private void updateHud()
+        {
+            var camerapos = _camera.camera.position - virtualSize.ToVector2() / 2;
+            for (var i = 0; i < 4; i++) _hudEntities[i].position = _hudPositions[i] + new Vector2((int)camerapos.X, (int)camerapos.Y);
+
+            var player = findEntitiesWithTag(PLAYER)[0].getComponent<PlayerComponent>();
+            var playerSubtexture = _playerHudFillSprite.subtexture;
+            _playerHudFillSprite.setSubtexture(recreateSubtextureWithRate(playerSubtexture, player.hpRate()));
+            _playerHudFillSprite.setOriginNormalized(Vector2.Zero);
+
+            var boss = findEntity("boss").getComponent<EnemyBossComponent>();
+            var bossSubtexture = _playerHudFillSprite.subtexture;
+            _bossHudFillSprite.setSubtexture(recreateSubtextureWithRate(bossSubtexture, boss.hpRate()));
+            _bossHudFillSprite.setOriginNormalized(Vector2.Zero);
+            _hudEntities[2].enabled = boss.isBattleActive;
+            _hudEntities[3].enabled = boss.isBattleActive;
+        }
+
+        private Subtexture recreateSubtextureWithRate(Subtexture subtexture, float rate)
+        {
+            var r = subtexture.sourceRect;
+            r.Width = (int)(subtexture.texture2D.Width * rate);
+            return new Subtexture(subtexture.texture2D, r);
         }
     }
 }

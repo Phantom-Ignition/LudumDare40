@@ -64,6 +64,10 @@ namespace LudumDare40.Components.Player
         // Footstep sound cooldown
 
         private float _footstepCooldown;
+        //--------------------------------------------------
+        // HP
+
+        public const int MAX_HP = 10;
 
         //--------------------------------------------------
         // Finite State Machine
@@ -282,7 +286,7 @@ namespace LudumDare40.Components.Player
         {
             _platformerObject = entity.getComponent<PlatformerObject>();
             battleComponent = entity.getComponent<BattleComponent>();
-            battleComponent.setHp(1);
+            battleComponent.setHp(MAX_HP);
             battleComponent.battleEntity = this;
             battleComponent.ImmunityDuration = 0.5f;
             battleComponent.destroyEntityAction = destroyEntity;
@@ -536,6 +540,11 @@ namespace LudumDare40.Components.Player
         public void Jump()
         {
             _platformerObject.jump();
+        }
+
+        public float hpRate()
+        {
+            return battleComponent.HP / MAX_HP;
         }
     }
 }
