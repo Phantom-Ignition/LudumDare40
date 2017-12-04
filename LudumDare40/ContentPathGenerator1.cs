@@ -25,6 +25,7 @@ namespace Nez
 			public const string laser = @"audios\laser";
 			public const string missile = @"audios\missile";
 			public const string mystOnTheMoor = @"audios\mystOnTheMoor";
+			public const string punch = @"audios\punch";
 			public const string roll = @"audios\roll";
 			public const string select = @"audios\select";
 			public const string shot = @"audios\shot";
@@ -125,9 +126,16 @@ namespace Nez
 			public const string windowskin = @"system\windowskin";
 		}
 
+		public static class Title
+		{
+			public const string background = @"title\background";
+			public const string menu_cursor = @"title\menu_cursor";
+			public const string menu_logo = @"title\menu_logo";
+			public const string menu_opt = @"title\menu_opt";
+		}
+
 		public const string map = @"map";
 		public const string tileset = @"tileset";
-
     }
 }
 

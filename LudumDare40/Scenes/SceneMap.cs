@@ -19,6 +19,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Nez;
 using Nez.Particles;
 using Nez.Sprites;
@@ -85,7 +86,6 @@ namespace LudumDare40.Scenes
             setupEnemies();
             setupReactors();
             setupCoreDrops();
-            setupEntityProcessors();
             setupNpcs();
             setupParticles();
             setupLadders();
@@ -96,12 +96,14 @@ namespace LudumDare40.Scenes
 
         public override void onStart()
         {
+            setupEntityProcessors();
+
             getEntityProcessor<NpcInteractionSystem>().mapStart();
             _ambienceEffectInstance = AudioManager.ambience.CreateInstance();
             _ambienceEffectInstance.IsLooped = true;
 
-            // TODO: PLAY AGAIN
-            //_ambienceEffectInstance.Play();
+            MediaPlayer.Stop();
+            _ambienceEffectInstance.Play();
         }
 
         private void setupMap()
@@ -175,14 +177,23 @@ namespace LudumDare40.Scenes
                 entity.addComponent<BattleComponent>();
                 entity.addComponent(new BoxCollider(-10f, -15f, 20f, 35f));
 
-                var patrolStartRight = bool.Parse(enemy.properties["patrolStartRight"]);
+                var patrolStartRight = bool.Parse(enemy.properties.ContainsKey("patrolStartRight")
+                    ? enemy.properties["patrolStartRight"]
+                    : "false");
                 var instance = createEnemyInstance(enemy.type, patrolStartRight);
                 var enemyComponent = entity.addComponent(instance);
                 enemyComponent.sprite.renderLayer = ENEMIES_RENDER_LAYER;
                 enemyComponent.playerCollider = findEntity("player").getComponent<BoxCollider>();
-                enemyComponent.patrolTime = float.Parse(enemy.properties["patrolTime"]);
+                enemyComponent.patrolTime = float.Parse(enemy.properties.ContainsKey("patrolTime")
+                    ? enemy.properties["patrolTime"]
+                    : "0");
 
                 entity.transform.position = enemy.position + new Vector2(enemy.width, enemy.height) / 2;
+
+                if (enemy.type == "EnemyBoss")
+                {
+                    entity.setEnabled(false);
+                }
             }
         }
 

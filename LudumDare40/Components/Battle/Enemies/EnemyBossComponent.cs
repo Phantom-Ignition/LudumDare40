@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LudumDare40.Components.Sprites;
+﻿using LudumDare40.Components.Sprites;
 using LudumDare40.FSM;
 using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Nez;
+using System.Collections.Generic;
 
 namespace LudumDare40.Components.Battle.Enemies
 {
@@ -43,7 +38,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
             // Init sprite
             var texture = entity.scene.content.Load<Texture2D>(Content.Characters.boss);
-            sprite = entity.addComponent(new AnimatedSprite(texture, "clawAttack"));
+            sprite = entity.addComponent(new AnimatedSprite(texture, "stand"));
             sprite.CreateAnimation("stand", 0.25f);
             sprite.AddFrames("stand", new List<Rectangle>
             {
@@ -123,6 +118,12 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(1645, 840, 235, 140),
                 new Rectangle(1880, 840, 235, 140),
                 new Rectangle(2115, 840, 235, 140),
+                new Rectangle(2350, 840, 235, 140),
+                new Rectangle(2350, 840, 235, 140),
+                new Rectangle(2350, 840, 235, 140),
+                new Rectangle(2350, 840, 235, 140),
+                new Rectangle(2350, 840, 235, 140),
+                new Rectangle(2350, 840, 235, 140),
                 new Rectangle(2350, 840, 235, 140),
                 new Rectangle(2585, 840, 235, 140),
                 new Rectangle(0, 980, 235, 140),
@@ -264,9 +265,9 @@ namespace LudumDare40.Components.Battle.Enemies
 
             if (sprite.CurrentAnimation == "bigLaserAttack")
             {
-                if (sprite.CurrentFrame != 10) return;
-                start = new Vector2(0, entity.position.Y + 21);
-                end = new Vector2(Scene.virtualSize.X, entity.position.Y + 21);
+                if (sprite.CurrentFrame < 10 || sprite.CurrentFrame > 17) return;
+                start = new Vector2(entity.position.X - 300, entity.position.Y + 21);
+                end = new Vector2(entity.position.X + 10, entity.position.Y + 21);
 
                 graphics.batcher.drawLine(start, end, Color.Black);
                 return;

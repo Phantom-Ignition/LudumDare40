@@ -77,6 +77,7 @@ namespace LudumDare40.Components.Battle
         {
             if (_dying) return;
 
+            knockback *= Vector2.UnitX;
             battleEntity?.onHit(knockback);
             _hitAnimation = 0.25f;
             ImmunityTime = ImmunityDuration;

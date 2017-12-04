@@ -28,7 +28,10 @@ namespace LudumDare40.Managers
 
         private VirtualIntegerAxis _movementAxis;
         public VirtualIntegerAxis MovementAxis => _movementAxis;
-        
+
+        private VirtualButton _selectButton;
+        public VirtualButton SelectButton => _selectButton;
+
         // Blocks all the interaction stuff
         public bool IsBusy { get; set; }
 
@@ -75,6 +78,12 @@ namespace LudumDare40.Managers
                 .addKeyboardKeys(VirtualInput.OverlapBehavior.TakeNewer, Keys.Left, Keys.Right)
                 .addGamePadLeftStickX()
                 .addGamePadDPadLeftRight();
+
+            _selectButton = new VirtualButton();
+            _selectButton
+                .addKeyboardKey(Keys.Enter)
+                .addGamePadButton(0, Buttons.A)
+                .addGamePadButton(0, Buttons.Start);
         }
 
         public bool isMovementAvailable()
