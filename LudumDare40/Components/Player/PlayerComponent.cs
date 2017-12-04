@@ -105,7 +105,7 @@ namespace LudumDare40.Components.Player
         //--------------------------------------------------
         // Player Manager
 
-        private PlayerManager _playerManager;
+        public PlayerManager playerManager;
 
         //----------------------//------------------------//
 
@@ -261,7 +261,8 @@ namespace LudumDare40.Components.Player
             _rollEffectTexture = entity.scene.content.Load<Texture2D>(Content.Effects.rollEffect);
 
             // Set player manager
-            _playerManager = Core.getGlobalManager<PlayerManager>();
+            playerManager = Core.getGlobalManager<PlayerManager>();
+            //playerManager.HoldingCore = true;
         }
 
         public override void onAddedToEntity()
@@ -306,7 +307,7 @@ namespace LudumDare40.Components.Player
         {
             var collider = entity.getComponent<BoxCollider>();
 
-            if (_playerManager.HoldingCore)
+            if (playerManager.HoldingCore)
             {
                 var reactors = entity.scene.findEntitiesWithTag(SceneMap.REACTORS);
                 foreach (var reactor in reactors)
@@ -317,12 +318,12 @@ namespace LudumDare40.Components.Player
                     {
                         var reactorComponent = reactor.getComponent<ReactorComponent>();
                         reactorComponent.setActivated();
-                        _playerManager.HoldingCore = false;
+                        playerManager.HoldingCore = false;
                         return;
                     }
                 }
                 (entity.scene as SceneMap)?.createCoreDrop(transform.position);
-                _playerManager.HoldingCore = false;
+                playerManager.HoldingCore = false;
                 return;
             }
 
@@ -334,7 +335,7 @@ namespace LudumDare40.Components.Player
                 if (collider.collidesWith(reactorCollider, out collisionResult))
                 {
                     coreDrop.destroy();
-                    _playerManager.HoldingCore = true;
+                    playerManager.HoldingCore = true;
                     return;
                 }
             }
@@ -399,7 +400,7 @@ namespace LudumDare40.Components.Player
 
             // Match the core sprite with the default one
             coreSprite.spriteEffects = sprite.spriteEffects;
-            coreSprite.setEnabled(_playerManager.HoldingCore);
+            coreSprite.setEnabled(playerManager.HoldingCore);
 
             ForcedGround = false;
         }

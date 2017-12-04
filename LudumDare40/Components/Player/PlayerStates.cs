@@ -113,15 +113,17 @@ namespace LudumDare40.Components.Player
         {
             base.update();
 
+            var holdingCore = entity.playerManager.HoldingCore;
+
             if (entity.isOnGround())
             {
                 fsm.resetStackTo(new StandState());
             }
-            else if (_input.MovementAxis.value == -1 && entity.platformerObject.collisionState.left)
+            else if (!holdingCore && _input.MovementAxis.value == -1 && entity.platformerObject.collisionState.left)
             {
                 fsm.changeState(new WallJumpState(-1));
             }
-            else if (_input.MovementAxis.value == 1 && entity.platformerObject.collisionState.right)
+            else if (!holdingCore && _input.MovementAxis.value == 1 && entity.platformerObject.collisionState.right)
             {
                 fsm.changeState(new WallJumpState(1));
             }

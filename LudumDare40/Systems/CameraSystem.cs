@@ -7,7 +7,7 @@ namespace LudumDare40.Systems
 {
     class CameraSystem : EntitySystem
     {
-        Camera _camera;
+        public Camera camera;
 
         /// <summary>
         /// how fast the camera closes the distance to the target position
@@ -60,7 +60,7 @@ namespace LudumDare40.Systems
         public CameraSystem(Entity target, Camera camera) : base(new Matcher().all(typeof(NpcBase)))
         {
             _targetEntity = target;
-            _camera = camera ?? target.scene.camera;
+            this.camera = camera ?? target.scene.camera;
 
             follow(_targetEntity);
 
@@ -88,8 +88,8 @@ namespace LudumDare40.Systems
             var entity = _targetEntity;
             // translate the deadzone to be in world space
             var halfScreen = entity.scene.sceneRenderTargetSize.ToVector2() * 0.5f;
-            _worldSpaceDeadzone.x = (int)(_camera.position.X - halfScreen.X + deadzone.x + focusOffset.X);
-            _worldSpaceDeadzone.y = (int)(_camera.position.Y - halfScreen.Y + deadzone.y + focusOffset.Y);
+            _worldSpaceDeadzone.x = (int)(camera.position.X - halfScreen.X + deadzone.x + focusOffset.X);
+            _worldSpaceDeadzone.y = (int)(camera.position.Y - halfScreen.Y + deadzone.y + focusOffset.Y);
             _worldSpaceDeadzone.width = deadzone.width;
             _worldSpaceDeadzone.height = deadzone.height;
 
@@ -98,14 +98,14 @@ namespace LudumDare40.Systems
 
             updateCameraShake();
 
-            _camera.position = Vector2.Lerp(_camera.position, _camera.position + _desiredPositionDelta, followLerp);
-            _camera.position += _shakeOffset;
-            _camera.entity.transform.roundPosition();
+            camera.position = Vector2.Lerp(camera.position, camera.position + _desiredPositionDelta, followLerp);
+            camera.position += _shakeOffset;
+            camera.entity.transform.roundPosition();
 
             if (mapLockEnabled)
             {
-                _camera.position = clampToMapSize(_camera.position);
-                _camera.entity.transform.roundPosition();
+                camera.position = clampToMapSize(camera.position);
+                camera.entity.transform.roundPosition();
             }
         }
 
@@ -117,7 +117,7 @@ namespace LudumDare40.Systems
         /// <param name="position">Position.</param>
         Vector2 clampToMapSize(Vector2 position)
         {
-            var halfScreen = new Vector2(_camera.bounds.width, _camera.bounds.height) * 0.5f;
+            var halfScreen = new Vector2(camera.bounds.width, camera.bounds.height) * 0.5f;
             var cameraMax = new Vector2(mapSize.X - halfScreen.X, mapSize.Y - halfScreen.Y);
 
             return Vector2.Clamp(position, halfScreen, cameraMax);
@@ -166,7 +166,7 @@ namespace LudumDare40.Systems
         public void follow(Entity targetEntity)
         {
             _targetEntity = targetEntity;
-            var cameraBounds = _camera.bounds;
+            var cameraBounds = camera.bounds;
             deadzone = new RectangleF(cameraBounds.width / 2, cameraBounds.height / 2, deadzoneSize.X, deadzoneSize.Y);
         }
 
@@ -201,8 +201,8 @@ namespace LudumDare40.Systems
         /// <param name="height">Height.</param>
         public void setCenteredDeadzone(int width, int height)
         {
-            Assert.isFalse(_camera == null, "camera is null. We cant get its bounds if its null. Either set it or wait until after this Component is added to the Entity.");
-            var cameraBounds = _camera.bounds;
+            Assert.isFalse(camera == null, "camera is null. We cant get its bounds if its null. Either set it or wait until after this Component is added to the Entity.");
+            var cameraBounds = camera.bounds;
             deadzone = new RectangleF((cameraBounds.width - width) / 2, (cameraBounds.height - height) / 2, width, height);
         }
 

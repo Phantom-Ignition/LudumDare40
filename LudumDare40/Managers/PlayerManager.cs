@@ -2,7 +2,7 @@
 
 namespace LudumDare40.Managers
 {
-    class PlayerManager : IUpdatableManager
+    public class PlayerManager : IUpdatableManager
     {
         private bool _holdingCore;
         public bool HoldingCore

@@ -22,6 +22,8 @@ namespace Nez
 			public const string hitPlayer2 = @"audios\hitPlayer2";
 			public const string hitPlayer3 = @"audios\hitPlayer3";
 			public const string jump = @"audios\jump";
+			public const string laser = @"audios\laser";
+			public const string missile = @"audios\missile";
 			public const string mystOnTheMoor = @"audios\mystOnTheMoor";
 			public const string roll = @"audios\roll";
 			public const string select = @"audios\select";
@@ -64,6 +66,7 @@ namespace Nez
 
 		public static class Maps
 		{
+			public const string background = @"maps\background";
 			public const string map = @"maps\map";
 			public const string map1 = @"maps\map1";
 			public const string map2 = @"maps\map2";
@@ -124,6 +127,7 @@ namespace Nez
 
 		public const string map = @"map";
 		public const string tileset = @"tileset";
+
     }
 }
 

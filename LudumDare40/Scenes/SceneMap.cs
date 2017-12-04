@@ -57,6 +57,7 @@ namespace LudumDare40.Scenes
         // Map
         
         private TiledMap _tiledMap;
+        private Sprite _backgroundSprite;
 
         //--------------------------------------------------
         // Camera
@@ -105,6 +106,11 @@ namespace LudumDare40.Scenes
 
         private void setupMap()
         {
+            var background = createEntity("map-background");
+            var texture = content.Load<Texture2D>(Content.Maps.background);
+            _backgroundSprite = background.addComponent(new Sprite(texture) { renderLayer = BACKGROUND_RENDER_LAYER});
+            background.position = (virtualSize.ToVector2() / 2);
+
             var sysManager = Core.getGlobalManager<SystemManager>();
             _tiledMap = content.Load<TiledMap>("maps/map");
             sysManager.setTiledMapComponent(_tiledMap);
@@ -376,7 +382,7 @@ namespace LudumDare40.Scenes
         private void setupPostProcessors()
         {
             Core.getGlobalManager<SystemManager>().cinematicLetterboxPostProcessor = addPostProcessor(new CinematicLetterboxPostProcessor(1));
-            Core.getGlobalManager<SystemManager>().flashPostProcessor = addPostProcessor(new FlashPostProcessor(0));
+            Core.getGlobalManager<SystemManager>().flashPostProcessor = addPostProcessor(new FlashPostProcessor(1));
 
             var bloom = addPostProcessor(new BloomPostProcessor(2));
             bloom.setBloomSettings(new BloomSettings(0.5f, 2, 0.9f, 1, 1, 1));
@@ -395,10 +401,12 @@ namespace LudumDare40.Scenes
         {
             base.update();
 
+            _backgroundSprite.entity.position = _camera.camera.position;
+
             if (Input.isKeyPressed(Keys.C))
             {
                 Core.startCoroutine(
-                    Core.getGlobalManager<SystemManager>().flashPostProcessor.animate(1f)
+                    Core.getGlobalManager<SystemManager>().flashPostProcessor.animate(0.5f)
                 );
             }
 

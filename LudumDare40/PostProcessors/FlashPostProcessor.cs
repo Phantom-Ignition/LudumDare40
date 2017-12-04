@@ -35,12 +35,10 @@ namespace LudumDare40.PostProcessors
 
         public override void onAddedToScene()
         {
-            /*
             effect = scene.content.loadEffect<Effect>("effects/flash.mgfxo");
 
             _flashIntensityParam = effect.Parameters["Intensity"];
             _flashIntensityParam.SetValue(_flashIntensity);
-            */
         }
 
 

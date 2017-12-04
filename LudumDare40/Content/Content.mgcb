@@ -596,3 +596,30 @@
 /processorParam:TextureFormat=Color
 /build:misc/bigLaser.png
 
+#begin effects/flash.mgfxo
+/copy:effects/flash.mgfxo
+
+#begin maps/background.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:maps/background.png
+
+#begin audios/missile.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/missile.ogg
+
+#begin audios/laser.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/laser.ogg
+

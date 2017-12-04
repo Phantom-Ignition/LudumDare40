@@ -15,7 +15,7 @@ namespace LudumDare40.Components
         public float moveSpeed = 1000;
         public float maxMoveSpeed = 150;
         public float gravity = 1200;
-        public float jumpHeight = 16 * 3;
+        public float jumpHeight = 17 * 3;
         public float wallGravity = 100;
 
         //--------------------------------------------------
