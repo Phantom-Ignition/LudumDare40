@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using LudumDare40.Components.Battle;
+﻿using LudumDare40.Components.Battle;
 using LudumDare40.Components.Map;
 using LudumDare40.Components.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using Nez.ECS.Components.Physics.Colliders;
+using System;
+using System.Collections.Generic;
 
 namespace LudumDare40.Systems
 {

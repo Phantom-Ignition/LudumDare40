@@ -38,9 +38,14 @@
   <object id="43" name="coredrop" x="42.6667" y="111.167" width="25.3333" height="26"/>
  </objectgroup>
  <objectgroup name="enemies">
-  <object id="53" name="Enemy Drone" type="EnemyDrone" x="320" y="124.667" width="32" height="32"/>
+  <object id="53" name="Enemy Drone" type="EnemyDrone" x="237.333" y="126.667" width="32" height="32">
+   <properties>
+    <property name="patrolStartRight" type="bool" value="false"/>
+    <property name="patrolTime" type="float" value="1.5"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup name="objects">
-  <object id="36" name="playerSpawn" x="387.583" y="149.334"/>
+  <object id="36" name="playerSpawn" x="80.25" y="148"/>
  </objectgroup>
 </map>

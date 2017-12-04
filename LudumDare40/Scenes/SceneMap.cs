@@ -161,22 +161,24 @@ namespace LudumDare40.Scenes
                 entity.addComponent<BattleComponent>();
                 entity.addComponent(new BoxCollider(-10f, -15f, 20f, 35f));
 
-                var instance = createEnemyInstance(enemy.type);
+                var patrolStartRight = bool.Parse(enemy.properties["patrolStartRight"]);
+                var instance = createEnemyInstance(enemy.type, patrolStartRight);
                 var enemyComponent = entity.addComponent(instance);
                 enemyComponent.sprite.renderLayer = ENEMIES_RENDER_LAYER;
                 enemyComponent.playerCollider = findEntity("player").getComponent<BoxCollider>();
+                enemyComponent.patrolTime = float.Parse(enemy.properties["patrolTime"]);
 
                 entity.transform.position = enemy.position + new Vector2(enemy.width, enemy.height) / 2;
             }
         }
 
-        private EnemyComponent createEnemyInstance(string enemyName)
+        private EnemyComponent createEnemyInstance(string enemyName, bool patrolStartRight)
         {
             var enemiesNamespace = typeof(BattleComponent).Namespace + ".Enemies";
             var type = Type.GetType(enemiesNamespace + "." + enemyName + "Component");
             if (type != null)
             {
-                return Activator.CreateInstance(type) as EnemyComponent;
+                return Activator.CreateInstance(type, new object[] { patrolStartRight }) as EnemyComponent;
             }
             return null;
         }

@@ -125,7 +125,9 @@ namespace LudumDare40.Components.Player
             else if (entity.platformerObject.collisionState.right)
             {
                 fsm.changeState(new WallJumpState(1));
-            } else if (isMovementAvailable() && Input.isKeyPressed(Keys.A))
+            }
+
+            if (isMovementAvailable() && Input.isKeyPressed(Keys.A))
             {
                 Console.WriteLine("attack button pressed 2");
                 fsm.pushState(new AttackStateOne());

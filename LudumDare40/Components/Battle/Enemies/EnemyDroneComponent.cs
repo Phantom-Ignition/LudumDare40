@@ -20,6 +20,10 @@ namespace LudumDare40.Components.Battle.Enemies
 
         //----------------------//------------------------//
 
+        public EnemyDroneComponent(bool patrolStartRight) : base(patrolStartRight)
+        {
+        }
+
         public override void initialize()
         {
             base.initialize();

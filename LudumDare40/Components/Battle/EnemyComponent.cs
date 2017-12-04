@@ -54,11 +54,22 @@ namespace LudumDare40.Components.Battle
         public AreaOfSightCollider areaOfSight;
 
         //--------------------------------------------------
+        // Patrol
+
+        public float patrolTime;
+        public bool patrolStartRight;
+
+        //--------------------------------------------------
         // Dangerous Stage
 
         public int dangerousStage;
 
         //----------------------//------------------------//
+
+        public EnemyComponent(bool patrolStartRight)
+        {
+            this.patrolStartRight = patrolStartRight;
+        }
 
         public override void initialize()
         {

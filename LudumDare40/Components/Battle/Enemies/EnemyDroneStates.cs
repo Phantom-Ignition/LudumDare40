@@ -4,6 +4,7 @@ using LudumDare40.FSM;
 using LudumDare40.Managers;
 using Microsoft.Xna.Framework;
 using Nez;
+using Nez.Tiled;
 using Random = Nez.Random;
 
 namespace LudumDare40.Components.Battle.Enemies
@@ -26,15 +27,17 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void begin()
         {
+            _side = entity.patrolStartRight ? 1 : -1;
             switchSide();
             entity.sprite.play("floating");
         }
 
         public void switchSide()
         {
+            _timer?.stop();
             _side *= -1;
             entity.forceMovement(Vector2.UnitX * _side);
-            _timer = Core.schedule(1.5f, entity, t =>
+            _timer = Core.schedule(entity.patrolTime, entity, t =>
             {
                 switchSide();
             });
@@ -42,12 +45,28 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void update()
         {
+            var po = entity.getComponent<PlatformerObject>();
+            if (entity.sprite.getDirection() == 1 && po.collisionState.right)
+            {
+                po.velocity = -po.maxMoveSpeed * 0.8f * Vector2.UnitX;
+                switchSide();
+            }
+            if (entity.sprite.getDirection() == -1 && po.collisionState.left)
+            {
+                po.velocity = po.maxMoveSpeed * 0.8f * Vector2.UnitX;
+                switchSide();
+            }
             if (entity.canSeeThePlayer())
             {
                 _timer.stop();
                 entity.forceMovement(Vector2.Zero);
                 fsm.pushState(new EnemyDroneFollowState());
             }
+        }
+
+        public override void end()
+        {
+            _timer?.stop();
         }
     }
 
