@@ -29,6 +29,7 @@ namespace LudumDare40
         {
             bigBitmapFont = content.Load<BitmapFont>(Nez.Content.Fonts.titleFont);
             smallBitmapFont = content.Load<BitmapFont>(Nez.Content.Fonts.smallFont);
+            AudioManager.loadAllSounds();
         }
 
         protected override void Initialize()

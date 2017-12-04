@@ -1,4 +1,5 @@
-﻿using LudumDare40.FSM;
+﻿using System;
+using LudumDare40.FSM;
 using LudumDare40.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,6 +22,7 @@ namespace LudumDare40.Components.Player
             {
                 if (entity.isOnGround() && _input.JumpButton.isPressed)
                 {
+                    Console.WriteLine("jump button pressed");
                     fsm.resetStackTo(new JumpingState(true));
                 }
                 if (_input.UpButton.isDown && entity.platformerObject.IsLadderTouching)
@@ -81,6 +83,7 @@ namespace LudumDare40.Components.Player
 
             if (isMovementAvailable() && _input.AttackButton.isPressed)
             {
+                Console.WriteLine("attack button pressed");
                 fsm.pushState(new AttackStateOne());
             }
         }
@@ -101,6 +104,7 @@ namespace LudumDare40.Components.Player
             entity.SetAnimation(PlayerComponent.Animations.JumpPreparation);
             if (_needJump)
             {
+                AudioManager.roll.Play(0.7f, 1.0f, 0f);
                 _needJump = false;
                 entity.Jump();
             }
@@ -151,6 +155,7 @@ namespace LudumDare40.Components.Player
 
         public override void begin()
         {
+            AudioManager.roll.Play(0.6f, 0.4f, 0f);
             _immunityFrames = new[] {1, 2};
             entity.SetAnimation(PlayerComponent.Animations.Rolling);
             entity.forceMovement(Vector2.UnitX * (entity.sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1));
@@ -185,7 +190,7 @@ namespace LudumDare40.Components.Player
 
         public override void begin()
         {
-            entity.SetAnimation(PlayerComponent.Animations.Stand);
+            entity.SetAnimation(PlayerComponent.Animations.SlidingWall);
             entity.platformerObject.grabbingWall = true;
         }
 
@@ -260,6 +265,7 @@ namespace LudumDare40.Components.Player
 
         public override void begin()
         {
+            AudioManager.swordSounds.play();
             _input.IsLocked = true;
             entity.SetAnimation(PlayerComponent.Animations.AttackOne);
         }
@@ -296,6 +302,7 @@ namespace LudumDare40.Components.Player
         {
             _input.IsLocked = true;
             entity.SetAnimation(PlayerComponent.Animations.AttackTwo);
+            AudioManager.swordSounds.play();
         }
 
         public override void update()
@@ -317,6 +324,7 @@ namespace LudumDare40.Components.Player
     {
         public override void begin()
         {
+            AudioManager.hitPlayer.play(0.9f, 0.0f);
             entity.SetAnimation(PlayerComponent.Animations.Hit);
         }
 

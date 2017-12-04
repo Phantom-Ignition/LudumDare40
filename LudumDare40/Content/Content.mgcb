@@ -350,3 +350,141 @@
 /processorParam:TextureFormat=Color
 /build:misc/bullet.png
 
+#begin audios/cannon.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/cannon.ogg
+
+#begin audios/electric.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/electric.ogg
+
+#begin audios/equip.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/equip.ogg
+
+#begin audios/explosion.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/explosion.ogg
+
+#begin audios/footstep.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/footstep.ogg
+
+#begin audios/hit1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/hit1.ogg
+
+#begin audios/hit2.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/hit2.ogg
+
+#begin audios/hit3.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/hit3.ogg
+
+#begin audios/hitman.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:audios/hitman.mp3
+
+#begin audios/hitPlayer1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/hitPlayer1.ogg
+
+#begin audios/hitPlayer2.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/hitPlayer2.ogg
+
+#begin audios/hitPlayer3.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/hitPlayer3.ogg
+
+#begin audios/jump.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/jump.ogg
+
+#begin audios/mystOnTheMoor.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:audios/mystOnTheMoor.mp3
+
+#begin audios/roll.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/roll.ogg
+
+#begin audios/select.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/select.ogg
+
+#begin audios/shot.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/shot.ogg
+
+#begin audios/switch.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/switch.ogg
+
+#begin audios/sword1.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/sword1.ogg
+
+#begin audios/sword2.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/sword2.ogg
+
+#begin audios/sword3.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/sword3.ogg
+
+#begin audios/alarm.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/alarm.ogg
+
+#begin audios/ambience.ogg
+/importer:OggImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:audios/ambience.ogg
+

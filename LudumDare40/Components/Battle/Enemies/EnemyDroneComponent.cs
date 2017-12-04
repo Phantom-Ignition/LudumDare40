@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using System.Collections.Generic;
 using LudumDare40.FSM;
+using LudumDare40.Managers;
 using LudumDare40.Scenes;
+using LudumDare40.Extensions;
 
 namespace LudumDare40.Components.Battle.Enemies
 {
@@ -47,6 +49,19 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(320, 64, 64, 64),
             }, new[] { 0, 0, 0, 0, 0, 0 }, new[] { -28, -28, -28, -28, -28, -28 });
 
+            sprite.CreateAnimation("attackStrong", 0.1f, false);
+            sprite.AddFrames("attackStrong", new List<Rectangle>
+            {
+                new Rectangle(256, 128, 64, 64),
+                new Rectangle(320, 128, 64, 64),
+                new Rectangle(0, 192, 64, 64),
+                new Rectangle(64, 192, 64, 64),
+                new Rectangle(128, 192, 64, 64),
+                new Rectangle(192, 192, 64, 64),
+                new Rectangle(256, 192, 64, 64),
+                new Rectangle(320, 192, 64, 64),
+            }, new[] { 0, 0, 0, 0, 0, 0, 0, 0 }, new[] { -28, -28, -28, -28, -28, -28, -28, -28 });
+
             sprite.CreateAnimation("hit", 0.1f, false);
             sprite.AddFrames("hit", new List<Rectangle>
             {
@@ -59,13 +74,13 @@ namespace LudumDare40.Components.Battle.Enemies
             sprite.CreateAnimation("dying", 0.1f, false);
             sprite.AddFrames("dying", new List<Rectangle>
             {
-                new Rectangle(0, 192, 64, 64),
-                new Rectangle(64, 192, 64, 64),
-                new Rectangle(128, 192, 64, 64),
-                new Rectangle(192, 192, 64, 64),
-                new Rectangle(256, 192, 64, 64),
-                new Rectangle(320, 192, 64, 64),
                 new Rectangle(0, 256, 64, 64),
+                new Rectangle(64, 256, 64, 64),
+                new Rectangle(128, 256, 64, 64),
+                new Rectangle(192, 256, 64, 64),
+                new Rectangle(256, 256, 64, 64),
+                new Rectangle(320, 256, 64, 64),
+                new Rectangle(0, 320, 64, 64),
             }, new[] { 0, 0, 0, 0, 0, 0, 0 }, new[] { -28, -28, -28, -28, -28, -28, -28 });
 
             // collisor init
@@ -88,12 +103,21 @@ namespace LudumDare40.Components.Battle.Enemies
             platformerObject.moveSpeed = 60;
         }
 
-        public void createShot()
+        public void createShot(int type)
         {
+            if (type == 1)
+            {
+                AudioManager.shot.Play(0.7f);
+            }
+            else
+            {
+                AudioManager.cannon.Play(0.7f);
+            }
             var shots = entity.scene.findEntitiesWithTag(SceneMap.SHOTS);
             var shot = entity.scene.createEntity($"shot:${shots.Count}");
             var direction = sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1;
-            shot.addComponent(new ShotComponent(direction, dangerousStage));
+            shot.addComponent(new ShotComponent(direction, type));
+            sprite.play(type == 1 ? "attack" : "attackStrong");
 
             var position = entity.getComponent<HurtCollider>().absolutePosition;
             shot.transform.position = position;

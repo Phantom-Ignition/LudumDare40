@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using System;
+using LudumDare40.Extensions;
+using LudumDare40.Managers;
 using Random = Nez.Random;
 
 namespace LudumDare40.Components.Battle.Enemies
@@ -121,6 +123,7 @@ namespace LudumDare40.Components.Battle.Enemies
     {
         public override void begin()
         {
+            AudioManager.electric.Play(1.0f);
             var distanceToPlayer = entity.distanceToPlayer();
             var sign = Math.Sign(distanceToPlayer);
             entity.sprite.spriteEffects = sign < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
@@ -142,6 +145,7 @@ namespace LudumDare40.Components.Battle.Enemies
     {
         public override void begin()
         {
+            AudioManager.hit.play(0.8f, 0.0f);
             entity.sprite.play("hit");
         }
 
@@ -158,6 +162,7 @@ namespace LudumDare40.Components.Battle.Enemies
     {
         public override void begin()
         {
+            AudioManager.explosion.Play();
             entity.sprite.play("dying");
         }
     }

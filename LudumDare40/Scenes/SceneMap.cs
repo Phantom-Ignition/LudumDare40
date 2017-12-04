@@ -16,6 +16,7 @@ using LudumDare40.PostProcessors;
 using LudumDare40.Scenes.SceneMapExtensions;
 using LudumDare40.Systems;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Nez;
@@ -61,6 +62,11 @@ namespace LudumDare40.Scenes
 
         private List<Entity> _reactors;
 
+        //--------------------------------------------------
+        // Ambience
+
+        private SoundEffectInstance _ambienceEffectInstance;
+
         //----------------------//------------------------//
 
         public override void initialize()
@@ -84,6 +90,9 @@ namespace LudumDare40.Scenes
         public override void onStart()
         {
             getEntityProcessor<NpcInteractionSystem>().mapStart();
+            _ambienceEffectInstance = AudioManager.ambience.CreateInstance();
+            _ambienceEffectInstance.IsLooped = true;
+            _ambienceEffectInstance.Play();
         }
 
         private void setupMap()

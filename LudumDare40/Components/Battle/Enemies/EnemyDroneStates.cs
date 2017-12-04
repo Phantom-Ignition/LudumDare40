@@ -1,7 +1,10 @@
 ﻿using System;
+using LudumDare40.Extensions;
 using LudumDare40.FSM;
+using LudumDare40.Managers;
 using Microsoft.Xna.Framework;
 using Nez;
+using Random = Nez.Random;
 
 namespace LudumDare40.Components.Battle.Enemies
 {
@@ -74,6 +77,8 @@ namespace LudumDare40.Components.Battle.Enemies
             if (_shotCooldown > 0.0f)
             {
                 _shotCooldown -= Time.deltaTime;
+                if (entity.canSeeThePlayer())
+                    entity.forceMovement(Vector2.Zero);
                 return;
             }
             if (entity.canSeeThePlayer())
@@ -86,7 +91,14 @@ namespace LudumDare40.Components.Battle.Enemies
                 if (entity.dangerousStage == 2 && distance < 70)
                 {
                     _shotCooldown = 0.8f;
-                    fsm.pushState(new EnemyDroneShotState());
+                    if (Random.nextFloat() > 0.4)
+                    {
+                        fsm.pushState(new EnemyDroneCanonShotState());
+                    }
+                    else
+                    {
+                        fsm.pushState(new EnemyDroneShotState());
+                    }
                 }
             }
         }
@@ -112,7 +124,31 @@ namespace LudumDare40.Components.Battle.Enemies
             if (!_shot && entity.sprite.CurrentFrame == 2)
             {
                 _shot = true;
-                entity.createShot();
+                entity.createShot(1);
+            }
+            if (entity.sprite.Looped)
+            {
+                fsm.popState();
+            }
+        }
+    }
+
+    public class EnemyDroneCanonShotState : EnemyDroneState
+    {
+        private bool _shot;
+
+        public override void begin()
+        {
+            _shot = false;
+            entity.sprite.play("attackStrong");
+        }
+
+        public override void update()
+        {
+            if (!_shot && entity.sprite.CurrentFrame == 3)
+            {
+                _shot = true;
+                entity.createShot(2);
             }
             if (entity.sprite.Looped)
             {
@@ -125,6 +161,7 @@ namespace LudumDare40.Components.Battle.Enemies
     {
         public override void begin()
         {
+            AudioManager.hit.play(0.8f, 0.0f);
             entity.sprite.play("hit");
         }
 
@@ -141,6 +178,7 @@ namespace LudumDare40.Components.Battle.Enemies
     {
         public override void begin()
         {
+            AudioManager.explosion.Play();
             entity.sprite.play("dying");
         }
     }

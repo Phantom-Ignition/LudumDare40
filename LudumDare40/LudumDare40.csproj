@@ -76,8 +76,10 @@
       <DependentUpon>ContentPathGenerator.tt</DependentUpon>
     </Compile>
     <Compile Include="Extensions\ColorExtensions.cs" />
+    <Compile Include="Extensions\SoundEffectExtensions.cs" />
     <Compile Include="FSM\FiniteStateMachine.cs" />
     <Compile Include="GameMain.cs" />
+    <Compile Include="Managers\AudioManager.cs" />
     <Compile Include="Managers\InputManager.cs" />
     <Compile Include="Managers\PlayerManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />

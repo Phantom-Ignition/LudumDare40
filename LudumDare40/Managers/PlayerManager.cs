@@ -4,14 +4,20 @@ namespace LudumDare40.Managers
 {
     class PlayerManager : IUpdatableManager
     {
-        public bool HoldingCore;
-
-        public PlayerManager()
+        private bool _holdingCore;
+        public bool HoldingCore
         {
+            get => _holdingCore;
+            set
+            {
+                _holdingCore = value;
+                if (value)
+                {
+                    AudioManager.equip.Play();
+                }
+            }
         }
 
-        public void update()
-        {
-        }
+        public void update() { }
     }
 }

@@ -6,7 +6,6 @@ using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
-using Nez.ECS.Components.Physics.Colliders;
 
 namespace LudumDare40.Components.Battle
 {

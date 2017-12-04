@@ -1,6 +1,7 @@
 ﻿using LudumDare40.Components.Battle;
 using LudumDare40.Components.Map;
 using LudumDare40.Components.Sprites;
+using LudumDare40.Extensions;
 using LudumDare40.FSM;
 using LudumDare40.Managers;
 using LudumDare40.Scenes;
@@ -10,6 +11,7 @@ using Nez;
 using Nez.Tiled;
 using System;
 using System.Collections.Generic;
+using Random = Nez.Random;
 
 namespace LudumDare40.Components.Player
 {
@@ -30,7 +32,8 @@ namespace LudumDare40.Components.Player
             AttackTwo,
             Hit,
             Rolling,
-            Dying
+            Dying,
+            SlidingWall
         }
 
         private Dictionary<Animations, string> _animationMap;
@@ -57,6 +60,11 @@ namespace LudumDare40.Components.Player
         // Velocity
 
         public Vector2 Velocity => _platformerObject.velocity;
+
+        //--------------------------------------------------
+        // Footstep sound cooldown
+
+        private float _footstepCooldown;
 
         //--------------------------------------------------
         // Finite State Machine
@@ -108,6 +116,7 @@ namespace LudumDare40.Components.Player
                 {Animations.JumpLanding, "jumpLanding"},
                 {Animations.AttackOne, "attack1"},
                 {Animations.AttackTwo, "attack2"},
+                {Animations.SlidingWall, "slidingWall"},
                 {Animations.Rolling, "rolling"},
                 {Animations.Hit, "jumpLanding"},
                 {Animations.Dying, "dying"},
@@ -196,6 +205,12 @@ namespace LudumDare40.Components.Player
             });
             sprite.AddFramesToAttack(am[Animations.AttackTwo], 0, 1, 2, 3);
 
+            sprite.CreateAnimation(am[Animations.SlidingWall], 0.1f, false);
+            sprite.AddFrames(am[Animations.SlidingWall], new List<Rectangle>()
+            {
+                new Rectangle(320, 192, 64, 64),
+            }, new int[] { 0 }, new int[] { -9 });
+
             sprite.CreateAnimation(am[Animations.Rolling], 0.05f, false);
             sprite.AddFrames(am[Animations.Rolling], new List<Rectangle>()
             {
@@ -242,6 +257,7 @@ namespace LudumDare40.Components.Player
             battleComponent = entity.getComponent<BattleComponent>();
             battleComponent.setHp(50);
             battleComponent.battleEntity = this;
+            battleComponent.ImmunityDuration = 0.5f;
         }
 
         public void onHit(Vector2 knockback)
@@ -320,9 +336,20 @@ namespace LudumDare40.Components.Player
             if (applyKnockback())
                 return;
 
-            var velocity = _forceMovement ? _forceMovementVelocity.X : Core.getGlobalManager<InputManager>().MovementAxis.value;
+            var axis = Core.getGlobalManager<InputManager>().MovementAxis.value;
+            var velocity = _forceMovement ? _forceMovementVelocity.X : axis;
             if (canMove() && (velocity > 0 || velocity < 0))
             {
+                if (isOnGround() && axis != 0 && _footstepCooldown <= 0.0f)
+                {
+                    _footstepCooldown = 0.25f;
+                    AudioManager.footstep.Play(0.4f);
+                }
+                else
+                {
+                    _footstepCooldown -= Time.deltaTime;
+                }
+
                 var po = _platformerObject;
                 var mms = po.maxMoveSpeed;
                 var moveSpeed = _walljumpForcedMovement ? po.gravity * mms : po.moveSpeed;
