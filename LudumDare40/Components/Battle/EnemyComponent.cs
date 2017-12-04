@@ -46,7 +46,7 @@ namespace LudumDare40.Components.Battle
         //--------------------------------------------------
         // Battle Component
 
-        private BattleComponent _battleComponent;
+        protected BattleComponent _battleComponent;
 
         //--------------------------------------------------
         // Area of Sight

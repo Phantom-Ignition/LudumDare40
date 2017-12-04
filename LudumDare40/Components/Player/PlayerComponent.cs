@@ -272,6 +272,8 @@ namespace LudumDare40.Components.Player
             battleComponent.setHp(50);
             battleComponent.battleEntity = this;
             battleComponent.ImmunityDuration = 0.5f;
+
+            entity.setTag(SceneMap.PLAYER);
         }
 
         public void onHit(Vector2 knockback)

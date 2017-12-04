@@ -121,7 +121,6 @@ namespace LudumDare40.Components.Battle.Enemies
             var shot = entity.scene.createEntity($"shot:${shots.Count}");
             var direction = sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1;
             shot.addComponent(new ShotComponent(direction, type));
-            sprite.play(type == 1 ? "attack" : "attackStrong");
 
             var position = entity.getComponent<HurtCollider>().absolutePosition;
             shot.transform.position = position;

@@ -46,6 +46,7 @@ namespace LudumDare40.Scenes
         public const int COREDROPS = 2;
         public const int ENEMIES = 3;
         public const int SHOTS = 4;
+        public const int PLAYER = 5;
 
         //--------------------------------------------------
         // PostProcessors
@@ -92,7 +93,9 @@ namespace LudumDare40.Scenes
             getEntityProcessor<NpcInteractionSystem>().mapStart();
             _ambienceEffectInstance = AudioManager.ambience.CreateInstance();
             _ambienceEffectInstance.IsLooped = true;
-            _ambienceEffectInstance.Play();
+
+            // TODO: PLAY AGAIN
+            //_ambienceEffectInstance.Play();
         }
 
         private void setupMap()
@@ -121,7 +124,7 @@ namespace LudumDare40.Scenes
             var sysManager = Core.getGlobalManager<SystemManager>();
 
             var collisionLayer = _tiledMap.properties["collisionLayer"];
-            Vector2? playerSpawn = null;
+            Vector2? playerSpawn;
 
             if (sysManager.SpawnPosition.HasValue)
             {

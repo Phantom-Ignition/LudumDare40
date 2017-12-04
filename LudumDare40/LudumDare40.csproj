@@ -48,6 +48,8 @@
     <Compile Include="Components\Battle\AreaOfSightCollider.cs" />
     <Compile Include="Components\Battle\AttackCollider.cs" />
     <Compile Include="Components\Battle\BattleComponent.cs" />
+    <Compile Include="Components\Battle\Enemies\EnemyBossComponent.cs" />
+    <Compile Include="Components\Battle\Enemies\EnemyBossStates.cs" />
     <Compile Include="Components\Battle\Enemies\EnemyDroneComponent.cs" />
     <Compile Include="Components\Battle\Enemies\EnemyDroneStates.cs" />
     <Compile Include="Components\Battle\Enemies\EnemyOneComponent.cs" />

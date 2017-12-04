@@ -40,6 +40,7 @@ namespace LudumDare40.Systems
             if (collider.collidesWith(_playerCollider, out collisionResult))
             {
                 _playerBattler.onHit(collisionResult);
+                entity.destroy();
             }
         }
         

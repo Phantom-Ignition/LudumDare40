@@ -1,0 +1,194 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using LudumDare40.Components.Sprites;
+using LudumDare40.FSM;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Nez;
+
+namespace LudumDare40.Components.Battle.Enemies
+{
+    public class EnemyBossComponent : EnemyComponent
+    {
+        //--------------------------------------------------
+        // Finite State Machine
+        
+        private FiniteStateMachine<EnemyBossStates, EnemyBossComponent> _fsm;
+        public FiniteStateMachine<EnemyBossStates, EnemyBossComponent> FSM => _fsm;
+
+        //--------------------------------------------------
+        // Laser
+
+        public int laserStartFrame { get; private set; }
+        public int laserEndFrame { get; private set; }
+        public Vector2[,] laserPoints { get; private set; }
+
+        //----------------------//------------------------//
+
+        public EnemyBossComponent(bool patrolStartRight) : base(patrolStartRight) { }
+
+        public override void initialize()
+        {
+            base.initialize();
+
+            // Init sprite
+            var texture = entity.scene.content.Load<Texture2D>(Content.Characters.boss);
+            sprite = entity.addComponent(new AnimatedSprite(texture, "clawAttack"));
+            sprite.CreateAnimation("stand", 0.25f);
+            sprite.AddFrames("stand", new List<Rectangle>
+            {
+                new Rectangle(0, 0, 235, 140),
+                new Rectangle(235, 0, 235, 140),
+                new Rectangle(470, 0, 235, 140),
+                new Rectangle(705, 0, 235, 140),
+                new Rectangle(940, 0, 235, 140),
+                new Rectangle(1175, 0, 235, 140),
+            });
+
+            sprite.CreateAnimation("clawAttack", 0.08f, false);
+            sprite.AddFrames("clawAttack", new List<Rectangle>
+            {
+                new Rectangle(1410, 0, 235, 140),
+                new Rectangle(1645, 0, 235, 140),
+                new Rectangle(1880, 0, 235, 140),
+                new Rectangle(2115, 0, 235, 140),
+                new Rectangle(2350, 0, 235, 140),
+                new Rectangle(2585, 0, 235, 140),
+                new Rectangle(0, 140, 235, 140),
+                new Rectangle(235, 140, 235, 140),
+                new Rectangle(470, 140, 235, 140),
+                new Rectangle(705, 140, 235, 140),
+                new Rectangle(940, 140, 235, 140),
+                new Rectangle(1175, 140, 235, 140),
+            });
+            sprite.AddAttackCollider("clawAttack", new List<List<Rectangle>>()
+            {
+                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle>() { new Rectangle(-62, -50, 135, 60) },
+                new List<Rectangle>() { new Rectangle(-82, -24, 155, 60) },
+                new List<Rectangle>() { new Rectangle(-62, -24, 135, 60) },
+            });
+            sprite.AddFramesToAttack("clawAttack", 6, 7, 8);
+
+            sprite.CreateAnimation("laserAttack", 0.08f, false);
+            sprite.AddFrames("laserAttack", new List<Rectangle>
+            {
+                new Rectangle(1410, 140, 235, 140),
+                new Rectangle(1645, 140, 235, 140),
+                new Rectangle(1880, 140, 235, 140),
+                new Rectangle(2115, 140, 235, 140),
+                new Rectangle(2350, 140, 235, 140),
+                new Rectangle(2585, 140, 235, 140),
+                new Rectangle(0, 280, 235, 140),
+                new Rectangle(235, 280, 235, 140),
+                new Rectangle(470, 280, 235, 140),
+                new Rectangle(705, 280, 235, 140),
+                new Rectangle(940, 280, 235, 140),
+                new Rectangle(1175, 280, 235, 140),
+                new Rectangle(1410, 280, 235, 140),
+                new Rectangle(1645, 280, 235, 140),
+                new Rectangle(1880, 280, 235, 140),
+                new Rectangle(2115, 280, 235, 140),
+                new Rectangle(2350, 280, 235, 140),
+                new Rectangle(2585, 280, 235, 140),
+                new Rectangle(0, 420, 235, 140),
+            });
+
+            sprite.CreateAnimation("dying", 0.25f);
+            sprite.AddFrames("dying", new List<Rectangle>
+            {
+                new Rectangle(235, 420, 235, 140),
+                new Rectangle(470, 420, 235, 140),
+                new Rectangle(705, 420, 235, 140),
+                new Rectangle(940, 420, 235, 140),
+                new Rectangle(1175, 420, 235, 140),
+                new Rectangle(1410, 420, 235, 140),
+                new Rectangle(1645, 420, 235, 140),
+                new Rectangle(1880, 420, 235, 140),
+                new Rectangle(2115, 420, 235, 140),
+                new Rectangle(2350, 420, 235, 140),
+                new Rectangle(2585, 420, 235, 140),
+                new Rectangle(0, 560, 235, 140),
+                new Rectangle(235, 560, 235, 140),
+                new Rectangle(470, 560, 235, 140),
+                new Rectangle(705, 560, 235, 140),
+                new Rectangle(940, 560, 235, 140),
+                new Rectangle(1175, 560, 235, 140),
+                new Rectangle(1410, 560, 235, 140),
+                new Rectangle(1645, 560, 235, 140),
+                new Rectangle(1880, 560, 235, 140),
+                new Rectangle(2115, 560, 235, 140),
+            });
+
+            // config the laser 
+            laserStartFrame = 8;
+            laserEndFrame = 16;
+            laserPoints = new[,]
+            {
+                {new Vector2(16, -4), new Vector2(16, 47)},
+                {new Vector2(10, -5), new Vector2(-5, 47)},
+                {new Vector2(6, -2), new Vector2(-21, 47)},
+                {new Vector2(0, -3), new Vector2(-42, 47)},
+                {new Vector2(-3, -7), new Vector2(-52, 47)},
+                {new Vector2(-6, -8), new Vector2(-85, 47)},
+                {new Vector2(-10, -10), new Vector2(-117, 47)},
+            };
+
+            // FSM
+            _fsm = new FiniteStateMachine<EnemyBossStates, EnemyBossComponent>(this, new EnemyBossWaiting());
+
+            // add hurt box
+            entity.addComponent(new HurtCollider(-30, -55, 146, 102));
+
+            // View range
+            areaOfSight = entity.addComponent(new AreaOfSightCollider(-120, -50, 250, 96));
+        }
+
+        public override void update()
+        {
+            _fsm.update();
+            base.update();
+        }
+
+        public override void onAddedToEntity()
+        {
+            base.onAddedToEntity();
+            _battleComponent.HP = 200;
+
+            var collider = entity.getComponent<BoxCollider>();
+            collider.height += 27;
+        }
+
+        public void launchMissiles()
+        {
+            
+        }
+
+        public override void onHit(Vector2 knockback) { }
+
+        public override void debugRender(Graphics graphics)
+        {
+            base.debugRender(graphics);
+
+            if (sprite.CurrentFrame < laserStartFrame) return;
+            if (sprite.CurrentFrame >= laserEndFrame) return;
+            if (sprite.CurrentAnimation != "laserAttack") return;
+
+            var index = sprite.CurrentFrame - laserStartFrame-1;
+            if (index < 0) return;
+            var start = laserPoints[index, 0] + entity.position;
+            var end = laserPoints[index, 1] + entity.position;
+
+            graphics.batcher.drawLine(start, end, Color.Black);
+        }
+    }
+}

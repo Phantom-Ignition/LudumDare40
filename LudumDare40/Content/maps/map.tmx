@@ -25,20 +25,20 @@
 0,0,0,0,0,0,0,0,0,0,7,7,7,7,7,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,
-0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,7,0,
+0,0,0,0,0,0,0,0,0,0,7,0,0,7,7,
+0,0,0,0,0,0,0,0,0,0,7,0,0,7,0,
+0,0,0,0,0,0,0,0,0,0,7,0,0,7,0,
 6,6,6,6,6,6,6,6,6,6,6,6,6,6,0
 </data>
  </layer>
  <objectgroup color="#595642" name="reactors">
-  <object id="42" name="reactor1" x="224" y="192" width="32" height="32"/>
+  <object id="42" name="reactor1" x="416" y="96" width="32" height="32"/>
  </objectgroup>
  <objectgroup color="#bdbd00" name="coreDrops">
-  <object id="43" name="coredrop" x="42.6667" y="111.167" width="25.3333" height="26"/>
+  <object id="43" name="coredrop" x="22.6667" y="92.5003" width="25.3333" height="26"/>
  </objectgroup>
  <objectgroup name="enemies">
-  <object id="53" name="Enemy Drone" type="EnemyDrone" x="237.333" y="126.667" width="32" height="32">
+  <object id="53" name="Enemy Drone" type="EnemyBoss" x="192" y="192" width="32" height="32">
    <properties>
     <property name="patrolStartRight" type="bool" value="false"/>
     <property name="patrolTime" type="float" value="1.5"/>
@@ -46,6 +46,6 @@
   </object>
  </objectgroup>
  <objectgroup name="objects">
-  <object id="36" name="playerSpawn" x="80.25" y="148"/>
+  <object id="36" name="playerSpawn" x="113.333" y="184"/>
  </objectgroup>
 </map>

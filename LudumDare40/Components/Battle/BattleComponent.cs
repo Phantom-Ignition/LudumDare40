@@ -23,7 +23,11 @@ namespace LudumDare40.Components.Battle
         // HP
 
         private float _hp;
-        public float HP => _hp;
+        public float HP
+        {
+            get { return _hp; }
+            set { _hp = value; }
+        }
 
         //--------------------------------------------------
         // Death animation
@@ -69,9 +73,14 @@ namespace LudumDare40.Components.Battle
 
         public void onHit(CollisionResult collisionResult)
         {
+            var knockback = new Vector2(Math.Sign(collisionResult.minimumTranslationVector.X), 0);
+            onHit(knockback);
+        }
+
+        public void onHit(Vector2 knockback)
+        {
             if (_dying) return;
 
-            var knockback = new Vector2(Math.Sign(collisionResult.minimumTranslationVector.X), 0);
             battleEntity?.onHit(knockback);
             _hitAnimation = 0.25f;
             ImmunityTime = ImmunityDuration;
