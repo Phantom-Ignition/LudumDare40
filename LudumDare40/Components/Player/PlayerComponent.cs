@@ -11,7 +11,6 @@ using Nez;
 using Nez.Tiled;
 using System;
 using System.Collections.Generic;
-using Random = Nez.Random;
 
 namespace LudumDare40.Components.Player
 {
@@ -335,6 +334,7 @@ namespace LudumDare40.Components.Player
                 {
                     coreDrop.destroy();
                     _playerManager.HoldingCore = true;
+                    return;
                 }
             }
         }
@@ -343,10 +343,6 @@ namespace LudumDare40.Components.Player
         {
             // Update FSM
             _fsm.update();
-
-            // Match the core sprite with the default one
-            coreSprite.spriteEffects = sprite.spriteEffects;
-            coreSprite.setEnabled(_playerManager.HoldingCore);
 
             // apply knockback before movement
             if (applyKnockback())
@@ -365,6 +361,7 @@ namespace LudumDare40.Components.Player
                 {
                     _footstepCooldown -= Time.deltaTime;
                 }
+                    
 
                 var po = _platformerObject;
                 var mms = po.maxMoveSpeed;
@@ -381,12 +378,27 @@ namespace LudumDare40.Components.Player
                     mms *= 1.5f;
                 }
                 po.velocity.X = (int)MathHelper.Clamp(po.velocity.X + moveSpeed * velocity * Time.deltaTime, -mms, mms);
-                sprite.spriteEffects = velocity < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+
+                if (platformerObject.grabbingWall)
+                {
+                    po.velocity.X = po.grabbingWallSide * mms;
+                    sprite.spriteEffects = po.grabbingWallSide == -1
+                        ? SpriteEffects.FlipHorizontally
+                        : SpriteEffects.None;
+                }
+                else
+                {
+                    sprite.spriteEffects = velocity < 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+                }
             }
             else
             {
                 _platformerObject.velocity.X = 0;
             }
+
+            // Match the core sprite with the default one
+            coreSprite.spriteEffects = sprite.spriteEffects;
+            coreSprite.setEnabled(_playerManager.HoldingCore);
 
             ForcedGround = false;
         }
@@ -468,7 +480,7 @@ namespace LudumDare40.Components.Player
             effectSprite.spriteEffects = sprite.spriteEffects;
             var collider = entity.getComponent<BoxCollider>();
             effect.position = new Vector2(collider.bounds.center.X, collider.bounds.top + effectSprite.height / 2 - 4);
-            effect.position += ((effectSprite.getDirection() * collider.bounds.width / 2) - 3) * Vector2.UnitX;
+            effect.position += effectSprite.getDirection() *(( collider.bounds.width / 2) - 3) * Vector2.UnitX;
             effect.addComponent<SpriteEffectComponent>();
         }
 

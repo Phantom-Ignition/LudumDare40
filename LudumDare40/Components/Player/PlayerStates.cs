@@ -3,7 +3,6 @@ using LudumDare40.FSM;
 using LudumDare40.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Nez;
 
 namespace LudumDare40.Components.Player
@@ -22,7 +21,6 @@ namespace LudumDare40.Components.Player
             {
                 if (entity.isOnGround() && _input.JumpButton.isPressed)
                 {
-                    Console.WriteLine("jump button pressed");
                     fsm.resetStackTo(new JumpingState(true));
                 }
                 if (_input.UpButton.isDown && entity.platformerObject.IsLadderTouching)
@@ -57,6 +55,7 @@ namespace LudumDare40.Components.Player
             if (!entity.isOnGround())
             {
                 fsm.changeState(new JumpingState(false));
+                return;
             }
 
             if (entity.isOnGround())
@@ -82,7 +81,6 @@ namespace LudumDare40.Components.Player
 
             if (isMovementAvailable() && _input.AttackButton.isPressed)
             {
-                Console.WriteLine("attack button pressed");
                 fsm.pushState(new AttackStateOne());
             }
         }
@@ -106,7 +104,8 @@ namespace LudumDare40.Components.Player
                 AudioManager.roll.Play(0.7f, 1.0f, 0f);
                 _needJump = false;
                 entity.Jump();
-                entity.createJumpEffect();
+                if (entity.isOnGround())
+                    entity.createJumpEffect();
             }
         }
 
@@ -118,18 +117,16 @@ namespace LudumDare40.Components.Player
             {
                 fsm.resetStackTo(new StandState());
             }
-            else if (entity.platformerObject.collisionState.left)
+            else if (_input.MovementAxis.value == -1 && entity.platformerObject.collisionState.left)
             {
                 fsm.changeState(new WallJumpState(-1));
             }
-            else if (entity.platformerObject.collisionState.right)
+            else if (_input.MovementAxis.value == 1 && entity.platformerObject.collisionState.right)
             {
                 fsm.changeState(new WallJumpState(1));
             }
-
-            if (isMovementAvailable() && Input.isKeyPressed(Keys.A))
+            else if (isMovementAvailable() && _input.AttackButton.isPressed)
             {
-                Console.WriteLine("attack button pressed 2");
                 fsm.pushState(new AttackStateOne());
             }
 
@@ -184,6 +181,7 @@ namespace LudumDare40.Components.Player
     public class WallJumpState : PlayerState
     {
         private float _effectCooldown;
+        private float _grabbingSideTick;
         private int _side;
 
         public WallJumpState(int side)
@@ -193,10 +191,12 @@ namespace LudumDare40.Components.Player
 
         public override void begin()
         {
+            _grabbingSideTick = 0.0f;
             entity.createWallSlideEffect();
             _effectCooldown = 0.5f;
             entity.SetAnimation(PlayerComponent.Animations.SlidingWall);
             entity.platformerObject.grabbingWall = true;
+            entity.platformerObject.grabbingWallSide = _side;
         }
 
         public override void update()
@@ -214,6 +214,8 @@ namespace LudumDare40.Components.Player
             }
 
             var collisionState = entity.platformerObject.collisionState;
+            
+
             if (entity.isOnGround())
             {
                 fsm.resetStackTo(new StandState());
@@ -227,8 +229,21 @@ namespace LudumDare40.Components.Player
                     var self = t.context as PlayerComponent;
                     self.forceMovement(Vector2.Zero);
                 });
+                return;
             }
-            else if ((_side == -1 && !collisionState.left) || (_side == 1 && !collisionState.right))
+            
+            var inputAxis = _input.MovementAxis.value;
+            if (_side == -1 && inputAxis == 1 ||
+                _side == 1 && inputAxis == -1)
+            {
+                _grabbingSideTick += Time.deltaTime;
+                if (_grabbingSideTick > 0.3f)
+                {
+                    Console.WriteLine("jump");
+                    fsm.changeState(new JumpingState(false));
+                }
+            }
+            else if (_side == -1 && !collisionState.left || _side == 1 && !collisionState.right)
             {
                 fsm.changeState(new JumpingState(false));
             }
@@ -270,7 +285,7 @@ namespace LudumDare40.Components.Player
 
         public override void end()
         {
-            entity.platformerObject.gabbingLadder = false;
+            entity.platformerObject.grabbingLadder = false;
         }
     }
 

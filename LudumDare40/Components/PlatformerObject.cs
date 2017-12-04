@@ -1,4 +1,5 @@
-﻿using LudumDare40.Components.Map;
+﻿using System;
+using LudumDare40.Components.Map;
 using LudumDare40.Managers;
 using Microsoft.Xna.Framework;
 using Nez;
@@ -21,14 +22,15 @@ namespace LudumDare40.Components
         // Walljump
 
         public bool grabbingWall;
+        public int grabbingWallSide;
 
         //--------------------------------------------------
         // Ladder
-        
+
         public LadderComponent ladderComponent { get; set; }
         public bool IsLadderTouching => ladderComponent != null;
 
-        public bool gabbingLadder;
+        public bool grabbingLadder;
 
         //--------------------------------------------------
         // Tiled Mover
@@ -61,15 +63,16 @@ namespace LudumDare40.Components
 
         public void update()
         {
-            if (gabbingLadder)
+            if (grabbingLadder)
             {
                 // deny any movement in the x axis
                 velocity.X = 0.0f;
             }
-            else
+            if (!grabbingLadder)
             {
                 // apply gravity
                 velocity.Y += ((grabbingWall && velocity.Y > 0) ? wallGravity : gravity) * Time.deltaTime;
+                velocity.Y = MathHelper.Clamp(velocity.Y, -maxMoveSpeed * 3, maxMoveSpeed * 3);
             }
 
             // apply movement
@@ -94,7 +97,7 @@ namespace LudumDare40.Components
 
         public void enterOnLadder()
         {
-            gabbingLadder = true;
+            grabbingLadder = true;
             velocity.Y = 0;
             _mover.move(Vector2.UnitY * -1, _boxCollider, collisionState);
 
