@@ -19,7 +19,7 @@ namespace LudumDare40.Components.Battle.Enemies
         //--------------------------------------------------
         // HP
 
-        private const int _maxHp = 10;
+        private const int _maxHp = 30;
 
         //--------------------------------------------------
         // Laser
@@ -32,6 +32,7 @@ namespace LudumDare40.Components.Battle.Enemies
         // Battle Active
 
         public bool isBattleActive;
+        public bool canStartTheAttacks;
 
         //--------------------------------------------------
         // Can take damage

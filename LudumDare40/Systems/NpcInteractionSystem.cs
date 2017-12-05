@@ -28,6 +28,11 @@ namespace LudumDare40.Systems
             _autorunNpcs.Add(npc);
         }
 
+        public void executeNpc(NpcBase npc)
+        {
+            executeActionList(npc, false);
+        }
+
         public void mapStart()
         {
             foreach (var npc in _autorunNpcs)
@@ -63,30 +68,6 @@ namespace LudumDare40.Systems
 
         public override void process(Entity entity)
         {
-            var npcComp = entity.getComponent<NpcBase>();
-
-            if (npcComp.RunOnTouch)
-            {
-                CollisionResult collisionResult;
-                if (entity.getComponent<Collider>().collidesWith(_player.getComponent<InteractionCollider>(), out collisionResult))
-                {
-                    executeActionList(entity.getComponent<NpcBase>(), true);
-                }
-            }
-            else
-            {
-                var inputManager = Core.getGlobalManager<InputManager>();
-                if (inputManager.InteractionButton.isPressed)
-                {
-                    CollisionResult collisionResult;
-                    if (entity.getComponent<Collider>().collidesWith(_player.getComponent<InteractionCollider>(), out collisionResult))
-                    {
-                        executeActionList(entity.getComponent<NpcBase>(), true);
-                    }
-                }
-            }
-
-            
         }
 
         private void executeActionList(NpcBase npc, bool turnToPlayer)

@@ -87,6 +87,7 @@
     <Compile Include="Managers\InputManager.cs" />
     <Compile Include="Managers\PlayerManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
+    <Compile Include="NPCs\BossBattleScript.cs" />
     <Compile Include="NPCs\First Act\BagOnRaft.cs" />
     <Compile Include="NPCs\First Act\ElderMouse.cs" />
     <Compile Include="NPCs\First Act\ElliotMother.cs" />

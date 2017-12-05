@@ -51,6 +51,10 @@ namespace LudumDare40.Components.Battle.Enemies
                     Core.startCoroutine(
                         Core.getGlobalManager<SystemManager>().flashPostProcessor.animate(1.5f)
                     );
+                    Core.schedule(0.2f, t =>
+                    {
+                        (entity.entity.scene as SceneMap)?.blockPassage();
+                    });
                 }
                 fsm.resetStackTo(new EnemyBossWaiting());
             }
@@ -66,6 +70,7 @@ namespace LudumDare40.Components.Battle.Enemies
     public class EnemyBossWaiting : EnemyBossStates
     {
         private float _attackCooldown;
+        private bool _setFirstCooldown;
 
         public override void begin()
         {
@@ -74,6 +79,13 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void update()
         {
+            if (!entity.canStartTheAttacks) return;
+            if (!_setFirstCooldown)
+            {
+                _setFirstCooldown = true;
+                _attackCooldown = 5.0f;
+            }
+
             if (_attackCooldown > 0.0f)
             {
                 _attackCooldown -= Time.deltaTime;
@@ -323,7 +335,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void end()
         {
-            Core.getGlobalManager<InputManager>().IsLocked = true;
+            Core.getGlobalManager<InputManager>().IsLocked = false;
         }
     }
 }

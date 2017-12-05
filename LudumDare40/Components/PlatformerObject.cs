@@ -61,6 +61,11 @@ namespace LudumDare40.Components
             _boxCollider = entity.getComponent<BoxCollider>();
         }
 
+        public void setMover(TiledMapMover mover)
+        {
+            _mover = mover;
+        }
+
         public void update()
         {
             if (grabbingLadder)

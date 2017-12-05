@@ -79,6 +79,17 @@ namespace LudumDare40.Scenes
         private bool _bossBattleActive;
 
         //--------------------------------------------------
+        // Entities
+
+        public Entity playerEntity;
+        public Entity bossEntity;
+
+        //--------------------------------------------------
+        // Scripts
+
+        private NpcBase _bossBattleScript;
+
+        //--------------------------------------------------
         // HUD
 
         private Sprite _playerHudFillSprite;
@@ -106,6 +117,7 @@ namespace LudumDare40.Scenes
             setupWater();
             setupHud();
             setupPostProcessors();
+            setupScripts();
         }
 
         public override void onStart()
@@ -119,6 +131,8 @@ namespace LudumDare40.Scenes
             MediaPlayer.Stop();
             _ambienceEffectInstance.Play();
         }
+
+        private TiledMapComponent tiledMapComponent;
 
         private void setupMap()
         {
@@ -135,8 +149,8 @@ namespace LudumDare40.Scenes
             var collisionLayer = _tiledMap.properties["collisionLayer"];
             var defaultLayers = _tiledMap.properties["defaultLayers"].Split(',').Select(s => s.Trim()).ToArray();
 
-            var tiledComp = tiledEntity.addComponent(new TiledMapComponent(_tiledMap, collisionLayer) { renderLayer = TILED_MAP_RENDER_LAYER });
-            tiledComp.setLayersToRender(defaultLayers);
+            tiledMapComponent = tiledEntity.addComponent(new TiledMapComponent(_tiledMap, collisionLayer) { renderLayer = TILED_MAP_RENDER_LAYER });
+            tiledMapComponent.setLayersToRender(defaultLayers);
             
             if (_tiledMap.properties.ContainsKey("aboveWaterLayer"))
             {
@@ -174,6 +188,7 @@ namespace LudumDare40.Scenes
             playerComponent.coreSprite.renderLayer = MISC_RENDER_LAYER;
 
             Core.getGlobalManager<SystemManager>().setPlayer(player);
+            playerEntity = player;
         }
 
         private void setupEnemies()
@@ -207,6 +222,7 @@ namespace LudumDare40.Scenes
                 if (enemy.type == "EnemyBoss")
                 {
                     entity.name = "boss";
+                    bossEntity = entity;
                 }
             }
         }
@@ -330,10 +346,14 @@ namespace LudumDare40.Scenes
             }
         }
 
+        private NpcInteractionSystem _npcInteractionSystem;
+
         private void setupEntityProcessors()
         {
             var player = findEntity("player");
             var playerComponent = player.getComponent<PlayerComponent>();
+
+            _npcInteractionSystem = new NpcInteractionSystem(playerComponent);
 
             camera.addComponent(new CameraShake());
             var mapSize = new Vector2(_tiledMap.width * _tiledMap.tileWidth, _tiledMap.height * _tiledMap.tileHeight);
@@ -345,7 +365,7 @@ namespace LudumDare40.Scenes
                 deadzoneSize = new Vector2(20, 10)
             };
             addEntityProcessor(_camera);
-            addEntityProcessor(new NpcInteractionSystem(playerComponent));
+            addEntityProcessor(_npcInteractionSystem);
             addEntityProcessor(new LadderSystem(new Matcher().all(typeof(LadderComponent)), playerComponent));
             addEntityProcessor(new BattleSystem());
             addEntityProcessor(new ShotsBattleSystem(player));
@@ -422,6 +442,12 @@ namespace LudumDare40.Scenes
             scanlines.effect.linesFactor = 1500f;
         }
 
+        private void setupScripts()
+        {
+            _bossBattleScript = createEntity("bossScript")
+                .addComponent(new BossBattleScript("boss battle script"));
+        }
+
         public void startScreenShake(float magnitude, float duration)
         {
             _camera.startCameraShake(magnitude, duration);
@@ -457,9 +483,21 @@ namespace LudumDare40.Scenes
             if (Core.getGlobalManager<PlayerManager>().CoresCollected == 3)
             {
                 _bossBattleActive = true;
-                var boss = findEntity("boss").getComponent<EnemyBossComponent>();
-                boss.wakeUp();
+
+                var player = findEntity("player");
+                player.removeComponent<TiledMapMover>();
+                var mover = player.addComponent(new TiledMapMover(_tiledMap.getLayer<TiledTileLayer>("bossCollision")));
+                player.getComponent<PlatformerObject>().setMover(mover);
+
+                _npcInteractionSystem.executeNpc(_bossBattleScript);
             }
+        }
+
+        public void blockPassage()
+        {
+            var layersToRender = _tiledMap.properties["defaultLayers"].Split(',').Select(s => s.Trim()).ToList();
+            layersToRender.Add("bossBlock");
+            tiledMapComponent.setLayersToRender(layersToRender.ToArray());
         }
 
         private void updateHud()

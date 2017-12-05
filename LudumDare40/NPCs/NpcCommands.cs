@@ -1,4 +1,5 @@
-﻿using LudumDare40.Components.Player;
+﻿using System;
+using LudumDare40.Components.Player;
 using LudumDare40.Components.Windows;
 using LudumDare40.Managers;
 using LudumDare40.Scenes;
@@ -301,6 +302,26 @@ namespace LudumDare40.NPCs
         public override void start()
         {
             _npc.sprite.setEnabled(!_hide);
+        }
+
+        public override bool update()
+        {
+            return true;
+        }
+    }
+
+    public class NpcExecuteActionCommand : NpcCommand
+    {
+        private Action _action;
+
+        public NpcExecuteActionCommand(NpcBase npc, Action action) : base(npc)
+        {
+            _action = action;
+        }
+
+        public override void start()
+        {
+            _action.Invoke();
         }
 
         public override bool update()

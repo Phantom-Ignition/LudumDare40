@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using LudumDare40.Components;
 using LudumDare40.Components.Sprites;
@@ -292,6 +293,11 @@ namespace LudumDare40.NPCs
         protected void hideTexture()
         {
             _commands.Add(new NpcHideTextureCommand(this, true));
+        }
+
+        protected void executeAction(Action action)
+        {
+            _commands.Add(new NpcExecuteActionCommand(this, action));
         }
 
         #endregion
