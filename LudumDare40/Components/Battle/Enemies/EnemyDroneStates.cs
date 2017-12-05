@@ -27,7 +27,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void begin()
         {
-            _side = entity.patrolStartRight ? 1 : -1;
+            _side = entity.patrolStartRight ? -1 : 1;
             switchSide();
             entity.sprite.play("floating");
         }

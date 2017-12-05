@@ -27,7 +27,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void begin()
         {
-            _side = entity.patrolStartRight ? 1 : -1;
+            _side = entity.patrolStartRight ? -1 : 1;
             switchSide();
             entity.sprite.play("walking");
         }
@@ -92,7 +92,7 @@ namespace LudumDare40.Components.Battle.Enemies
             }
             var distance = entity.distanceToPlayer();
             entity.forceMovement(Vector2.UnitX * Math.Sign(distance));
-            if (entity.canSeeThePlayer() && Math.Abs(distance) < 26)
+            if (entity.canSeeThePlayer() && Math.Abs(distance) < 24)
             {
                 fsm.pushState(new EnemyOnePunchState());
             }
@@ -127,7 +127,7 @@ namespace LudumDare40.Components.Battle.Enemies
         {
             if (entity.sprite.Looped)
             {
-                fsm.pushState(new EnemyOneFollowState());
+                fsm.resetStackTo(new EnemyOneFollowState());
             }
         }
     }
@@ -149,7 +149,7 @@ namespace LudumDare40.Components.Battle.Enemies
         {
             if (entity.sprite.Looped)
             {
-                fsm.pushState(new EnemyOneFollowState());
+                fsm.resetStackTo(new EnemyOneFollowState());
             }
         }
     }
