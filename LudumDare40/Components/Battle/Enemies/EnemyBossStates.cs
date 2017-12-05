@@ -323,7 +323,7 @@ namespace LudumDare40.Components.Battle.Enemies
                 AudioManager.laser.Play(0.9f);
             }
 
-            if (_playerBattler.isOnImmunity() || entity.sprite.CurrentFrame < 23 || entity.sprite.CurrentFrame > 30) return;
+            if (entity.sprite.CurrentFrame < 23 || entity.sprite.CurrentFrame > 30) return;
             
             var start = new Vector2(entity.entity.position.X - 600, entity.entity.position.Y + 21);
             var end = new Vector2(entity.entity.position.X + 10, entity.entity.position.Y + 20);
@@ -343,7 +343,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void end()
         {
-            _bigLaserSprite.entity.setEnabled(false);
+            _bigLaserSprite.entity.destroy();
         }
     }
 

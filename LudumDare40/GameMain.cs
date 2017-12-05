@@ -11,7 +11,7 @@ namespace LudumDare40
         public static BitmapFont bigBitmapFont;
         public static BitmapFont smallBitmapFont;
 
-        public GameMain() : base(width: 854, height: 480, isFullScreen: false, enableEntitySystems: true)
+        public GameMain() : base(width: 854, height: 480, isFullScreen: false, enableEntitySystems: true, windowTitle:"Machina Rising")
         {
             IsMouseVisible = true;
             Window.AllowUserResizing = true;

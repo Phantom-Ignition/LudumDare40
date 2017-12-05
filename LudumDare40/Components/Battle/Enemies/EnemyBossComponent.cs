@@ -20,7 +20,7 @@ namespace LudumDare40.Components.Battle.Enemies
         //--------------------------------------------------
         // HP
 
-        private const int _maxHp = 50;
+        private const int _maxHp = 60;
 
         //--------------------------------------------------
         // Laser

@@ -376,6 +376,7 @@ namespace LudumDare40.Components.Player
         {
             _input.IsLocked = true;
             entity.SetAnimation(PlayerComponent.Animations.Dying);
+            Core.getGlobalManager<PlayerManager>().CoresCollected = 0;
         }
     }
 }

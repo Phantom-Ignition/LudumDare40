@@ -140,8 +140,10 @@ namespace LudumDare40.Scenes
             MediaPlayer.Stop();
             _ambienceEffectInstance.Play();
 
+            if (Core.getGlobalManager<PlayerManager>().FirstScriptPlayed) return;
             Core.schedule(0.5f, t =>
             {
+                Core.getGlobalManager<PlayerManager>().FirstScriptPlayed = true;
                 _npcInteractionSystem.executeNpc(_startGameScript);
             });
         }
@@ -544,6 +546,13 @@ namespace LudumDare40.Scenes
             var r = subtexture.sourceRect;
             r.Width = (int)(subtexture.texture2D.Width * rate);
             return new Subtexture(subtexture.texture2D, r);
+        }
+
+        public override void unload()
+        {
+            base.unload();
+            Core.getGlobalManager<InputManager>().IsLocked = false;
+            Core.getGlobalManager<InputManager>().IsBusy = false;
         }
     }
 }

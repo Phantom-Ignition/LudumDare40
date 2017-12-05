@@ -129,6 +129,8 @@ namespace LudumDare40.Scenes
 
             if (!_fading && input.SelectButton.isPressed)
             {
+                if (Core.isOnTransition()) return;
+
                 AudioManager.select.Play(0.5f);
                 _fading = true;
                 if (_index == 0)

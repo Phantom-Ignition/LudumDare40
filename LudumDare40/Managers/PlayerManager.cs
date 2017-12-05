@@ -20,6 +20,8 @@ namespace LudumDare40.Managers
             }
         }
 
+        public bool FirstScriptPlayed { get; set; }
+
         public bool FirstCoreCollected { get; set; }
         public int CoresCollected { get; set; }
 
