@@ -107,6 +107,11 @@ namespace LudumDare40.Components.Player
         public bool isRolling;
 
         //--------------------------------------------------
+        // Block Walljump
+
+        public bool blockWalljump;
+
+        //--------------------------------------------------
         // Player Manager
 
         public PlayerManager playerManager;
@@ -365,6 +370,10 @@ namespace LudumDare40.Components.Player
                 if (collider.collidesWith(reactorCollider, out collisionResult))
                 {
                     coreDrop.destroy();
+                    if (!playerManager.FirstCoreCollected)
+                    {
+                        (entity.scene as SceneMap)?.runGrabFirstCoreScript();
+                    }
                     playerManager.HoldingCore = true;
                     return;
                 }

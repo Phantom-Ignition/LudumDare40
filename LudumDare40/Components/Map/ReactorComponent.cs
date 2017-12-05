@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using LudumDare40.Components.Battle;
 using LudumDare40.Components.Sprites;
+using LudumDare40.Extensions;
 using LudumDare40.Managers;
 using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
@@ -20,7 +21,7 @@ namespace LudumDare40.Components.Map
         {
             var texture = entity.scene.content.Load<Texture2D>(Content.Misc.reactor);
 
-            sprite = entity.addComponent(new AnimatedSprite(texture, "off"));
+            sprite = entity.addComponent(new AnimatedSprite(texture, "off") {renderLayer = SceneMap.MISC_RENDER_LAYER});
             sprite.CreateAnimation("off", 0.1f, false);
             sprite.AddFrames("off", new List<Rectangle>
             {
@@ -46,6 +47,8 @@ namespace LudumDare40.Components.Map
         {
             _isActivated = true;
             sprite.play("activated");
+
+            AudioManager.equip.Play(0.4f);
 
             var enemies = entity.scene.findEntitiesWithTag(SceneMap.ENEMIES);
             foreach (var enemy in enemies)

@@ -13,11 +13,14 @@ namespace LudumDare40.Managers
                 _holdingCore = value;
                 if (value)
                 {
+                    if (!FirstCoreCollected)
+                        FirstCoreCollected = true;
                     AudioManager.equip.Play();
                 }
             }
         }
 
+        public bool FirstCoreCollected { get; set; }
         public int CoresCollected { get; set; }
 
         public void update() { }

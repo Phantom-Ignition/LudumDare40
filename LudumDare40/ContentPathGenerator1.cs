@@ -90,7 +90,9 @@ namespace Nez
 			public const string bigLaser = @"misc\bigLaser";
 			public const string bullet = @"misc\bullet";
 			public const string cannon = @"misc\cannon";
+			public const string controls = @"misc\controls";
 			public const string coreDrop = @"misc\coreDrop";
+			public const string credits = @"misc\credits";
 			public const string missile = @"misc\missile";
 			public const string reactor = @"misc\reactor";
 		}
@@ -145,6 +147,7 @@ namespace Nez
 
 		public const string map = @"map";
 		public const string tileset = @"tileset";
+
     }
 }
 

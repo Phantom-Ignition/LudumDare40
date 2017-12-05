@@ -19,7 +19,7 @@ namespace LudumDare40.Components.Player
         {
             if (isMovementAvailable())
             {
-                if (entity.isOnGround() && _input.JumpButton.isPressed)
+                if (entity.isOnGround() && isMovementAvailable() && _input.JumpButton.isPressed)
                 {
                     fsm.resetStackTo(new JumpingState(true));
                 }
@@ -60,7 +60,7 @@ namespace LudumDare40.Components.Player
 
             if (entity.isOnGround())
             {
-                if (_input.RollButton.isPressed)
+                if (isMovementAvailable() && _input.RollButton.isPressed)
                 {
                     fsm.pushState(new RollingState());
                 }
@@ -74,7 +74,7 @@ namespace LudumDare40.Components.Player
                 }
             }
 
-            if (_input.TakeThrowButton.isPressed)
+            if (isMovementAvailable() && _input.TakeThrowButton.isPressed)
             {
                 entity.takeThrow();
             }
@@ -114,16 +114,17 @@ namespace LudumDare40.Components.Player
             base.update();
 
             var holdingCore = entity.playerManager.HoldingCore;
+            var canDoWalljump = !entity.blockWalljump && !holdingCore;
 
             if (entity.isOnGround())
             {
                 fsm.resetStackTo(new StandState());
             }
-            else if (!holdingCore && _input.MovementAxis.value == -1 && entity.platformerObject.collisionState.left)
+            else if (canDoWalljump && _input.MovementAxis.value == -1 && entity.platformerObject.collisionState.left)
             {
                 fsm.changeState(new WallJumpState(-1));
             }
-            else if (!holdingCore && _input.MovementAxis.value == 1 && entity.platformerObject.collisionState.right)
+            else if (canDoWalljump && _input.MovementAxis.value == 1 && entity.platformerObject.collisionState.right)
             {
                 fsm.changeState(new WallJumpState(1));
             }
@@ -222,7 +223,7 @@ namespace LudumDare40.Components.Player
             {
                 fsm.resetStackTo(new StandState());
             }
-            else if (_input.JumpButton.isPressed)
+            else if (isMovementAvailable() && _input.JumpButton.isPressed)
             {
                 fsm.changeState(new JumpingState(true));
                 entity.forceMovement(Vector2.UnitX * _side * -1, true);
@@ -271,15 +272,15 @@ namespace LudumDare40.Components.Player
             {
                 fsm.resetStackTo(new StandState());
             }
-            else if (_input.JumpButton.isPressed)
+            else if (isMovementAvailable() && _input.JumpButton.isPressed)
             {
                 fsm.changeState(new JumpingState(true));
             }
-            else if (_input.DownButton.isDown)
+            else if (isMovementAvailable() && _input.DownButton.isDown)
             {
                 entity.platformerObject.ladderVelocityDown();
             }
-            else if (_input.UpButton.isDown)
+            else if (isMovementAvailable() && _input.UpButton.isDown)
             {
                 entity.platformerObject.ladderVelocityUp();
             }

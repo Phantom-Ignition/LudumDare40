@@ -97,7 +97,7 @@ namespace LudumDare40.Components.Battle.Enemies
             }
 
             float rand;
-            
+
             if (!entity.canSeeThePlayer())
             {
                 if (entity.hpRate() > 0.5f)
@@ -161,7 +161,7 @@ namespace LudumDare40.Components.Battle.Enemies
             {
                 _playedPunchSe = true;
                 AudioManager.punch.Play(1.0f);
-                (entity.entity.scene as SceneMap)?.startScreenShake(100, 100);
+                (entity.entity.scene as SceneMap)?.startScreenShake(20, 100);
             }
             if (entity.sprite.Looped)
             {
@@ -282,6 +282,18 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(0, 0, 0, 0),
                 new Rectangle(0, 0, 0, 0),
                 new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
+                new Rectangle(0, 0, 0, 0),
                 new Rectangle(0, 0, 101, 8),
                 new Rectangle(0, 0, 101, 8),
                 new Rectangle(0, 0, 101, 8),
@@ -294,7 +306,8 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(0, 0, 0, 0),
                 new Rectangle(0, 0, 0, 0),
             });
-            laser.position = entity.entity.position + new Vector2(-125, 24);
+            laser.setScale(new Vector2(2.5f, 1));
+            laser.position = entity.entity.position + new Vector2(-143, 24);
         }
 
         public override void update()
@@ -304,15 +317,15 @@ namespace LudumDare40.Components.Battle.Enemies
                 fsm.popState();
             }
             
-            if (!_playedLaserSe && entity.sprite.CurrentFrame >= 9)
+            if (!_playedLaserSe && entity.sprite.CurrentFrame >= 20)
             {
                 _playedLaserSe = true;
                 AudioManager.laser.Play(0.9f);
             }
 
-            if (_playerBattler.isOnImmunity() || entity.sprite.CurrentFrame < 10 || entity.sprite.CurrentFrame > 17) return;
+            if (_playerBattler.isOnImmunity() || entity.sprite.CurrentFrame < 23 || entity.sprite.CurrentFrame > 30) return;
             
-            var start = new Vector2(entity.entity.position.X - 300, entity.entity.position.Y + 21);
+            var start = new Vector2(entity.entity.position.X - 600, entity.entity.position.Y + 21);
             var end = new Vector2(entity.entity.position.X + 10, entity.entity.position.Y + 20);
 
             RaycastHit[] hits = new RaycastHit[10];
@@ -326,6 +339,11 @@ namespace LudumDare40.Components.Battle.Enemies
                     player.onHit(knockback);
                 }
             }
+        }
+
+        public override void end()
+        {
+            _bigLaserSprite.entity.setEnabled(false);
         }
     }
 

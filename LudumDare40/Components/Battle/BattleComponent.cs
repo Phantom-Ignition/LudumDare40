@@ -84,7 +84,7 @@ namespace LudumDare40.Components.Battle
 
         public void onHit(Vector2 knockback)
         {
-            if (_dying || battleEntity != null && !battleEntity.canTakeDamage) return;
+            if (_dying || ImmunityTime > 0.0f || battleEntity != null && !battleEntity.canTakeDamage) return;
 
             knockback *= Vector2.UnitX;
             battleEntity?.onHit(knockback);

@@ -11,13 +11,13 @@ namespace LudumDare40
         public static BitmapFont bigBitmapFont;
         public static BitmapFont smallBitmapFont;
 
-        public GameMain() : base(width: 852, height: 480, isFullScreen: false, enableEntitySystems: true)
+        public GameMain() : base(width: 854, height: 480, isFullScreen: false, enableEntitySystems: true)
         {
             IsMouseVisible = true;
             Window.AllowUserResizing = true;
-            debugRenderEnabled = true;
 
             IsFixedTimeStep = true;
+            exitOnEscapeKeypress = false;
 
             // Register Global Managers
             registerGlobalManager(new InputManager());
@@ -43,7 +43,7 @@ namespace LudumDare40
             base.Draw(new GameTime());
 
             // Set first scene
-            scene = new SceneMap();
+            scene = new SceneControls();
         }
     }
 }

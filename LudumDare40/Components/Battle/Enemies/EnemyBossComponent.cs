@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using System.Collections.Generic;
+using LudumDare40.Managers;
 
 namespace LudumDare40.Components.Battle.Enemies
 {
@@ -19,7 +20,7 @@ namespace LudumDare40.Components.Battle.Enemies
         //--------------------------------------------------
         // HP
 
-        private const int _maxHp = 30;
+        private const int _maxHp = 50;
 
         //--------------------------------------------------
         // Laser
@@ -146,6 +147,18 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(705, 840, 235, 140),
                 new Rectangle(940, 840, 235, 140),
                 new Rectangle(1175, 840, 235, 140),
+                new Rectangle(1410, 840, 235, 140),
+                new Rectangle(1645, 840, 235, 140),
+                new Rectangle(1880, 840, 235, 140),
+                new Rectangle(1410, 840, 235, 140),
+                new Rectangle(1645, 840, 235, 140),
+                new Rectangle(1880, 840, 235, 140),
+                new Rectangle(1410, 840, 235, 140),
+                new Rectangle(1645, 840, 235, 140),
+                new Rectangle(1880, 840, 235, 140),
+                new Rectangle(1410, 840, 235, 140),
+                new Rectangle(1645, 840, 235, 140),
+                new Rectangle(1880, 840, 235, 140),
                 new Rectangle(1410, 840, 235, 140),
                 new Rectangle(1645, 840, 235, 140),
                 new Rectangle(1880, 840, 235, 140),
@@ -289,7 +302,10 @@ namespace LudumDare40.Components.Battle.Enemies
             return _battleComponent.HP / _maxHp;
         }
 
-        public override void onHit(Vector2 knockback) { }
+        public override void onHit(Vector2 knockback)
+        {
+            AudioManager.hit.play(0.9f, 0.0f);
+        }
 
         public override void onDeath()
         {
