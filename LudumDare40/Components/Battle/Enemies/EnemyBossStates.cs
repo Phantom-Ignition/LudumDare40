@@ -80,10 +80,14 @@ namespace LudumDare40.Components.Battle.Enemies
         public override void update()
         {
             if (!entity.canStartTheAttacks) return;
-            if (!_setFirstCooldown)
+            if (!_setFirstCooldown && entity.canSeeThePlayer())
             {
                 _setFirstCooldown = true;
-                _attackCooldown = 5.0f;
+                _attackCooldown = 1.0f;
+            }
+            else if (!_setFirstCooldown)
+            {
+                return;
             }
 
             if (_attackCooldown > 0.0f)

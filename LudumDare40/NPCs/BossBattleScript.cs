@@ -41,7 +41,12 @@ namespace LudumDare40.NPCs
             focusCamera(playerEntity);
             playerMessage("Shit.");
             closePlayerMessage();
+            executeAction(() =>
+            {
+                boss.canStartTheAttacks = true;
+            });
             cinematicOut(0, 1);
         }
+        
     }
 }

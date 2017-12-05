@@ -1,4 +1,5 @@
 ﻿using System;
+using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
@@ -64,7 +65,7 @@ namespace LudumDare40.Components.Windows
             _maxWidth = 200;
             _textSize.X = 200;
 
-            _markupComponent = new MarkupText();
+            _markupComponent = new MarkupText() { renderLayer = SceneMap.HUD_FILL_RENDER_LAYER };
             _markupComponent.setTextWidth(_maxWidth);
 
             TextDelay = 0.03f;

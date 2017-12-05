@@ -14,6 +14,7 @@ namespace LudumDare40.Components.Map
         public AnimatedSprite sprite;
 
         private bool _isActivated;
+        public bool isActivated => _isActivated;
 
         public override void initialize()
         {

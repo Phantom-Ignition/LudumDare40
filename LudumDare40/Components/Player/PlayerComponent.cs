@@ -346,6 +346,7 @@ namespace LudumDare40.Components.Player
                     if (collider.collidesWith(reactorCollider, out collisionResult))
                     {
                         var reactorComponent = reactor.getComponent<ReactorComponent>();
+                        if (reactorComponent.isActivated) continue;
                         reactorComponent.setActivated();
                         playerManager.HoldingCore = false;
                         return;

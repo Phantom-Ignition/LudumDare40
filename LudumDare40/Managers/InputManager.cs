@@ -41,7 +41,10 @@ namespace LudumDare40.Managers
         public InputManager()
         {
             _interactionButton = new VirtualButton();
-            _interactionButton.nodes.Add(new VirtualButton.KeyboardKey(Keys.F));
+            _interactionButton
+                .addKeyboardKey(Keys.A)
+                .addKeyboardKey(Keys.Enter)
+                .addGamePadButton(0, Buttons.A);
             
             _attackButton = new VirtualButton();
             _attackButton
