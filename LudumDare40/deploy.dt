@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<Settings>
+  <ShowConsole>true</ShowConsole>
+  <ProjectSettings>
+    <AssemblyInfo>C:\Users\Rafael\Documents\Visual Studio 2017\Projects\LudumDare40\LudumDare40\Properties\AssemblyInfo.cs</AssemblyInfo>
+    <ReleaseFolder>C:\Users\Rafael\Documents\Visual Studio 2017\Projects\LudumDare40\LudumDare40\bin\DesktopGL\AnyCPU\Release</ReleaseFolder>
+    <DeployFolder>C:\Users\Rafael\Desktop\Deploy</DeployFolder>
+  </ProjectSettings>
+  <SourceSettings>
+    <SourceFolder />
+    <IgnoreFolders>bin, obj, .vs, .git</IgnoreFolders>
+    <SourceChecked>false</SourceChecked>
+  </SourceSettings>
+  <WindowsSettings>
+    <InnoSetupBinary />
+    <SetupGUID>cd6462e1-eaf5-4f3d-ab3d-b9f864f7c2e1</SetupGUID>
+    <IconWindows>C:\Users\Rafael\Documents\Visual Studio 2017\Projects\LudumDare40\LudumDare40\icon.ico</IconWindows>
+    <DeployWinSetup>false</DeployWinSetup>
+    <DeployWinPortable>true</DeployWinPortable>
+  </WindowsSettings>
+  <LinuxSettings>
+    <DeployLinux>true</DeployLinux>
+  </LinuxSettings>
+  <OSXSettings>
+    <IconOSX>C:\Users\Rafael\Documents\Visual Studio 2017\Projects\LudumDare40\LudumDare40\icon.ico.icns</IconOSX>
+    <DeployOSX>true</DeployOSX>
+  </OSXSettings>
+</Settings>
