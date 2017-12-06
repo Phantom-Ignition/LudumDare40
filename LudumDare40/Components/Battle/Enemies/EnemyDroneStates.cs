@@ -73,7 +73,6 @@ namespace LudumDare40.Components.Battle.Enemies
     public class EnemyDroneFollowState : EnemyDroneState
     {
         private float _followLimitTick;
-        private float _shotCooldown;
 
         public override void begin()
         {
@@ -93,9 +92,9 @@ namespace LudumDare40.Components.Battle.Enemies
             }
             var distance = entity.distanceToPlayer();
             entity.forceMovement(Vector2.UnitX * Math.Sign(distance));
-            if (_shotCooldown > 0.0f)
+            if (entity.shotCooldown > 0.0f)
             {
-                _shotCooldown -= Time.deltaTime;
+                entity.shotCooldown -= Time.deltaTime;
                 if (entity.canSeeThePlayer())
                     entity.forceMovement(Vector2.Zero);
                 return;
@@ -104,12 +103,12 @@ namespace LudumDare40.Components.Battle.Enemies
             {
                 if (entity.dangerousStage == 1 && distance < 70)
                 {
-                    _shotCooldown = 1.0f;
+                    entity.shotCooldown = 1.0f;
                     fsm.pushState(new EnemyDroneShotState());
                 }
                 if (entity.dangerousStage == 2 && distance < 70)
                 {
-                    _shotCooldown = 0.8f;
+                    entity.shotCooldown = 0.8f;
                     if (Random.nextFloat() > 0.4)
                     {
                         fsm.pushState(new EnemyDroneCanonShotState());

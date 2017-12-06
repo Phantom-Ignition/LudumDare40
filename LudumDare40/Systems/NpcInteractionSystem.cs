@@ -57,18 +57,7 @@ namespace LudumDare40.Systems
             }
         }
 
-        protected override void process(List<Entity> entities)
-        {
-            var inputManager = Core.getGlobalManager<InputManager>();
-            if (!inputManager.IsBusy)
-            {
-                base.process(entities);
-            }
-        }
-
-        public override void process(Entity entity)
-        {
-        }
+        public override void process(Entity entity) { }
 
         private void executeActionList(NpcBase npc, bool turnToPlayer)
         {

@@ -25,14 +25,6 @@ namespace LudumDare40.Components
         public int grabbingWallSide;
 
         //--------------------------------------------------
-        // Ladder
-
-        public LadderComponent ladderComponent { get; set; }
-        public bool IsLadderTouching => ladderComponent != null;
-
-        public bool grabbingLadder;
-
-        //--------------------------------------------------
         // Tiled Mover
 
         TiledMapMover _mover;
@@ -68,17 +60,9 @@ namespace LudumDare40.Components
 
         public void update()
         {
-            if (grabbingLadder)
-            {
-                // deny any movement in the x axis
-                velocity.X = 0.0f;
-            }
-            if (!grabbingLadder)
-            {
-                // apply gravity
-                velocity.Y += ((grabbingWall && velocity.Y > 0) ? wallGravity : gravity) * Time.deltaTime;
-                velocity.Y = MathHelper.Clamp(velocity.Y, -maxMoveSpeed * 3, maxMoveSpeed * 3);
-            }
+            // apply gravity
+            velocity.Y += ((grabbingWall && velocity.Y > 0) ? wallGravity : gravity) * Time.deltaTime;
+            velocity.Y = MathHelper.Clamp(velocity.Y, -maxMoveSpeed * 3, maxMoveSpeed * 3);
 
             // apply movement
             _mover.move(velocity * Time.deltaTime, _boxCollider, collisionState);
@@ -98,27 +82,6 @@ namespace LudumDare40.Components
         public void jump()
         {
             velocity.Y = -Mathf.sqrt(2 * jumpHeight * gravity);
-        }
-
-        public void enterOnLadder()
-        {
-            grabbingLadder = true;
-            velocity.Y = 0;
-            _mover.move(Vector2.UnitY * -1, _boxCollider, collisionState);
-
-            var ladderX = ladderComponent.transform.position.X + ladderComponent.size.X / 2;
-            var ladderDelta = ladderX -_mover.transform.position.X;
-            _mover.move(Vector2.UnitX * ladderDelta, _boxCollider, collisionState);
-        }
-
-        public void ladderVelocityUp()
-        {
-            _mover.move(Vector2.UnitY * -2, _boxCollider, collisionState);
-        }
-
-        public void ladderVelocityDown()
-        {
-            _mover.move(Vector2.UnitY * 2, _boxCollider, collisionState);
         }
     }
 }

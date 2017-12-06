@@ -67,7 +67,6 @@ namespace LudumDare40.Components.Battle.Enemies
 
     public class EnemyOneFollowState : EnemyOneState
     {
-        private float _electricalDischargeCooldown;
         private float _followLimitTick;
 
         public override void begin()
@@ -86,9 +85,9 @@ namespace LudumDare40.Components.Battle.Enemies
                     fsm.resetStackTo(new EnemyOnePatrolState());
                 }
             }
-            if (_electricalDischargeCooldown > 0.0f)
+            if (entity.electricalDischargeCooldown > 0.0f)
             {
-                _electricalDischargeCooldown = Math.Max(0, _electricalDischargeCooldown - Time.deltaTime);
+                entity.electricalDischargeCooldown = Math.Max(0, entity.electricalDischargeCooldown - Time.deltaTime);
             }
             var distance = entity.distanceToPlayer();
             entity.forceMovement(Vector2.UnitX * Math.Sign(distance));
@@ -96,11 +95,11 @@ namespace LudumDare40.Components.Battle.Enemies
             {
                 fsm.pushState(new EnemyOnePunchState());
             }
-            else if (entity.dangerousStage > 1 && _electricalDischargeCooldown <= 0.0f && entity.canSeeThePlayer() && Math.Abs(distance) < 40)
+            else if (entity.dangerousStage > 1 && entity.electricalDischargeCooldown <= 0.0f && entity.canSeeThePlayer() && Math.Abs(distance) < 40)
             {
-                _electricalDischargeCooldown = 0.8f;
+                entity.electricalDischargeCooldown = 1f;
                 var ran = Random.nextFloat();
-                if (ran > 0.4)
+                if (ran > 0.6)
                     fsm.pushState(new EnemyOneElectricalDischargeState());
             }
         }
@@ -158,7 +157,6 @@ namespace LudumDare40.Components.Battle.Enemies
     {
         public override void begin()
         {
-            AudioManager.hit.play(0.8f, 0.0f);
             entity.sprite.play("hit");
         }
 

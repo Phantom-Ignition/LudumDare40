@@ -86,7 +86,7 @@ namespace LudumDare40.Components.Battle
             _platformerObject = entity.getComponent<PlatformerObject>();
 
             _battleComponent = entity.getComponent<BattleComponent>();
-            _battleComponent.setHp(5);
+            _battleComponent.setHp(4);
             _battleComponent.battleEntity = this;
 
             entity.setTag(SceneMap.ENEMIES);

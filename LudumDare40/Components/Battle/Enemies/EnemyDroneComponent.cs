@@ -18,6 +18,11 @@ namespace LudumDare40.Components.Battle.Enemies
         private FiniteStateMachine<EnemyDroneState, EnemyDroneComponent> _fsm;
         public FiniteStateMachine<EnemyDroneState, EnemyDroneComponent> FSM => _fsm;
 
+        //--------------------------------------------------
+        // Skills
+
+        public float shotCooldown;
+
         //----------------------//------------------------//
 
         public EnemyDroneComponent(bool patrolStartRight) : base(patrolStartRight)

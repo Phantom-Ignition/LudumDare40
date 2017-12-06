@@ -20,7 +20,7 @@ namespace LudumDare40.Components.Battle.Enemies
         //--------------------------------------------------
         // HP
 
-        private const int _maxHp = 60;
+        private const int _maxHp = 50;
 
         //--------------------------------------------------
         // Laser
@@ -102,19 +102,18 @@ namespace LudumDare40.Components.Battle.Enemies
                 new Rectangle(940, 140, 235, 140),
                 new Rectangle(1175, 140, 235, 140),
             });
-            sprite.AddAttackCollider("clawAttack", new List<List<Rectangle>>()
+            sprite.AddAttackCollider("clawAttack", new List<List<Rectangle>>
             {
-                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
-                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
-                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
-                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
-                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
-                new List<Rectangle>() { new Rectangle(0, 0, 0, 0) },
-                new List<Rectangle>() { new Rectangle(-62, -50, 135, 60) },
-                new List<Rectangle>() { new Rectangle(-82, -24, 155, 60) },
-                new List<Rectangle>() { new Rectangle(-62, -24, 135, 60) },
+                new List<Rectangle> { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle> { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle> { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle> { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle> { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle> { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle> { new Rectangle(0, 0, 0, 0) },
+                new List<Rectangle> { new Rectangle(-77, -24, 150, 60) },
             });
-            sprite.AddFramesToAttack("clawAttack", 6, 7, 8);
+            sprite.AddFramesToAttack("clawAttack", 7);
 
             sprite.CreateAnimation("laserAttack", 0.08f, false);
             sprite.AddFrames("laserAttack", new List<Rectangle>

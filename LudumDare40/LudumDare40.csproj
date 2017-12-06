@@ -79,10 +79,7 @@
     <Compile Include="Components\InteractionCollider.cs" />
     <Compile Include="Components\Map\CoreDropComponent.cs" />
     <Compile Include="Components\Map\ReactorComponent.cs" />
-    <Compile Include="Components\Map\LadderComponent.cs" />
-    <Compile Include="Components\Map\RaftComponent.cs" />
     <Compile Include="Components\Map\SpriteEffectComponent.cs" />
-    <Compile Include="Components\Map\TransferComponent.cs" />
     <Compile Include="Components\PlatformerObject.cs" />
     <Compile Include="Components\Player\PlayerComponent.cs" />
     <Compile Include="Components\Player\PlayerStates.cs" />
@@ -97,7 +94,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ContentPathGenerator.tt</DependentUpon>
     </Compile>
-    <Compile Include="Extensions\ColorExtensions.cs" />
     <Compile Include="Extensions\SoundEffectExtensions.cs" />
     <Compile Include="FSM\FiniteStateMachine.cs" />
     <Compile Include="GameMain.cs" />
@@ -106,16 +102,9 @@
     <Compile Include="Managers\PlayerManager.cs" />
     <Compile Include="Managers\SystemManager.cs" />
     <Compile Include="NPCs\BossBattleScript.cs" />
-    <Compile Include="NPCs\First Act\BagOnRaft.cs" />
-    <Compile Include="NPCs\First Act\ElderMouse.cs" />
-    <Compile Include="NPCs\First Act\ElliotMother.cs" />
-    <Compile Include="NPCs\First Act\RaftStake.cs" />
-    <Compile Include="NPCs\First Act\StartFieldBarrier.cs" />
-    <Compile Include="NPCs\First Act\VillageBarrier.cs" />
     <Compile Include="NPCs\GrabFirstCoreScript.cs" />
     <Compile Include="NPCs\NpcBase.cs" />
     <Compile Include="NPCs\NpcCommands.cs" />
-    <Compile Include="NPCs\NpcTest.cs" />
     <Compile Include="NPCs\StartGameScript.cs" />
     <Compile Include="PostProcessors\FlashPostProcessor.cs" />
     <Compile Include="Program.cs" />
@@ -123,13 +112,10 @@
     <Compile Include="Scenes\SceneControls.cs" />
     <Compile Include="Scenes\SceneCredits.cs" />
     <Compile Include="Scenes\SceneMap.cs" />
-    <Compile Include="Scenes\SceneMapExtensions\FirstRaft.cs" />
-    <Compile Include="Scenes\SceneMapExtensions\ISceneMapExtensionable.cs" />
     <Compile Include="Scenes\SceneTitle.cs" />
     <Compile Include="Systems\BattleSystem.cs" />
     <Compile Include="Systems\ShotsBattleSystem.cs" />
     <Compile Include="Systems\CameraSystem.cs" />
-    <Compile Include="Systems\LadderSystem.cs" />
     <Compile Include="Systems\NpcInteractionSystem.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -137,7 +123,6 @@
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

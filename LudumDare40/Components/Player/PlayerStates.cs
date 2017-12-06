@@ -23,10 +23,6 @@ namespace LudumDare40.Components.Player
                 {
                     fsm.resetStackTo(new JumpingState(true));
                 }
-                if (_input.UpButton.isDown && entity.platformerObject.IsLadderTouching)
-                {
-                    fsm.resetStackTo(new LadderState());
-                }
             }
         }
 
@@ -158,7 +154,7 @@ namespace LudumDare40.Components.Player
         {
             AudioManager.roll.Play(0.6f, 0.4f, 0f);
             entity.createRollEffect();
-            _immunityFrames = new[] {1, 2};
+            _immunityFrames = new[] {0, 1, 2};
             entity.SetAnimation(PlayerComponent.Animations.Rolling);
             entity.forceMovement(Vector2.UnitX * (entity.sprite.spriteEffects == SpriteEffects.FlipHorizontally ? -1 : 1));
             entity.isRolling = true;
@@ -255,40 +251,6 @@ namespace LudumDare40.Components.Player
         public override void end()
         {
             entity.platformerObject.grabbingWall = false;
-        }
-    }
-
-    public class LadderState : PlayerState
-    {
-        public override void begin()
-        {
-            entity.SetAnimation(PlayerComponent.Animations.Stand);
-            entity.platformerObject.enterOnLadder();
-        }
-
-        public override void update()
-        {
-            if (entity.isOnGround() || !entity.platformerObject.IsLadderTouching)
-            {
-                fsm.resetStackTo(new StandState());
-            }
-            else if (isMovementAvailable() && _input.JumpButton.isPressed)
-            {
-                fsm.changeState(new JumpingState(true));
-            }
-            else if (isMovementAvailable() && _input.DownButton.isDown)
-            {
-                entity.platformerObject.ladderVelocityDown();
-            }
-            else if (isMovementAvailable() && _input.UpButton.isDown)
-            {
-                entity.platformerObject.ladderVelocityUp();
-            }
-        }
-
-        public override void end()
-        {
-            entity.platformerObject.grabbingLadder = false;
         }
     }
 

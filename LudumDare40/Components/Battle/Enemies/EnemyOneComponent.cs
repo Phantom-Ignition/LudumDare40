@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LudumDare40.Components.Player;
-using LudumDare40.Components.Sprites;
+﻿using LudumDare40.Components.Sprites;
 using LudumDare40.FSM;
 using LudumDare40.Scenes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
+using System.Collections.Generic;
+using LudumDare40.Managers;
 
 namespace LudumDare40.Components.Battle.Enemies
 {
@@ -20,6 +16,11 @@ namespace LudumDare40.Components.Battle.Enemies
 
         private FiniteStateMachine<EnemyOneState, EnemyOneComponent> _fsm;
         public FiniteStateMachine<EnemyOneState, EnemyOneComponent> FSM => _fsm;
+
+        //--------------------------------------------------
+        // Skills
+
+        public float electricalDischargeCooldown;
 
         //----------------------//------------------------//
 
@@ -97,7 +98,7 @@ namespace LudumDare40.Components.Battle.Enemies
                 new List<Rectangle> { new Rectangle(-34, -30, 69, 59) },
                 new List<Rectangle> { new Rectangle(-28, -28, 59, 51) },
             });
-            sprite.AddFramesToAttack("electricalDischarge", 0, 1, 2, 3, 4, 5, 6);
+            sprite.AddFramesToAttack("electricalDischarge", 4);
 
             sprite.CreateAnimation("hit", 0.1f, false);
             sprite.AddFrames("hit", new List<Rectangle>
@@ -135,6 +136,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void onHit(Vector2 knockback)
         {
+            AudioManager.hit.play(0.8f, 0.0f);
             if (dangerousStage <= 1)
             {
                 (entity.scene as SceneMap)?.startScreenShake(0.7f, 100);

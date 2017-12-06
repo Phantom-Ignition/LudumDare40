@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Nez;
 using System.Collections.Generic;
+using LudumDare40.Components.Player;
 using Random = Nez.Random;
 
 namespace LudumDare40.Components.Battle.Enemies
@@ -19,7 +20,14 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void end() { }
 
-        public override void update() { }
+        public override void update()
+        {
+            if (entity.isBattleActive)
+            {
+                entity.playerCollider.entity.getComponent<PlayerComponent>()
+                    .blockWalljump = entity.canSeeThePlayer();
+            }
+        }
     }
 
     public class EnemyBossInactive : EnemyBossStates
@@ -42,6 +50,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void update()
         {
+            base.update();
             if (entity.sprite.Looped)
             {
                 if (!_playedEffects)
@@ -79,6 +88,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void update()
         {
+            base.update();
             if (!entity.canStartTheAttacks) return;
             if (!_setFirstCooldown && entity.canSeeThePlayer())
             {
@@ -157,6 +167,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void update()
         {
+            base.update();
             if (!_playedPunchSe && entity.sprite.CurrentFrame == 7)
             {
                 _playedPunchSe = true;
@@ -183,6 +194,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void update()
         {
+            base.update();
             if (entity.sprite.Looped)
             {
                 fsm.popState();
@@ -223,6 +235,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void update()
         {
+            base.update();
             if (entity.sprite.Looped)
             {
                 fsm.popState();
@@ -312,6 +325,7 @@ namespace LudumDare40.Components.Battle.Enemies
 
         public override void update()
         {
+            base.update();
             if (entity.sprite.Looped)
             {
                 fsm.popState();

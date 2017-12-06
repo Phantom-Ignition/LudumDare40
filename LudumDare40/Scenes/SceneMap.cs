@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using LudumDare40.Components;
+﻿using LudumDare40.Components;
 using LudumDare40.Components.Battle;
 using LudumDare40.Components.Battle.Enemies;
 using LudumDare40.Components.Map;
 using LudumDare40.Components.Player;
-using LudumDare40.Components.Sprites;
 using LudumDare40.Components.Windows;
-using LudumDare40.Extensions;
 using LudumDare40.Managers;
 using LudumDare40.NPCs;
 using LudumDare40.PostProcessors;
-using LudumDare40.Scenes.SceneMapExtensions;
 using LudumDare40.Systems;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Nez;
 using Nez.Particles;
 using Nez.Sprites;
 using Nez.Textures;
 using Nez.Tiled;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LudumDare40.Scenes
 {
@@ -36,8 +31,8 @@ namespace LudumDare40.Scenes
         public const int BACKGROUND_RENDER_LAYER = 10;
         public const int TILED_MAP_RENDER_LAYER = 9;
         public const int WATER_RENDER_LAYER = 6;
-        public const int MISC_RENDER_LAYER = 5; // NPCs, Text, etc.
-        public const int ENEMIES_RENDER_LAYER = 4; // NPCs, Text, etc.
+        public const int MISC_RENDER_LAYER = 5;
+        public const int ENEMIES_RENDER_LAYER = 4;
         public const int PLAYER_RENDER_LAYER = 3;
         public const int PARTICLES_RENDER_LAYER = 2;
         public const int HUD_BACK_RENDER_LAYER = 1;
@@ -53,9 +48,8 @@ namespace LudumDare40.Scenes
         public const int PLAYER = 5;
 
         //--------------------------------------------------
-        // Post Processors
-
-        private CinematicLetterboxPostProcessor _cinematicPostProcessor;
+        // On Transition
+        
         private bool _onTransition;
 
         //--------------------------------------------------
@@ -122,7 +116,6 @@ namespace LudumDare40.Scenes
             setupCoreDrops();
             setupNpcs();
             setupParticles();
-            setupLadders();
             setupWater();
             setupHud();
             setupPostProcessors();
@@ -345,21 +338,6 @@ namespace LudumDare40.Scenes
             }
         }
 
-        private void setupLadders()
-        {
-            var ladders = _tiledMap.getObjectGroup("ladders");
-            if (ladders == null) return;
-
-            var names = new Dictionary<string, int>();
-            foreach (var ladderObj in ladders.objects)
-            {
-                names[ladderObj.name] = names.ContainsKey(ladderObj.name) ? ++names[ladderObj.name] : 0;
-
-                var ladder = createEntity(string.Format("{0}:{1}", ladderObj.name, names[ladderObj.name]));
-                ladder.addComponent(new LadderComponent(ladderObj));
-            }
-        }
-
         private void setupEntityProcessors()
         {
             var player = findEntity("player");
@@ -378,7 +356,6 @@ namespace LudumDare40.Scenes
             };
             addEntityProcessor(_camera);
             addEntityProcessor(_npcInteractionSystem);
-            addEntityProcessor(new LadderSystem(new Matcher().all(typeof(LadderComponent)), playerComponent));
             addEntityProcessor(new BattleSystem());
             addEntityProcessor(new ShotsBattleSystem(player));
         }

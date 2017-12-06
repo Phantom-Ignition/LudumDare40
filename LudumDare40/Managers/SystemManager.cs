@@ -34,6 +34,11 @@ namespace LudumDare40.Managers
         private Vector2? _spawnPosition;
         public Vector2? SpawnPosition => _spawnPosition;
 
+        //--------------------------------------------------
+        // Enemies
+    
+
+
         //----------------------//------------------------//
 
         public SystemManager()

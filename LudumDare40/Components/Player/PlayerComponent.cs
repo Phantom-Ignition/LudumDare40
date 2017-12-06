@@ -354,6 +354,7 @@ namespace LudumDare40.Components.Player
                         if (reactorComponent.isActivated) continue;
                         reactorComponent.setActivated();
                         playerManager.HoldingCore = false;
+                        battleComponent.setHp(MAX_HP);
                         return;
                     }
                 }
